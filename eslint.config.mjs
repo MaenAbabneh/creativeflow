@@ -14,13 +14,7 @@ const eslintConfig = [
   {
     ignores: ["components/ui/**/*"],
   },
-  ...compat.extends(
-    "next/core-web-vitals",
-    "next/typescript",
-    "standard",
-    "prettier"
-    // "plugin:tailwindcss/recommended"
-  ),
+  ...compat.extends("next/core-web-vitals", "next/typescript", "prettier"),
   {
     rules: {
       "import/order": [

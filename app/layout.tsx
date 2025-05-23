@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
+import ThemeProvider from "@/context/Theme";
+import Navbar from "@/navigation/navbar";
+
 const inter = localFont({
   src: "./fonts/Interfont.ttf",
   variable: "--font-inter",
@@ -35,44 +38,14 @@ const Tajwal = localFont({
   variable: "--font-tajwal",
 });
 
-export const metadata: { [key: string]: Metadata } = {
-  en: {
-    title: "Creative Overflow",
-    description:
-      "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
-    openGraph: {
-      title: "Creative Overflow",
-      description:
-        "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
-    },
-    twitter: {
-      title: "Creative Overflow",
-      description:
-        "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
-    },
-  },
-
-  ar: {
-    title: "Creative Overflow",
-    description:
-      "منصة مدفوعة بالمجتمع لطرح الأسئلة والإجابة عليها في مجال البرمجة. احصل على المساعدة، وشارك المعرفة، وتعاون مع المطورين من جميع أنحاء العالم. استكشف مواضيع في تطوير الويب، وتطوير تطبيقات الهواتف المحمولة، والخوارزميات، وهياكل البيانات، والمزيد.",
-    openGraph: {
-      title: "Creative Overflow",
-      description:
-        "منصة مدفوعة بالمجتمع لطرح الأسئلة والإجابة عليها في مجال البرمجة. احصل على المساعدة، وشارك المعرفة، وتعاون مع المطورين من جميع أنحاء العالم. استكشف مواضيع في تطوير الويب، وتطوير تطبيقات الهواتف المحمولة، والخوارزميات، وهياكل البيانات، والمزيد.",
-    },
-    twitter: {
-      title: "Creative Overflow",
-      description:
-        "منصة مدفوعة بالمجتمع لطرح الأسئلة والإجابة عليها في مجال البرمجة. احصل على المساعدة، وشارك المعرفة، وتعاون مع المطورين من جميع أنحاء العالم. استكشف مواضيع في تطوير الويب، وتطوير تطبيقات الهواتف المحمولة، والخوارزميات، وهياكل البيانات، والمزيد.",
-    },
-  },
-
+export const metadata: Metadata = {
+  title: "Creative Overflow",
+  description:
+    "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
+  keywords: ["programming", "coding", "developer community"],
+  authors: [{ name: "Maen Ababenh" }],
   icons: {
-    icons: 
-    {
-      icon:'images/site-icon.png',
-    },
+    icon: "images/site-icon.png",
   },
 };
 
@@ -82,11 +55,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${Grotisk.variable} ${Tajwal.variable} font-sans antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
