@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+
+import  Theme  from "./theme";
+import {Input} from "../../ui/input";
 const Navbar = () => {
   return (
     <nav className="flex-between dark:--color-dark-200 background-light900_dark200 fixed w-full z-50 gap-5 p-6 shadow-light-300 dark:shadow-none sm:px-12 ">
@@ -15,8 +18,8 @@ const Navbar = () => {
           Creative Overflow
         </p>
       </Link>
-      <p className="max-sm:hidden">globsl search</p>
-      <div className="flex-between gap-0">them</div>
+      <Input className=" w-5"/>
+      <div className="flex-between gap-0"><Theme/></div>
     </nav>
   );
 };

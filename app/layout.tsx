@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
 
+// import { SidebarProvider } from "@/components/ui/sidebar";
+import "./globals.css";
 import ThemeProvider from "@/context/Theme";
-import Navbar from "@/navigation/navbar";
 
 const inter = localFont({
   src: "./fonts/Interfont.ttf",
@@ -64,8 +64,7 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-        >
-          <Navbar />
+          >
           {children}
         </ThemeProvider>
       </body>
