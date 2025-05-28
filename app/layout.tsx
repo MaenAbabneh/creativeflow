@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import localFont from "next/font/local";
+import { SessionProvider } from "next-auth/react";
+import { Toaster } from "sonner";
 
-// import { SidebarProvider } from "@/components/ui/sidebar";
 import "./globals.css";
+import { auth } from "@/auth";
 import ThemeProvider from "@/context/Theme";
 
-const inter = localFont({
-  src: "./fonts/Interfont.ttf",
-  variable: "--font-inter",
-  weight: "100 200 300 400 500 600 700 800 900",
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
 });
-
 const Grotisk = localFont({
   src: "./fonts/SpaceGrotesk.ttf",
   variable: "--font-space-grotesk",
@@ -49,25 +50,29 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${Grotisk.variable} ${Tajwal.variable} font-sans antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+      <SessionProvider session ={session}>
+        <body
+          className={`${inter.className} ${Grotisk.variable} ${Tajwal.variable} font-sans antialiased`}
+        >
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
           >
-          {children}
-        </ThemeProvider>
-      </body>
+            {children}
+          </ThemeProvider>
+          <Toaster />
+        </body>
+      </SessionProvider>
     </html>
   );
 }

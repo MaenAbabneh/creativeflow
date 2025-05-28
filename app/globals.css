@@ -40,8 +40,8 @@
   --shadow-dark-100: 0px 2px 10px 0px rgba(46, 52, 56, 0.1);
   --shadow-dark-200: 2px 0px 20px 0px rgba(39, 36, 36, 0.04);
 
-  --background-image-auth-dark: url("/images/auth-dark.png");
-  --background-image-auth-light: url("/images/auth-light.png");
+  --background-image-auth-dark: url("../public/images/auth-dark.png");
+  --background-image-auth-light: url("../public/images/auth-light.png");
 
   --breakpoint-xs: 420px;
 
@@ -50,14 +50,6 @@
   --font-tajwal: var(--font-tajwal);
 }
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
@@ -105,7 +97,7 @@
   @apply bg-light-800 dark:bg-dark-200;
 }
 
-@utility background-dark400_light900 {
+@utility background-light800_dark100 {
   @apply dark:bg-dark-400! bg-light-900!;
 }
 
@@ -150,7 +142,6 @@
 }
 
 @utility text-light400_light500 {
-  @apply text-light-400! dark:text-light-500!;
   @apply text-light-400! dark:text-light-500!;
 }
 
