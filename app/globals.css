@@ -266,7 +266,7 @@
 }
 
 @utility primary-gradient-dark {
-  background: linear-gradient(129deg, #1b55d1 0%, #4072e0 100%);
+  background: linear-gradient(129deg, #111960 0%, #1b55d1 100%);
 }
 
 @utility dark-gradient {
@@ -296,6 +296,21 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+@utility light-text-gradient {
+  background: linear-gradient(120deg, #111960 0%, #1b55d1 80%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility dark-text-gradient {
+  background: linear-gradient(120deg, #1b55d1 50%, #111960 90%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 
 @utility flex-center {
   @apply flex justify-center items-center;
