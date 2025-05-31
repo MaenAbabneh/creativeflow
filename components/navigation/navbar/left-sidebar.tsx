@@ -19,7 +19,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { sidebarLinks } from "@/constants";
 import ROUTES from "@/constants/routes";
 
-export function AppSidebar() {
+export default function LeftSidebar() {
   const pathname = usePathname();
   const { state } = useSidebar();
   const isExpanded = state === "expanded";
@@ -27,12 +27,12 @@ export function AppSidebar() {
     <Sidebar
       collapsible="icon"
       variant="sidebar"
-      className="rounded-lg pt[75px] bg-dark-400 overflow-y-auto fixed z-40"
+      className="light-border rounded-lg min-h-screen dark:bg-dark-400 bg-light-800 overflow-y-auto fixed z-50 top-[76px] shadow-lg dark:shadow-none"
     >
-      <SidebarContent className="bg-dark-300">
+      <SidebarContent className="dark:bg-dark-300">
         <SidebarGroup>
           <SidebarMenu>
-            <SidebarMenuItem className="flex flex-col gap-6 mt-5">
+            <SidebarMenuItem className="flex flex-col gap-6 mt-4">
               {sidebarLinks.map((link) => {
                 const { route, label, imgURL } = link;
                 const userId = 1; // Replace with actual user ID logic
@@ -75,7 +75,7 @@ export function AppSidebar() {
               {isExpanded ? (
                 <div className="flex flex-col gap-2 ">
                   <Link href={ROUTES.SIGNIN}>
-                    <Button className="w-[240px] bg-light-700 dark:bg-dark-200 ">
+                    <Button className="w-[240px] bg-light-400 dark:bg-dark-200 ">
                       <p className="dark:light-text-gradient dark-text-gradient body-bold">
                         Sign In
                       </p>

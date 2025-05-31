@@ -248,6 +248,9 @@
 @utility invert-colors {
   @apply invert dark:invert-0;
 }
+@utility invert-colors-2 {
+  @apply invert-0 dark:invert;
+}
 
 @utility shadow-light100_dark100 {
   @apply shadow-light-100 dark:shadow-dark-100;

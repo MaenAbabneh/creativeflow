@@ -8,7 +8,7 @@ import Theme from "./theme";
 import { Input } from "../../ui/input";
 const Navbar = () => {
   return (
-    <nav className="flex-between  background-light800_dark300 fixed w-full z-50 gap-5 p-5 shadow-light-300 dark:shadow-none sm:px-12 ">
+    <nav className="flex-between  bg-light-850 dark:bg-dark-300 fixed w-full z-50 gap-5 p-5 shadow-dark-200 dark:shadow-none sm:px-12 ">
       <Link href="/" className=" items-center gap-1.5 sm:hidden">
         <Image
           src="/images/site-logo.svg"
