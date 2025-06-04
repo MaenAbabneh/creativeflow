@@ -20,7 +20,7 @@ const TagsCard = ({ id, name, qustions, showCount, compact }: Props) => {
       href={ROUTES.TAGS(id)}
       className="flex justify-between items-center  pr-6 rounded-lg hover:bg-light200_dark700 transition-colors duration-200 ease-in-out cursor-pointer w-full"
     >
-      <Badge className=" background-light800_dark300 text-light400_light500 rounded-md border-none px-4 py-2 uppercase">
+      <Badge className=" dark:bg-dark-200 bg-light-700 text-light400_light500 rounded-md border-none px-4 py-2 uppercase">
         <div className="flex-center space-x-2 items-center">
           <i className={`${iconClass} text-lg `}></i>
           <span># {name}</span>

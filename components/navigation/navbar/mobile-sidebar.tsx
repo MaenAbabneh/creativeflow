@@ -18,14 +18,14 @@ import MobileNavLinks from "./mobileNavlinks";
 
 const MobileSidebar = () => {
   return (
-    <Sheet>
+    <Sheet >
       <SheetTrigger asChild className="md:hidden">
         <Image
           src="/icons/hamburger.svg"
           alt="hamburger menu icon"
           width={30}
           height={30}
-          className="cursor-pointer invert-colors"
+          className="cursor-pointer invert-colors object-contain   "
         />
       </SheetTrigger>
       <SheetContent side="left" className=" w-[300px]">
@@ -70,7 +70,9 @@ const MobileSidebar = () => {
           <Link href={ROUTES.SIGNUP}>
             <SheetClose asChild>
               <Button className="w-[280px] bg-light-700 dark:bg-dark-200">
-                <span className="text-dark100_light900 body-regular">Sign Up</span>
+                <span className="text-dark100_light900 body-regular">
+                  Sign Up
+                </span>
               </Button>
             </SheetClose>
           </Link>

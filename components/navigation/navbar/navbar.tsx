@@ -33,11 +33,18 @@ const Navbar = () => {
           height={220}
           className="hidden dark:block object-contain "
         />
-        {/* <p className="h2-bold font-space-grotesk text-dark-100 dark:text-light-900 max-sm:hidden">
-          Creative <span className="dark:dark-text-gradient-logo light-text-gradient">Overflow</span>
-        </p> */}
       </Link>
-      <Input className=" w-5" />
+      <div className="flex items-center gap-2 min-w-[600px] light-border background-light800_dark400 rounded-2xl px-3 py-1 shadow-lg dark:shadow-none">
+      <Image
+        src="/icons/search.svg"
+        alt="search icon"
+        width={20}
+        height={20}
+        className="invert-colors object-contain ml-2 cursor-pointer "
+      />
+      <Input className="no-focus border-none !bg-transparent" />
+      
+      </div>
       <div className="flex  flex-row gap-5 justify-between">
         <Theme />
         <MobileSidebar />
