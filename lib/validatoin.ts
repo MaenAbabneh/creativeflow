@@ -50,3 +50,20 @@ export const SignUpSchema = z.object({
     .max(50, "Name must be less than 50 characters long")
     .regex(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
 });
+
+export const QuestionSchema = z.object({
+  title: z
+    .string()
+    .min(5, "Title must be at least 5 characters long")
+    .max(100, "Title must be less than 100 characters long"),
+  content: z
+    .string()
+    .min(20, "Content must be at least 20 characters long"),
+  tags: z
+    .array(z.string().min(1, "At least one tag is required"))
+    .min(1, "At least one tag is required")
+    .max(5, "A maximum of 5 tags is allowed")
+    .refine((tags) => tags.every((tag) => /^[a-zA-Z0-9_]+$/.test(tag)), {
+      message: "Tags can only contain letters, numbers, and underscores",
+    }),
+  })

@@ -3,8 +3,13 @@ import Link from "next/link";
 
 import TagsCard from "@/components/card/tags-card";
 import ROUTES from "@/constants/routes";
+import { cn } from "@/lib/utils"; // Make sure cn is imported
 
-const RightSidebar = () => {
+interface RightSidebarProps {
+  isMobileView?: boolean;
+}
+
+const RightSidebar = ({ isMobileView = false }: RightSidebarProps) => {
   const topQuestions = [
     { id: "1", question: "What is the best way to learn React?" },
     { id: "2", question: "How do I manage state in a React application?" },
@@ -24,19 +29,31 @@ const RightSidebar = () => {
     { id: "5", name: "Next.js", qustions: 45 },
   ];
 
+  const baseSectionClasses = "!background-light900_dark300 custom-scrollbar";
+  // Desktop specific classes (borders, shadows, rounding) are applied by the <aside> in layout.tsx
+  // So, for desktop, RightSidebar just needs to fill its container and handle internal scrolling if necessary.
+  const desktopSpecificClasses = "h-full overflow-y-auto"; // Fills the <aside> container from layout.tsx
+  const mobileSpecificClasses = "h-full overflow-y-auto"; // Fills the SheetContent
+
   return (
-    <section className="light-border h-screen !background-light900_dark300  pt-5 pl-4 overflow-y-auto border-l border-light200_dark700 shadow-lg  dark:shadow-none rounded-lg custom-scrollbar hidden md:block">
-      <div>
-        <h2 className="h3-bold text-dark100_light900  mb-4 ">Top Questions</h2>
-        <div className="flex w-[280px] flex-col  ">
-          {topQuestions.map(({ id, question }) => {
-            return (
+    <section
+      className={cn(
+        baseSectionClasses,
+        isMobileView ? mobileSpecificClasses : desktopSpecificClasses
+      )}
+    >
+      {/* Inner div for consistent padding and content structure */}
+      <div className="p-6 flex flex-col gap-8">
+        <div>
+          <h2 className="h3-bold text-dark100_light900 mb-4">Top Questions</h2>
+          <div className="flex flex-col gap-2">
+            {topQuestions.map(({ id, question }) => (
               <Link
                 href={ROUTES.PROFILE(id)}
                 key={id}
-                className="flex flex-row items-center gap-2 justify-between cursor-pointer  rounded-lg p-2 "
+                className="flex flex-row items-center justify-between gap-3 cursor-pointer rounded-lg p-3 hover:bg-light-800/80 dark:hover:bg-dark-400/80 transition-colors"
               >
-                <p key={id} className="mt-1 body-medium text-dark100_light900">
+                <p className="body-medium text-dark100_light900 flex-1">
                   {question}
                 </p>
                 <Image
@@ -44,15 +61,16 @@ const RightSidebar = () => {
                   alt="arrow-right"
                   width={16}
                   height={16}
-                  className="invert-colors items-center mb- "
+                  className="invert-colors"
                 />
               </Link>
-            );
-          })}
+            ))}
+          </div>
         </div>
-        <div className="mt-5">
-          <h3 className="h3-bold">Popular Tags</h3>
-          <div className="mt-7 flex flex-col gap-4">
+
+        <div>
+          <h3 className="h3-bold text-dark100_light900 mb-4">Popular Tags</h3>
+          <div className="flex flex-col gap-3">
             {popularTags.map(({ id, name, qustions }) => (
               <TagsCard
                 key={id}

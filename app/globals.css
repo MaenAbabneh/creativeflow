@@ -607,3 +607,6 @@ code {
     @apply bg-background text-foreground;
   }
 }
+.filter-to-blue {
+  filter: invert(40%) sepia(80%) saturate(1000%) hue-rotate(190deg) brightness(100%) contrast(100%);
+}
