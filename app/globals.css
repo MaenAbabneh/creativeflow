@@ -610,3 +610,6 @@ code {
 .filter-to-blue {
   filter: invert(40%) sepia(80%) saturate(1000%) hue-rotate(190deg) brightness(100%) contrast(100%);
 }
+.mdxeditor-popup-wrapper {
+  z-index: 50 !important;
+}

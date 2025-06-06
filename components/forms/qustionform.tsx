@@ -1,8 +1,7 @@
 "use client";
 import { QuestionSchema } from "@/lib/validatoin";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Path, useForm } from "react-hook-form";
-import z, { ZodType } from "zod";
+import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,9 +14,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import ROUTES from "@/constants/routes";
-import { Link } from "lucide-react";
-import { title } from "process";
+import dynamic from "next/dynamic";
+import { MDXEditorMethods } from "@mdxeditor/editor";
+import React from "react";
+const Editor = dynamic(() => import("@/components/editor/editor"), {
+  // Make sure we turn SSR off
+  ssr: false,
+});
 const QustionForm = () => {
   const form = useForm({
     resolver: zodResolver(QuestionSchema),
@@ -30,7 +33,7 @@ const QustionForm = () => {
   const handleCreateQuestion = (data: any) => {
     console.log(data);
   };
-
+  const editorRef = React.useRef<MDXEditorMethods | null>(null);
   return (
     <Form {...form}>
       <form
@@ -69,8 +72,14 @@ const QustionForm = () => {
                 Detailed explanation of your problem{" "}
                 <span className="text-primary-500">*</span>
               </FormLabel>
-              <div className="flex items-center w-full ">
-                <FormControl>editor</FormControl>
+              <div className="flex items-center w-full  ">
+                <FormControl>
+                  <Editor
+                    editorRef={editorRef}
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                </FormControl>
               </div>
               <FormDescription className="!text-dark300_light800 small-regular">
                 Introduce the problem and expand on what you put in the title.

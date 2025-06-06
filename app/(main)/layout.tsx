@@ -12,7 +12,7 @@ export default function MainLayout({
     <SidebarProvider>
       <div className="min-h-screen background-light850_dark200">
         {/* Fixed Navbar */}
-        <div className="fixed top-0 left-0 right-0 z-50 h-[77px]">
+        <div className="fixed top-0 left-0 right-0 z-10 h-[77px]">
           <Navbar />
         </div>
 
@@ -24,7 +24,7 @@ export default function MainLayout({
           {/* Main Content Area - Takes up available space */}
           <main
             className="flex-1 min-h-[calc(100vh-77px)] 
-                         overflow-y-auto no-scrollbar
+                         overflow-visible no-scrollbar
                          px-4 md:px-6 lg:px-8 xl:px-10 py-6"
             // The lg:mr-[280px] xl:lg:mr-[320px] creates space for the fixed RightSidebar
             // We apply margin only on screens where RightSidebar is visible and fixed

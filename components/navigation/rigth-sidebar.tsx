@@ -74,7 +74,7 @@ const RightSidebar = ({ isMobileView = false }: RightSidebarProps) => {
             {popularTags.map(({ id, name, qustions }) => (
               <TagsCard
                 key={id}
-                id={id}
+                _id={id}
                 name={name}
                 qustions={qustions}
                 showCount={true}
