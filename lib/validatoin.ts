@@ -56,14 +56,9 @@ export const QuestionSchema = z.object({
     .string()
     .min(5, "Title must be at least 5 characters long")
     .max(100, "Title must be less than 100 characters long"),
-  content: z
-    .string()
-    .min(20, "Content must be at least 20 characters long"),
+  content: z.string().min(20, "Content must be at least 20 characters long"),
   tags: z
-    .array(z.string().min(1, "At least one tag is required"))
+    .array(z.string())
     .min(1, "At least one tag is required")
-    .max(5, "A maximum of 5 tags is allowed")
-    .refine((tags) => tags.every((tag) => /^[a-zA-Z0-9_]+$/.test(tag)), {
-      message: "Tags can only contain letters, numbers, and underscores",
-    }),
-  })
+    .max(5, "A maximum of 5 tags is allowed"),
+});

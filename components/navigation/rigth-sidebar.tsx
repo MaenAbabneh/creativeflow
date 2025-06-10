@@ -32,9 +32,8 @@ const RightSidebar = ({ isMobileView = false }: RightSidebarProps) => {
   const baseSectionClasses = "!background-light900_dark300 custom-scrollbar";
   // Desktop specific classes (borders, shadows, rounding) are applied by the <aside> in layout.tsx
   // So, for desktop, RightSidebar just needs to fill its container and handle internal scrolling if necessary.
-  const desktopSpecificClasses = "h-full overflow-y-auto"; // Fills the <aside> container from layout.tsx
-  const mobileSpecificClasses = "h-full overflow-y-auto"; // Fills the SheetContent
-
+  const desktopSpecificClasses = "h-full overflow-y-auto";
+  const mobileSpecificClasses = "h-full overflow-y-auto";
   return (
     <section
       className={cn(
@@ -42,18 +41,17 @@ const RightSidebar = ({ isMobileView = false }: RightSidebarProps) => {
         isMobileView ? mobileSpecificClasses : desktopSpecificClasses
       )}
     >
-      {/* Inner div for consistent padding and content structure */}
-      <div className="p-6 flex flex-col gap-8">
+      <div className="pt-10 px-6 flex flex-col gap-6">
         <div>
-          <h2 className="h3-bold text-dark100_light900 mb-4">Top Questions</h2>
-          <div className="flex flex-col gap-2">
+          <h2 className="h3-bold text-dark100_light900 mb-3">Top Questions</h2>
+          <div className="flex flex-col gap-1">
             {topQuestions.map(({ id, question }) => (
               <Link
                 href={ROUTES.PROFILE(id)}
                 key={id}
-                className="flex flex-row items-center justify-between gap-3 cursor-pointer rounded-lg p-3 hover:bg-light-800/80 dark:hover:bg-dark-400/80 transition-colors"
+                className="flex flex-row items-center justify-between gap-3 cursor-pointer rounded-lg p-3 hover:background-light800_dark400 transition-colors duration-200"
               >
-                <p className="body-medium text-dark100_light900 flex-1">
+                <p className="body-medium text-dark100_light900 flex-1 line-clamp-2">
                   {question}
                 </p>
                 <Image
@@ -61,7 +59,7 @@ const RightSidebar = ({ isMobileView = false }: RightSidebarProps) => {
                   alt="arrow-right"
                   width={16}
                   height={16}
-                  className="invert-colors"
+                  className="invert-colors flex-shrink-0"
                 />
               </Link>
             ))}
@@ -70,7 +68,7 @@ const RightSidebar = ({ isMobileView = false }: RightSidebarProps) => {
 
         <div>
           <h3 className="h3-bold text-dark100_light900 mb-4">Popular Tags</h3>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
             {popularTags.map(({ id, name, qustions }) => (
               <TagsCard
                 key={id}

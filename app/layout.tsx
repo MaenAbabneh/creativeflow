@@ -7,7 +7,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { auth } from "@/auth";
 import ThemeProvider from "@/context/Theme";
-
+import { connectDB } from "@/lib/mogodb";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     icon: "images/site-icon.png",
   },
 };
-
+connectDB();
 export default async function RootLayout({
   children,
 }: Readonly<{

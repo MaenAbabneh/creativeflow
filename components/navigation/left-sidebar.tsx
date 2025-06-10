@@ -30,7 +30,7 @@ export default function LeftSidebar() {
       collapsible="icon" 
       className="sticky top-[77px] h-[calc(100vh-77px)] 
                  border-r border-light-700 dark:border-dark-400
-                 background-light900_dark300
+                 !background-light900_dark300
                  !p-0" 
     >
       <SidebarContent className="flex flex-col pt-4 pl-4 pr-4 custom-scrollbar"> {/* Added p-3 for content padding */}
@@ -49,7 +49,7 @@ export default function LeftSidebar() {
           </UIButton>
         </div>
         
-        <SidebarMenu className="mt-10 flex flex-col gap-6"> 
+        <SidebarMenu className="mt-6 flex flex-col gap-6"> 
           {sidebarLinks.map((link) => {
             const { route, label, imgURL } = link;
             let href = route;
@@ -101,7 +101,7 @@ export default function LeftSidebar() {
           <SidebarMenuButton
             asChild
             variant="outline" 
-            className="w-full justify-start items-center gap-3 py-5 px-3 rounded-lg bg-primary-500 text-white hover:bg-primary-500/90"
+            className="w-full justify-start items-center gap-3 py-5  rounded-lg bg-primary-500 text-white hover:bg-primary-500/90"
           >
             <Link href={ROUTES.SIGNIN}>
               <Image src="/icons/account.svg" alt="Sign In" width={20} height={20} />
@@ -111,7 +111,7 @@ export default function LeftSidebar() {
           <SidebarMenuButton
             asChild
             variant="outline" // Or your custom variant/styling
-            className="w-full justify-start items-center gap-3 p-3 rounded-lg"
+            className="w-full justify-start items-center gap-3 py-5 rounded-lg"
             // Apply custom styles to match original Button
           >
             <Link href={ROUTES.SIGNUP}>

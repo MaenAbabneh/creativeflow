@@ -313,14 +313,12 @@
   -webkit-text-fill-color: transparent;
 }
 
-
 @utility dark-text-gradient {
   background: linear-gradient(120deg, #1b55d1 50%, #111960 90%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
 
 @utility flex-center {
   @apply flex justify-center items-center;
@@ -608,8 +606,129 @@ code {
   }
 }
 .filter-to-blue {
-  filter: invert(40%) sepia(80%) saturate(1000%) hue-rotate(190deg) brightness(100%) contrast(100%);
+  filter: invert(40%) sepia(80%) saturate(1000%) hue-rotate(190deg)
+    brightness(100%) contrast(100%);
 }
+/* محرر MDX: نوافذ منبثقة وواجهات الحوار */
 .mdxeditor-popup-wrapper {
-  z-index: 50 !important;
+  z-index: 9999 !important;
+  position: relative;
+}
+
+/* لكل النوافذ المنبثقة والحوارات من المحرر MDX */
+[role="dialog"],
+.lexical-link-popover,
+.lexical-link-dialog,
+.mdx-modal,
+.LeafNodePopupContainer {
+  z-index: 9999 !important;
+  position: fixed !important;
+}
+
+/* الطبقة المعتمة خلف النوافذ المنبثقة */
+.mdxeditor-popup-backdrop,
+.mdxeditor-modal-backdrop {
+  position: fixed !important;
+  z-index: 9998 !important;
+}
+
+/* حاويات المحرر وإصلاح نوافذ الروابط بشكل خاص */
+.mdxeditor .link-dialog,
+.mdxeditor .link-dialog-portal,
+.mdxeditor .lexical-link-dialog-portal,
+.lexical-link-dialog-portal {
+  z-index: 9999 !important;
+  position: fixed !important;
+}
+
+/* تحسينات اختيار لغة البرمجة في مربعات الكود */
+.code-block-language-select {
+  max-height: 300px !important;
+  overflow-y: auto !important;
+  z-index: 9999 !important;
+}
+
+[class*="code-block-language-selector"] {
+  min-width: 160px !important;
+}
+
+.mdxeditor [aria-label="Select language"] {
+  min-width: 120px;
+}
+
+/* تنسيق أفضل لقائمة اللغات البرمجية */
+.code-block-language-select div {
+  padding: 6px 8px !important;
+}
+
+/* تحسين مظهر مربعات الكود */
+.mdxeditor code {
+  border-radius: 4px;
+  font-family: var(--font-mono);
+}
+
+/* تحسينات عامة للتصميم */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.3);
+  border-radius: 20px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.5);
+}
+
+/* تحسين الانتقالات */
+.transition-colors {
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+/* تحسين الظلال */
+.shadow-light-100 {
+  box-shadow: var(--shadow-light-100);
+}
+
+/* تحسين line-clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* تحسين الهوفر للعناصر التفاعلية */
+.hover-lift {
+  transition: transform 0.2s ease-in-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-1px);
+}
+
+/* تحسين الفوكوس للوصولية */
+.focus-visible:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* تحسين الجرادينت */
+.primary-gradient-light {
+  background: linear-gradient(135deg, #111960 0%, #1b55d1 100%);
+}
+
+.primary-gradient-dark {
+  background: linear-gradient(135deg, #1b55d1 0%, #111960 100%);
 }

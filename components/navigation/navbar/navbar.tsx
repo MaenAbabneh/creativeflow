@@ -9,8 +9,7 @@ import Theme from "./theme";
 import { Input } from "../../ui/input"; 
 
 const Navbar = () => {
-  return (
-    <nav className="flex-between bg-light-850 dark:bg-dark-300 fixed w-full z-50 gap-5 p-5  shadow-dark-200 dark:shadow-none sm:px-12">
+  return (    <nav className="flex-between background-light900_dark300 fixed w-full z-50 gap-5 p-4  shadow-light-100 dark:shadow-none">
       {/* Left Section: Logo & Mobile Left Sidebar Trigger */}
       <div className="flex items-center gap-3">
         <Link href="/" className="items-center gap-1.5 sm:hidden">
@@ -42,7 +41,7 @@ const Navbar = () => {
       </div>
 
       {/* Center Section: Search Bar (visible on sm and up) */}
-      <div className="hidden sm:flex items-center gap-2 flex-1 mx-4 max-w-md lg:max-w-xl light-border background-light800_dark400 rounded-lg px-3 py-1.5 shadow-sm dark:shadow-none">
+      <div className="hidden sm:flex items-center gap-2 flex-1 mx-4 max-w-md lg:max-w-xl light-border-2 background-light800_dark400 rounded-lg px-3 py-2 shadow-light-100 dark:shadow-none">
         <Image
           src="/icons/search.svg"
           alt="Search Icon"

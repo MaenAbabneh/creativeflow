@@ -12,12 +12,12 @@ export default function MainLayout({
     <SidebarProvider>
       <div className="min-h-screen background-light850_dark200">
         {/* Fixed Navbar */}
-        <div className="fixed top-0 left-0 right-0 z-10 h-[77px]">
+        <div className="fixed top-0 left-0 right-0 z-50 h-[77px] ">
           <Navbar />
         </div>
 
         {/* Main Layout Container */}
-        <div className="flex pt-[77px]">
+        <div className="flex pt-[77px]  ">
           {/* Left Sidebar */}
           <LeftSidebar />
 
@@ -25,12 +25,10 @@ export default function MainLayout({
           <main
             className="flex-1 min-h-[calc(100vh-77px)] 
                          overflow-visible no-scrollbar
-                         px-4 md:px-6 lg:px-8 xl:px-10 py-6"
-            // The lg:mr-[280px] xl:lg:mr-[320px] creates space for the fixed RightSidebar
-            // We apply margin only on screens where RightSidebar is visible and fixed
-            // For screens smaller than lg, RightSidebar is handled by MobileRightSidebar (Sheet)
+                         px-6 py-6
+                         relative z-10"
           >
-            <div className="mx-auto max-w-none lg:max-w-4xl xl:max-w-5xl">
+            <div className="mx-auto max-w-none lg:max-w-4xl xl:max-w-3xl">
               {children}
             </div>
           </main>
@@ -42,8 +40,7 @@ export default function MainLayout({
           className="hidden xl:block fixed top-[77px] right-0 h-[calc(100vh-77px)] 
                      w-[280px] xl:w-[320px] 
                      border-l border-light-700 dark:border-dark-400
-                     background-light800_dark300
-                     overflow-y-auto no-scrollbar z-10" // Added z-10 to ensure it's above main content if overlap occurs
+                     overflow-y-auto no-scrollbar z-30"
         >
           <RightSidebar />
         </aside>
