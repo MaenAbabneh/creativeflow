@@ -7,7 +7,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { auth } from "@/auth";
 import ThemeProvider from "@/context/Theme";
-import { connectDB } from "@/lib/mogodb";
+import dbConnect from "@/lib/mongoose";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -39,6 +39,8 @@ const Tajwal = localFont({
   variable: "--font-tajwal",
 });
 
+dbConnect();
+
 export const metadata: Metadata = {
   title: "Creative Overflow",
   description:
@@ -49,7 +51,6 @@ export const metadata: Metadata = {
     icon: "images/site-icon.png",
   },
 };
-connectDB();
 export default async function RootLayout({
   children,
 }: Readonly<{
