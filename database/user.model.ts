@@ -1,23 +1,18 @@
 import { Schema, model, models } from "mongoose";
 
 export interface IUser {
-  _id: string;
   name: string;
   username: string;
   email: string;
   bio?: string;
   image: string;
   location?: string;
-  portifilo?: string;
+  portfolio?: string;
   reputation?: number;
 }
 
-const userSchema = new Schema(
+const userSchema = new Schema<IUser>(
   {
-    _id: {
-      type: String,
-      required: true,
-    },
     name: {
       type: String,
       required: true,
@@ -45,7 +40,7 @@ const userSchema = new Schema(
       type: String,
       required: false,
     },
-    portifilo: {
+    portfolio: {
       type: String,
       required: false,
     },
