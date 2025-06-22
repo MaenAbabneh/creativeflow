@@ -6,11 +6,7 @@ export const SignInSchema = z.object({
 });
 
 export const SignUpSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .max(50, "Email must be less than 50 characters")
-    .email("Invalid email address"),
+  email: z.string().email("Invalid email address"),
 
   password: z
     .string({
@@ -61,4 +57,21 @@ export const QuestionSchema = z.object({
     .array(z.string())
     .min(1, "At least one tag is required")
     .max(5, "A maximum of 5 tags is allowed"),
+});
+
+export const UserSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .max(50, "Name must be less than 50 characters"),
+  username: z.string().min(3, "Username must be at least 3 characters long"),
+  email: z.string().email("Invalid email address"),
+  bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
+  image: z.string().url("Invalid image URL").optional(),
+  location: z
+    .string()
+    .max(100, "Location must be less than 100 characters")
+    .optional(),
+  portfolio: z.string().url("Invalid portfolio URL").optional(),
+  reputation: z.number().optional(),
 });

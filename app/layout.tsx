@@ -7,7 +7,6 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { auth } from "@/auth";
 import ThemeProvider from "@/context/Theme";
-import dbConnect from "@/lib/mongoose";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -38,8 +37,6 @@ const Tajwal = localFont({
   ],
   variable: "--font-tajwal",
 });
-
-dbConnect();
 
 export const metadata: Metadata = {
   title: "Creative Overflow",

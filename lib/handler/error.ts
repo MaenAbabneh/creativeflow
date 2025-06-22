@@ -6,7 +6,7 @@ import logger from "../logger";
 export type ResponseTypes = "api" | "server";
 
 const formatResponse = (
-  type: ResponseTypes,
+  responseType: ResponseTypes,
   status: number,
   message: string,
   error?: Record<string, string[]>
@@ -18,32 +18,45 @@ const formatResponse = (
       details: error,
     },
   };
-  return type === "api"
+  return responseType === "api"
     ? NextResponse.json(responseContent, { status })
     : { ...responseContent, status };
 };
-export const handleError = (error: unknown, type: ResponseTypes = "server") => {
-    logger.error("An error occurred", error);
+export const handleError = (
+  error: unknown,
+  responseType: ResponseTypes = "server"
+) => {
+  logger.error("An error occurred", error);
   if (error instanceof RequestError) {
-    logger.error({err: error}, `${type.toUpperCase()} Error: ${error.message}`);
-    return formatResponse(type, error.statusCode, error.message, error.error);
+    logger.error(
+      { err: error },
+      `${responseType.toUpperCase()} Error: ${error.message}`
+    );
+    return formatResponse(
+      responseType,
+      error.statusCode,
+      error.message,
+      error.error
+    );
   }
   if (error instanceof ZodError) {
     const validationError = new ValidationError(
-
       error.flatten().fieldErrors as Record<string, string[]>
     );
-    logger.error({err: error}, `${type.toUpperCase()} Validation Error: ${validationError.message}`);
+    logger.error(
+      { err: error },
+      `${responseType.toUpperCase()} Validation Error: ${validationError.message}`
+    );
     return formatResponse(
-      type,
+      responseType,
       validationError.statusCode,
       validationError.message,
       validationError.error
     );
   }
   if (error instanceof Error) {
-    logger.error({err: error}, "An unexpected error occurred");
-    return formatResponse(type, 500, error.message);
+    logger.error({ err: error }, "An unexpected error occurred");
+    return formatResponse(responseType, 500, error.message);
   }
-  return formatResponse(type, 500, "An unexpected error occurred");
+  return formatResponse(responseType, 500, "An unexpected error occurred");
 };

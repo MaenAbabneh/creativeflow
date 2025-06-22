@@ -5,6 +5,7 @@ export interface ICollection {
   author: Types.ObjectId;
 }
 
+export interface ICollectionDoc extends ICollection, Document {}
 const collectionSchema = new Schema<ICollection>({
   question: { type: Schema.Types.ObjectId, ref: "Question", required: true },
   author: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
