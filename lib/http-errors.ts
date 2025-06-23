@@ -10,14 +10,14 @@ export class RequestError extends Error{
 }
 
 export class ValidationError extends RequestError{
-    constructor(fieledErrors: Record<string, string[]>) {
-        const message = ValidationError.formatMessage(fieledErrors);
-        super(400, message, fieledErrors);
+    constructor(fieldErrors: Record<string, string[]>) {
+        const message = ValidationError.formatMessage(fieldErrors);
+        super(400, message, fieldErrors);
         this.name = "ValidationError";
-        this.error = fieledErrors;
+        this.error = fieldErrors;
     }
-    static formatMessage(fieledErrors: Record<string, string[]>): string{
-        return Object.entries(fieledErrors).map(([field, errors]) => {
+    static formatMessage(fieldErrors: Record<string, string[]>): string{
+        return Object.entries(fieldErrors).map(([field, errors]) => {
             return `${field}: ${errors.join(", ")}`;
         }).join(". ");
     }
@@ -31,8 +31,8 @@ export class NotFoundError extends RequestError{
 }
 
 export class ForbiddenError extends RequestError{
-    constructor(massage: string = "Forbidden") {
-        super(403, massage);
+    constructor(message: string = "Forbidden") {
+        super(403, message);
         this.name = "ForbiddenError";
     }
 }

@@ -17,8 +17,8 @@ interface Question {
   _id: string;
   tags: Tags[];
   author: Author;
-  createdAt: Data;
-  veiws: number;
+  createdAt: Date;
+  views: number;
   upvotes: number;
   answer: number;
 }
