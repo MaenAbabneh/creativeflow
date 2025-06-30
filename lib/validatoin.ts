@@ -1,3 +1,4 @@
+import { Provider } from "@radix-ui/react-tooltip";
 import z from "zod";
 
 export const SignInSchema = z.object({
@@ -91,4 +92,15 @@ export const AccountSchema = z.object({
   image: z.string().url({message:"Invalid image URL"}).optional(),
   provider: z.string().min(1, {message:"Provider is required"}),
   providerAccountId: z.string().min(1, {message:"Provider Account ID is required"}),
+});
+
+export const SigninWithOauthSchema = z.object({
+  provider: z.enum(["google", "github"]),
+  providerAccountId: z.string().min(1, { message: "Provider Account ID is required" }),
+  user : z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  username: z.string().min(3, { message: "Username must be at least 3 characters long" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  image: z.string().url({ message: "Invalid image URL" }).optional(),
+  }),
 });

@@ -11,14 +11,13 @@ export async function POST(request: Request) {
   try {
     await dbConnect();
 
-    const validationData = AccountSchema.safeParse({ providerAccountId });
+    const validationData = AccountSchema.partial().safeParse({ providerAccountId });
     if (!validationData.success) {
       throw new ValidationError(validationData.error.flatten().fieldErrors);
     }
     const account = await Account.findOne({ providerAccountId });
-    if (!account) {
-      throw new NotFoundError("account");
-    }
+    if (!account) throw new NotFoundError("Account");
+    
     return NextResponse.json(
       {
         success: true,
