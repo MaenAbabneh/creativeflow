@@ -1,7 +1,9 @@
 "use client";
+
 import { QuestionSchema } from "@/lib/validatoin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,15 +18,24 @@ import {
 import { Input } from "@/components/ui/input";
 import dynamic from "next/dynamic";
 import { MDXEditorMethods } from "@mdxeditor/editor";
-import React from "react";
+import React, { useRef, useTransition } from "react";
 import TagsCard from "../card/tags-card";
 import z from "zod";
+import { createQuestion } from "@/lib/actions/qustion.action";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import ROUTES from "@/constants/routes";
+
 const Editor = dynamic(() => import("@/components/editor/editor"), {
   // Make sure we turn SSR off
   ssr: false,
 });
 
-const QustionForm = () => {
+const QuestionForm = () => {
+  const router = useRouter();
+  const editorRef = useRef<MDXEditorMethods>(null);
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
     defaultValues: {
@@ -48,7 +59,7 @@ const QustionForm = () => {
         return;
       }
       if (tagInput && tagInput.length < 15 && !field.includes(tagInput)) {
-        form.setValue("tags", [...field.values(), tagInput]);
+        form.setValue("tags", [...field, tagInput]);
         e.currentTarget.value = "";
         form.clearErrors("tags");
       } else if (tagInput.length > 15) {
@@ -69,16 +80,27 @@ const QustionForm = () => {
       }
     }
   };
-  const handleReomveTags = (tag: string, field: string[]) => {
+  const handleRemoveTags = (tag: string, field: string[]) => {
     const updatedTags = field.filter((t) => t !== tag);
     form.setValue("tags", updatedTags);
     form.clearErrors("tags");
   };
 
-  const handleCreateQuestion = (data: z.infer<typeof QuestionSchema>) => {
-    console.log(data);
+  const handleCreateQuestion = async (data: z.infer<typeof QuestionSchema>) => {
+    startTransition(async () => {
+      const result = await createQuestion(data);
+      if (result.success) {
+        toast.success("Question created successfully", {
+          description: "Your question has been created successfully.",
+        });
+        if (result.data?._id) router.push(ROUTES.QUESTION(result.data._id));
+      } else {
+        toast.error("Failed to create question", {
+          description: "Please try again later.",
+        });
+      }
+    });
   };
-  const editorRef = React.useRef<MDXEditorMethods | null>(null);
   return (
     <Form {...form}>
       <form
@@ -165,7 +187,7 @@ const QustionForm = () => {
                             remove
                             isButton
                             handleRemove={() =>
-                              handleReomveTags(tag, field.value)
+                              handleRemoveTags(tag, field.value)
                             }
                           />
                         </div>
@@ -185,9 +207,17 @@ const QustionForm = () => {
         <div className="flex items-center justify-end w-full">
           <Button
             type="submit"
+            disabled={isPending}
             className="primary-gradient-dark dark:primary-gradient-light text-light-900 py-6 font-semibold text-[16px] hover:opacity-90 transition-opacity cursor-pointer"
           >
-            Ask a Qustion
+            {isPending ? (
+              <>
+                <ReloadIcon className="mr-2 size-4 animate-spin" />
+                <span>Submitting</span>
+              </>
+            ) : (
+              <> Ask a Question </>
+            )}
           </Button>
         </div>
       </form>
@@ -195,4 +225,4 @@ const QustionForm = () => {
   );
 };
 
-export default QustionForm;
+export default QuestionForm;

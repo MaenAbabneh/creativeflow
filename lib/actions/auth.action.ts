@@ -74,7 +74,7 @@ export async function singUpWithCredentials(
 
     return handleError(error) as ErrorResponse;
   } finally {
-    session.endSession();
+    await session.endSession();
   }
 }
 

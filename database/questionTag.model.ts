@@ -2,21 +2,21 @@ import { model, models, Schema, Types , Document } from "mongoose";
 
 export interface IQuestionTag {
   question: Types.ObjectId;
-  tags: Types.ObjectId;
+  tag: Types.ObjectId;
 }
 
 export interface IQuestionTagDoc extends IQuestionTag, Document {}
 const questionTagSchema = new Schema<IQuestionTag>(
   {
     question: { type: Schema.Types.ObjectId, ref: "Question", required: true },
-    tags: { type: Schema.Types.ObjectId, ref: "Tag", required: true },
+    tag: { type: Schema.Types.ObjectId, ref: "Tag", required: true },
   },
   {
     timestamps: true,
   }
 );
 
-const questionTag =
+const TagQuestion =
   models?.QuestionTag || model<IQuestionTag>("QuestionTag", questionTagSchema);
 
-export default questionTag;
+export default TagQuestion;

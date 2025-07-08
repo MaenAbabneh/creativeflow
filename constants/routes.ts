@@ -2,10 +2,10 @@ const ROUTES = {
   HOME: "/",
   SIGNIN: "/sign-in",
   SIGNUP: "/sign-up",
-  PROFILE: (_id: string) => `/profile/${_id}`,
-  TAGS: (_id: string) => `/tags/${_id}`,
+  PROFILE: (id: string) => `/profile/${id}`,
+  TAGS: (id: string) => `/tags/${id}`,
   ASK_QUESTION: "/ask-question",
-  QUESTION:(_id: string) => `/questions/${_id}`,
+  QUESTION:(id: string) => `/questions/${id}`,
 };
 
 export default ROUTES;
