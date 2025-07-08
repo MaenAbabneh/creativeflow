@@ -1,4 +1,3 @@
-import { Provider } from "@radix-ui/react-tooltip";
 import z from "zod";
 
 export const SignInSchema = z.object({

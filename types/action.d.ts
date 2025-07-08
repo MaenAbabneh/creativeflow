@@ -9,3 +9,10 @@ interface SigninWithOauthParams {
         username: string;
     };
 }
+
+interface AuthCredentials {
+    email: string;
+    name: string;
+    username: string;
+    password: string;
+}

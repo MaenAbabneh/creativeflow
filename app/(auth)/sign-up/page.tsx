@@ -1,6 +1,7 @@
 "use client"
 
 import { AuthForm } from "@/components/forms/authform";
+import { singUpWithCredentials } from "@/lib/actions/auth.action";
 import { SignUpSchema } from "@/lib/validatoin";
 
 export default function signUp() {
@@ -9,7 +10,7 @@ export default function signUp() {
       formType="SIGN_UP"
       schema={SignUpSchema}
       defaultValues={{ email: "", password: "" , username: "", name: "" }}
-      onSubmit={(data) => Promise.resolve({ success: true, data })}
+      onSubmit={singUpWithCredentials}
     />
   );
 }

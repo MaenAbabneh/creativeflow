@@ -1,4 +1,4 @@
-import LeftSidebar from "@/components/navigation/left-sidebar";
+import LeftSidebar from "@/components/navigation/leftsidebar/left-sidebar";
 import Navbar from "@/components/navigation/navbar/navbar";
 import RightSidebar from "@/components/navigation/rigth-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar"; // Import SidebarProvider

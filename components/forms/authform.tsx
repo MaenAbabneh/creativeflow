@@ -2,10 +2,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { JSX } from "react";
+
 import {
   DefaultValues,
   FieldValues,
   Path,
+  SubmitHandler,
   //   SubmitHandler,
   useForm,
 } from "react-hook-form";
@@ -22,11 +24,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import ROUTES from "@/constants/routes";
+import { ActionResponse } from "@/types/global";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodType<T>;
   defaultValues: T;
-  onSubmit: (data: T) => Promise<{ success: boolean }>;
+  onSubmit: (data: T) => Promise<ActionResponse>;
   formType: "SIGN_IN" | "SIGN_UP";
 }
 
@@ -35,20 +40,37 @@ export function AuthForm<T extends FieldValues>({
   defaultValues,
   onSubmit,
   formType,
-}: AuthFormProps<T>): JSX.Element {
+}: AuthFormProps<T>) {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>,
   });
 
-  //   const handleSubmit: SubmitHandler<T> = async () => {};
+  const handleSubmit: SubmitHandler<T> = async (data) => {
+    const result = (await onSubmit(data)) as ActionResponse;
+    if (result?.success) {
+      toast.success("success", {
+        description:
+          formType === "SIGN_IN"
+            ? "You have successfully signed in."
+            : "You have successfully signed up.",
+      });
+      router.push(ROUTES.HOME);
+    } else {
+      toast.error(`error ${result?.statusCode}`, {
+        description: result?.error?.message,
+      });
+    }
+  };
 
   const buttonText = formType === "SIGN_IN" ? "Sign In" : "Sign Up";
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(handleSubmit)}
         className="space-y-8 mt-5 w-full   "
       >
         {Object.keys(defaultValues).map((fieldName) => (

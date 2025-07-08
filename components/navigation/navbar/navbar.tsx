@@ -6,10 +6,15 @@ import MobileRightSidebar from "@/components/navigation/navbar/mobile-right-side
 import MobileSidebar from "@/components/navigation/navbar/mobile-sidebar"; // Left mobile sidebar
 
 import Theme from "./theme";
-import { Input } from "../../ui/input"; 
+import { Input } from "../../ui/input";
+import { auth } from "@/auth";
+import UserAvatar from "@/components/UserAvatar";
 
-const Navbar = () => {
-  return (    <nav className="flex-between background-light900_dark300 fixed w-full z-50 gap-5 p-4  shadow-light-100 dark:shadow-none">
+const Navbar = async () => {
+  const session = await auth();
+
+  return (
+    <nav className="flex-between background-light900_dark300 fixed w-full z-50 gap-5 p-4  shadow-light-100 dark:shadow-none">
       {/* Left Section: Logo & Mobile Left Sidebar Trigger */}
       <div className="flex items-center gap-3">
         <Link href="/" className="items-center gap-1.5 sm:hidden">
@@ -24,15 +29,15 @@ const Navbar = () => {
           <Image
             src="/images/Logo-dark.svg"
             alt="Creative Overflow Logo Dark"
-            width={200} 
-            height={40} 
+            width={200}
+            height={40}
             className="block dark:hidden object-contain"
           />
           <Image
             src="/images/Logo-light.svg"
             alt="Creative Overflow Logo Light"
-            width={200} 
-            height={40} 
+            width={200}
+            height={40}
             className="hidden dark:block object-contain"
           />
         </Link>
@@ -58,6 +63,13 @@ const Navbar = () => {
       {/* Right Section: Theme Toggle & Mobile Right Sidebar Trigger */}
       <div className="flex items-center gap-3 sm:gap-4">
         <Theme />
+        {session?.user && (
+          <UserAvatar
+            id={session.user.id || ""}
+            name={session.user.name || "User"}
+            imageUrl={session.user.image || ""}
+          />
+        )}
         {/* Mobile Right Sidebar Trigger - visible on screens smaller than lg */}
         <div className="xl:hidden">
           <MobileRightSidebar />
