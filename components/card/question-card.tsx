@@ -4,9 +4,10 @@ import Link from "next/link";
 import React from "react";
 import TagsCard from "./tags-card";
 import Metric from "@/components/metric";
+import { Questions, Tags } from "@/types/global";
 
 interface Props {
-  question: Question;
+  question: Questions;
 }
 
 const QuestionCard = ({
@@ -16,10 +17,10 @@ const QuestionCard = ({
     tags,
     author,
     createdAt,
-    veiws,
+    views,
     upvotes,
-    answer,
-    description,
+    answers,
+    content,
   },
 }: Props) => {
   return (
@@ -31,7 +32,7 @@ const QuestionCard = ({
           </span>
           <Link href={ROUTES.QUESTION(_id)} className="cursor-pointer">
             <h3 className="h3-bold text-dark100_light900">{title}</h3>
-            <p className="text-gray-600 dark:text-gray-400">{description}</p>
+            <p className="text-gray-600 dark:text-gray-400 line-clamp-1">{content}</p>
           </Link>
         </div>
       </div>
@@ -63,15 +64,15 @@ const QuestionCard = ({
           />
           <Metric
             image="/icons/eye.svg"
-            alt="veiws icon"
-            value={veiws}
+            alt="views icon"
+            value={views}
             title=" Views"
             textStyles="small-medium text-dark400_light800"
           />
           <Metric
             image="/icons/message.svg"
             alt="answer icon"
-            value={answer}
+            value={answers}
             title=" Answers"
             textStyles="small-medium text-dark400_light800"
             

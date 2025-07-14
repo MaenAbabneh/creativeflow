@@ -77,29 +77,61 @@ export const UserSchema = z.object({
 });
 
 export const AccountSchema = z.object({
-  userId: z.string().min(1, {message:"User ID is required"}),
-  name: z.string().min(1, {message:"Name is required"}),
+  userId: z.string().min(1, { message: "User ID is required" }),
+  name: z.string().min(1, { message: "Name is required" }),
   password: z
     .string()
-    .min(8, {message:"Password must conain at least 8 characters"})
-    .max(100, {message:"Password must be less than 100 characters"})
-    .regex(/[A-Z]/, {message:"Password must contain at least one uppercase letter"})
-    .regex(/[a-z]/, {message:"Password must contain at least one lowercase letter"})
-    .regex(/[0-9]/, {message:"Password must contain at least one number"})
-    .regex(/[^a-zA-Z0-9]/, {message:"Password must contain at least one special character"})
+    .min(8, { message: "Password must contain at least 8 characters" })
+    .max(100, { message: "Password must be less than 100 characters" })
+    .regex(/[A-Z]/, {
+      message: "Password must contain at least one uppercase letter",
+    })
+    .regex(/[a-z]/, {
+      message: "Password must contain at least one lowercase letter",
+    })
+    .regex(/[0-9]/, { message: "Password must contain at least one number" })
+    .regex(/[^a-zA-Z0-9]/, {
+      message: "Password must contain at least one special character",
+    })
     .optional(),
-  image: z.string().url({message:"Invalid image URL"}).optional(),
-  provider: z.string().min(1, {message:"Provider is required"}),
-  providerAccountId: z.string().min(1, {message:"Provider Account ID is required"}),
+  image: z.string().url({ message: "Invalid image URL" }).optional(),
+  provider: z.string().min(1, { message: "Provider is required" }),
+  providerAccountId: z
+    .string()
+    .min(1, { message: "Provider Account ID is required" }),
 });
 
 export const SigninWithOauthSchema = z.object({
   provider: z.enum(["google", "github"]),
-  providerAccountId: z.string().min(1, { message: "Provider Account ID is required" }),
-  user : z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  username: z.string().min(3, { message: "Username must be at least 3 characters long" }),
-  email: z.string().email({ message: "Invalid email address" }),
-  image: z.string().url({ message: "Invalid image URL" }).optional(),
+  providerAccountId: z
+    .string()
+    .min(1, { message: "Provider Account ID is required" }),
+  user: z.object({
+    name: z.string().min(1, { message: "Name is required" }),
+    username: z
+      .string()
+      .min(3, { message: "Username must be at least 3 characters long" }),
+    email: z.string().email({ message: "Invalid email address" }),
+    image: z.string().url({ message: "Invalid image URL" }).optional(),
   }),
 });
+
+export const EditQuestionSchema = QuestionSchema.extend({
+  questionId: z.string().min(1, { message: "Question ID is required." }),
+});
+
+export const GetQuestionSchema = QuestionSchema.extend({
+  questionId: z.string().min(1, { message: "Question ID is required." }),
+});
+
+export const GetAnswerSchema = z.object({
+  questionId: z.string().min(1, { message: "Question ID is required." }),
+});
+
+export const PaginatedSearchParamsSchema = z.object({
+  page: z.number().int().positive().default(1),
+  pageSize: z.number().int().positive().default(10),
+  query: z.string().optional(),
+  filter: z.string().optional(),
+  sort: z.string().optional(),
+})

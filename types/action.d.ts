@@ -16,3 +16,25 @@ interface AuthCredentials {
     username: string;
     password: string;
 }
+
+interface createQuestionProps {
+  title: string;
+  content: string;
+  tags: string[];
+}
+
+interface updateQuestionProps extends createQuestionProps {
+  questionId: string;
+}
+
+interface GetAnswerProps {
+  questionId: string;
+}
+
+interface PaginatedSearchParams {
+  page?: number;
+  pageSize?: number;
+  query?: string;
+  filter?: string;
+  sort?: string;
+}

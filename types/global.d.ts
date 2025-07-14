@@ -13,14 +13,14 @@ interface Author {
 
 interface Questions {
   title: string;
-  description: string;
+  content: string;
   _id: string;
   tags: Tags[];
   author: Author;
   createdAt: Date;
   views: number;
   upvotes: number;
-  answer: number;
+  answers: number;
 }
 
 type ActionResponse<T = null> = {
@@ -45,3 +45,4 @@ interface RouteParams {
   params: Promise<Record<string, string>>;
   searchParams: Promise<Record<string, string>>;
 }
+

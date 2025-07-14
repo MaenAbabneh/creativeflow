@@ -68,7 +68,7 @@ const TagsCard = ({
       </button>
     ) : (
       <Link
-        href={ROUTES.TAGS(_id)}
+        href={ROUTES.TAG(_id)}
         className="flex justify-between items-center  pr-6 rounded-lg hover:bg-light200_dark700 transition-colors duration-200 ease-in-out cursor-pointer w-full"
       >
         {content}

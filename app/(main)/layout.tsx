@@ -25,10 +25,10 @@ export default function MainLayout({
           <main
             className="flex-1 min-h-[calc(100vh-77px)] 
                          overflow-visible no-scrollbar
-                         px-6 py-6
+                         px-7 
                          relative z-10"
           >
-            <div className="mx-auto max-w-none lg:max-w-4xl xl:max-w-3xl">
+            <div className="mx-auto max-w-none lg:max-w-4xl xl:w-full">
               {children}
             </div>
           </main>

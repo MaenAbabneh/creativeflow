@@ -1,5 +1,4 @@
 "use client";
-
 import { QuestionSchema } from "@/lib/validatoin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -21,17 +20,22 @@ import { MDXEditorMethods } from "@mdxeditor/editor";
 import React, { useRef, useTransition } from "react";
 import TagsCard from "../card/tags-card";
 import z from "zod";
-import { createQuestion } from "@/lib/actions/qustion.action";
+import { createQuestion, editQuestion } from "@/lib/actions/qustion.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import ROUTES from "@/constants/routes";
+import { Questions } from "@/types/global";
 
 const Editor = dynamic(() => import("@/components/editor/editor"), {
   // Make sure we turn SSR off
   ssr: false,
 });
+interface Params {
+  question?: Questions;
+  isEdit?: boolean;
+}
 
-const QuestionForm = () => {
+const QuestionForm = ({ question, isEdit = false }: Params) => {
   const router = useRouter();
   const editorRef = useRef<MDXEditorMethods>(null);
   const [isPending, startTransition] = useTransition();
@@ -39,9 +43,9 @@ const QuestionForm = () => {
   const form = useForm<z.infer<typeof QuestionSchema>>({
     resolver: zodResolver(QuestionSchema),
     defaultValues: {
-      title: "",
-      content: "",
-      tags: [],
+      title: question?.title || "",
+      content: question?.content || "",
+      tags: question?.tags?.map((tag) => tag.name) || [],
     },
   });
   const handelTagsInput = (
@@ -88,6 +92,23 @@ const QuestionForm = () => {
 
   const handleCreateQuestion = async (data: z.infer<typeof QuestionSchema>) => {
     startTransition(async () => {
+      if (isEdit && question) {
+        const result = await editQuestion({
+          questionId: question._id,
+          ...data,
+        });
+        if (result.success) {
+          toast.success("Question updated successfully", {
+            description: "Your question has been updated successfully.",
+          });
+          if (result.data?._id) router.push(ROUTES.QUESTION(String(result.data._id)));
+        } else {
+          toast.error("Failed to update question", {
+            description: "Please try again later.",
+          });
+        }
+        return;
+      }
       const result = await createQuestion(data);
       if (result.success) {
         toast.success("Question created successfully", {
@@ -113,7 +134,7 @@ const QuestionForm = () => {
           render={({ field }) => (
             <FormItem className="  w-[87vw] sm:w-[88vw] md:w-[64vw] lg:w-[64vw] xl:w-[52vw] gap-3 ">
               <FormLabel className="text-dark100_light900 small-bold">
-                Qustion Title <span className="text-primary-500">*</span>
+                Question Title <span className="text-primary-500">*</span>
               </FormLabel>
               <div className="flex items-center w-full ">
                 <FormControl>
@@ -216,7 +237,7 @@ const QuestionForm = () => {
                 <span>Submitting</span>
               </>
             ) : (
-              <> Ask a Question </>
+              <> {isEdit ? "Edit a Question" : "Ask a Question"} </>
             )}
           </Button>
         </div>
