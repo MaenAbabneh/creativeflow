@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-import { techMap } from "@/constants/techmap";
+import { techDescriptionMap, techMap } from "@/constants/techmap";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -14,6 +14,15 @@ export const getDeviconClassName = (techName: string) => {
     ? `${techMap[normalizedTechName]} colored`
     : "devicon-devicon-plain";
 };
+
+export function getTechDescription(techName: string): string {
+  const normalizedTech = techName.replace(/[ .]/g, "").toLowerCase();
+
+  return (
+    techDescriptionMap[normalizedTech] ||
+    `${techName} is a technology or tool widely used in software development, providing valuable features and capabilities.`
+  );
+}
 
 export const getPuplishTime = (date: Date) => {
   const currentDate = new Date();
@@ -29,9 +38,19 @@ export const getPuplishTime = (date: Date) => {
   ];
   for (const { name, value } of unite) {
     const time = Math.floor(timeDifference / value);
-    if (time >= 1 ) {
+    if (time >= 1) {
       return `${time} ${name} ago`;
     }
   }
   return "just now";
+};
+
+export const formatNumber = (number: number) => {
+  if (number >= 1000000) {
+    return (number / 1000000).toFixed(1) + "M";
+  } else if (number >= 1000) {
+    return (number / 1000).toFixed(1) + "K";
+  } else {
+    return number.toString();
+  }
 };

@@ -12,6 +12,12 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from "@/components/ui/sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import ROUTES from "@/constants/routes";
 import NavLinks from "../navbar/Navlinks";
 import UserAvatar from "@/components/UserAvatar";
@@ -67,64 +73,102 @@ const LeftSidebarClient = ({
       <SidebarFooter className="mt-auto pb-0 lg:pb-10 border-t border-light-700 dark:border-dark-400">
         <div className="flex flex-col gap-2">
           {userId ? (
-            <form action={signOutAction} className="w-full">
-              <UIButton
-                type="submit"
-                variant="outline"
-                className="w-full justify-start items-center gap-3 py-5 rounded-lg cursor-pointer  "
-              >
-                {session?.user && (
-                  <UserAvatar
-                    id={session.user.id || userId}
-                    name={session.user.name || "User"}
-                    imageUrl={session.user.image || ""}
-                    className="h-6 w-6"
-                  />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <form action={signOutAction} className="w-full">
+                    <SidebarMenuButton
+                      asChild
+                      variant="outline"
+                      className="w-full justify-start items-center gap-3 py-5 rounded-lg cursor-pointer"
+                    >
+                      <button
+                        type="submit"
+                        className="flex w-full items-center gap-3"
+                      >
+                        {session?.user && !isCollapsed && (
+                          <UserAvatar
+                            id={session.user.id || userId}
+                            name={session.user.name || "User"}
+                            imageUrl={session.user.image || ""}
+                            className="h-6 w-6"
+                          />
+                        )}
+                        <Image
+                          src="/icons/logout.svg"
+                          alt="Logout"
+                          width={20}
+                          height={20}
+                          className="invert-colors-2"
+                        />
+                        <span>Logout</span>
+                      </button>
+                    </SidebarMenuButton>
+                  </form>
+                </TooltipTrigger>
+                {isCollapsed && (
+                  <TooltipContent side="right">
+                    <p>Logout</p>
+                  </TooltipContent>
                 )}
-                <Image
-                  src="/icons/logout.svg"
-                  alt="Logout"
-                  width={20}
-                  height={20}
-                  className="invert-colors-2"
-                />
-                <span>Logout</span>
-              </UIButton>
-            </form>
+              </Tooltip>
+            </TooltipProvider>
           ) : (
             <>
-              <SidebarMenuButton
-                asChild
-                variant="outline"
-                className="w-full justify-start items-center gap-3 py-5  rounded-lg bg-primary-500 text-white hover:bg-primary-500/90"
-              >
-                <Link href={ROUTES.SIGNIN}>
-                  <Image
-                    src="/icons/account.svg"
-                    alt="Sign In"
-                    width={20}
-                    height={20}
-                  />
-                  <span>Sign In</span>
-                </Link>
-              </SidebarMenuButton>
-              <SidebarMenuButton
-                asChild
-                variant="outline" // Or your custom variant/styling
-                className="w-full justify-start items-center gap-3 py-5 rounded-lg"
-                // Apply custom styles to match original Button
-              >
-                <Link href={ROUTES.SIGNUP}>
-                  <Image
-                    src="/icons/sign-up.svg"
-                    alt="Sign Up"
-                    width={20}
-                    height={20}
-                    className="invert-colors"
-                  />
-                  <span>Sign Up</span>
-                </Link>
-              </SidebarMenuButton>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SidebarMenuButton
+                      asChild
+                      variant="outline"
+                      className="w-full justify-start items-center gap-3 py-5 rounded-lg bg-primary-500 text-white hover:bg-primary-500/90"
+                    >
+                      <Link href={ROUTES.SIGNIN}>
+                        <Image
+                          src="/icons/account.svg"
+                          alt="Sign In"
+                          width={20}
+                          height={20}
+                        />
+                        <span>Sign In</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </TooltipTrigger>
+                  {isCollapsed && (
+                    <TooltipContent side="right">
+                      <p>Sign In</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
+
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SidebarMenuButton
+                      asChild
+                      variant="outline"
+                      className="w-full justify-start items-center gap-3 py-5 rounded-lg"
+                    >
+                      <Link href={ROUTES.SIGNUP}>
+                        <Image
+                          src="/icons/sign-up.svg"
+                          alt="Sign Up"
+                          width={20}
+                          height={20}
+                          className="invert-colors"
+                        />
+                        <span>Sign Up</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </TooltipTrigger>
+                  {isCollapsed && (
+                    <TooltipContent side="right">
+                      <p>Sign Up</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
             </>
           )}
         </div>

@@ -24,59 +24,67 @@ const QuestionCard = ({
   },
 }: Props) => {
   return (
-    <div className="pt-6 pb-4 sm:px-5 px-6 background-light800_dark300 dark:dark-gradient shadow-light-100 dark:shadow-dark-100 rounded-lg  mb-4 sm:mb-6 min-w-full mr-auto sm:min-w-160 lg:min-w-170">
-      <div className="flex sm:flex-row flex-col-reverse items-start justify-between gap-4 ">
-        <div>
-          <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden relative bottom-4">
-            {getPuplishTime(createdAt)}
-          </span>
-          <Link href={ROUTES.QUESTION(_id)} className="cursor-pointer">
-            <h3 className="h3-bold text-dark100_light900">{title}</h3>
-            <p className="text-gray-600 dark:text-gray-400 line-clamp-1">{content}</p>
+    <div className="pt-6 pb-4 px-4 sm:px-6 background-light800_dark300 dark:dark-gradient shadow-light-100 dark:shadow-dark-100 rounded-lg mb-4 sm:mb-6 w-full hover:shadow-light-200 dark:hover:shadow-dark-200 transition-shadow duration-200 max-w-full">
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <Link href={ROUTES.QUESTION(_id)} className="cursor-pointer group">
+            <h3 className="h3-bold text-dark100_light900 group-hover:text-primary-500 dark:group-hover:text-primary-500 transition-colors line-clamp-2">
+              {title}
+            </h3>
+            {content && (
+              <p className="text-dark400_light700 line-clamp-2 mt-2 body-regular">
+                {content}
+              </p>
+            )}
           </Link>
         </div>
-      </div>
-      <div className="flex w-full mt-4 flex-wrap justify-between items-center">
-        <div className="flex items-center">
-          {tags.map((tag: Tags) => (
-            <TagsCard key={tag._id} _id={tag._id} name={tag.name} compact />
-          ))}
-        </div>
-      </div>
-      <div className="flex-between flex-wrap w-full mt-4">
-        <Metric
-          key={_id}
-          image={author.image}
-          value={author.name}
-          alt={author.name}
-          href={ROUTES.PROFILE(author._id)}
-          title={`• asked ${getPuplishTime(createdAt)}`}
-          textStyles="body-medium text-dark400_light700"
-          isAuthor
-        />
-        <div className="flex max-sm:flex-wrap gap-3 items-center max-sm:justify-start ">
-          <Metric
-            image="/icons/like.svg"
-            alt="upvote icon"
-            value={upvotes}
-            title=" Upvotes"
-            textStyles="small-medium text-dark400_light800"
-          />
-          <Metric
-            image="/icons/eye.svg"
-            alt="views icon"
-            value={views}
-            title=" Views"
-            textStyles="small-medium text-dark400_light800"
-          />
-          <Metric
-            image="/icons/message.svg"
-            alt="answer icon"
-            value={answers}
-            title=" Answers"
-            textStyles="small-medium text-dark400_light800"
-            
-          />
+
+        {tags && tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 items-center mt-3 mb-2">
+            {tags.map((tag: Tags) => (
+              <TagsCard key={tag._id} _id={tag._id} name={tag.name} compact />
+            ))}
+          </div>
+        )}
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-light-700 dark:border-dark-400">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <Metric
+              image={author.image}
+              value={author.name}
+              alt={author.name}
+              href={ROUTES.PROFILE(author._id)}
+              title=""
+              textStyles="body-medium text-dark400_light700"
+              isAuthor
+            />
+            <span className="text-dark400_light700 small-regular whitespace-nowrap ml-1">
+              • asked {getPuplishTime(createdAt)}
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-3 items-center shrink-0 sm:justify-end">
+            <Metric
+              image="/icons/like.svg"
+              alt="upvote icon"
+              value={upvotes}
+              title=" Upvotes"
+              textStyles="small-medium text-dark400_light800"
+            />
+            <Metric
+              image="/icons/eye.svg"
+              alt="views icon"
+              value={views}
+              title=" Views"
+              textStyles="small-medium text-dark400_light800"
+            />
+            <Metric
+              image="/icons/message.svg"
+              alt="answer icon"
+              value={answers}
+              title=" Answers"
+              textStyles="small-medium text-dark400_light800"
+            />
+          </div>
         </div>
       </div>
     </div>

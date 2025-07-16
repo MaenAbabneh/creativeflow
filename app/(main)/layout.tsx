@@ -17,18 +17,20 @@ export default function MainLayout({
         </div>
 
         {/* Main Layout Container */}
-        <div className="flex pt-[77px]  ">
+        <div className="flex pt-[77px]">
           {/* Left Sidebar */}
           <LeftSidebar />
 
-          {/* Main Content Area - Takes up available space */}
+          {/* Main Content Area - Responsive spacing for sidebars */}
           <main
             className="flex-1 min-h-[calc(100vh-77px)] 
                          overflow-visible no-scrollbar
-                         px-7 
+                         px-4 sm:px-6 py-6
+                         xl:mr-[320px]
+                         transition-all duration-200 ease-linear
                          relative z-10"
           >
-            <div className="mx-auto max-w-none lg:max-w-4xl xl:w-full">
+            <div className="mx-auto max-w-none lg:max-w-4xl xl:max-w-full w-full">
               {children}
             </div>
           </main>

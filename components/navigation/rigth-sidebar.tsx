@@ -68,13 +68,13 @@ const RightSidebar = ({ isMobileView = false }: RightSidebarProps) => {
 
         <div>
           <h3 className="h3-bold text-dark100_light900 mb-4">Popular Tags</h3>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             {popularTags.map(({ id, name, qustions }) => (
               <TagsCard
                 key={id}
                 _id={id}
                 name={name}
-                qustions={qustions}
+                questions={qustions}
                 showCount={true}
                 compact
               />

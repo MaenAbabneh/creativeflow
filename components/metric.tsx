@@ -25,13 +25,14 @@ const Metric = ({
         src={image}
         alt={alt}
         width={isAuthor ? 30 : 20}
-        height={20}
-        className={`object-contain ${isAuthor ? "rounded-full " : "filter-to-blue mt-5 sm:mt-0"} `}
+        height={isAuthor ? 30 : 20}
+        className={`object-contain ${isAuthor ? "rounded-full" : "invert-colors"}`}
       />
-      <p className={`flex items-center gap-1 ${isAuthor? "":"mt-5 sm:mt-0"} ${textStyles}`}>
+      <p className={`flex items-center gap-1 ${textStyles}`}>
         {value}
-
-        <span className={`small-regular line-clamp-1 ${isAuthor ? "sm:block" : ""} `}>
+        <span
+          className={`small-regular line-clamp-1 ${isAuthor ? "max-sm:hidden" : ""}`}
+        >
           {title}
         </span>
       </p>
@@ -41,12 +42,12 @@ const Metric = ({
   return href ? (
     <Link
       href={href}
-      className="cursor-pointer flex flex-wrap items-center gap-2"
+      className="cursor-pointer flex items-center gap-2 hover:opacity-80 transition-opacity"
     >
       {contentMetric}
     </Link>
   ) : (
-    <div className=" flex-center gap-2">{contentMetric}</div>
+    <div className="flex items-center gap-2">{contentMetric}</div>
   );
 };
 

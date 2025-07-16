@@ -5,7 +5,7 @@ import action from "../handler/action";
 import {
   EditQuestionSchema,
   GetAnswerSchema,
-  PaginatedSearchParamsSchema,
+  PaginatedSearchSchema,
   QuestionSchema,
 } from "../validatoin";
 import { handleError } from "../handler/error";
@@ -209,7 +209,9 @@ export async function getQuestion(
   const { questionId } = validationResult.params!;
 
   try {
-    const question = await Question.findById(questionId).populate("tags");
+    const question = await Question.findById(questionId)
+    .populate("tags")
+    .populate("author", "name image");
 
     if (!question) throw new Error("Question not found");
 
@@ -224,7 +226,7 @@ export async function getQuestions(
 ): Promise<ActionResponse<{ questions: Questions[]; isNext: boolean }>> {
   const validationResult = await action({
     params,
-    schema: PaginatedSearchParamsSchema,
+    schema: PaginatedSearchSchema,
   });
 
   if (validationResult instanceof Error) {

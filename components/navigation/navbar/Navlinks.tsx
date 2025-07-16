@@ -5,7 +5,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { SheetClose } from "@/components/ui/sheet";
-import { SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
+import {
+  SidebarMenuItem,
+  SidebarMenuButton,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 
@@ -15,12 +25,15 @@ interface NavLinksProps {
   isSidebarNav?: boolean;
 }
 
-const NavLinks = ({ 
-  userId, 
-  isMobileNav = false, 
-  isSidebarNav = false 
+const NavLinks = ({
+  userId,
+  isMobileNav = false,
+  isSidebarNav = false,
 }: NavLinksProps) => {
   const pathname = usePathname();
+  const { state } = useSidebar();
+
+  const isCollapsed = state === "collapsed";
 
   return (
     <>
@@ -38,8 +51,8 @@ const NavLinks = ({
         }
 
         // Determine if link is active
-        const isActive = pathname === href || 
-                         (href !== "/" && pathname.startsWith(href));
+        const isActive =
+          pathname === href || (href !== "/" && pathname.startsWith(href));
 
         // Common link content
         const linkContent = (
@@ -57,8 +70,10 @@ const NavLinks = ({
             <span
               className={cn(
                 "transition-all ease-in-out",
-                isActive 
-                  ? isSidebarNav ? "body-bold" : "body-semibold"
+                isActive
+                  ? isSidebarNav
+                    ? "body-bold"
+                    : "body-semibold"
                   : "body-medium"
               )}
             >
@@ -71,37 +86,57 @@ const NavLinks = ({
         if (isSidebarNav) {
           return (
             <SidebarMenuItem key={label} className="p-0">
-              <SidebarMenuButton
-                asChild
-                isActive={isActive}
-                className={cn(
-                  "w-full justify-start items-center gap-4 p-5 rounded-lg text-dark100_light900 !body-medium",
-                  isActive
-                    ? "primary-gradient-light dark:primary-gradient-dark !body-bold !text-light-900"
-                    : "text-dark300_light900 hover:bg-light-800 dark:hover:bg-dark-400"
-                )}
-              >
-                <Link href={href}>
-                  {linkContent}
-                </Link>
-              </SidebarMenuButton>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      className={cn(
+                        "w-full justify-start items-center gap-4 p-5 rounded-lg text-dark100_light900 !body-medium",
+                        isActive
+                          ? "primary-gradient-light dark:primary-gradient-dark !body-bold !text-light-900"
+                          : "text-dark300_light900 hover:bg-light-800 dark:hover:bg-dark-400"
+                      )}
+                    >
+                      <Link href={href}>{linkContent}</Link>
+                    </SidebarMenuButton>
+                  </TooltipTrigger>
+                  {isCollapsed && (
+                    <TooltipContent side="right">
+                      <p>{label}</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
             </SidebarMenuItem>
           );
         }
 
         // Link component for mobile
         const LinkComponent = (
-          <Link
-            href={href}
-            className={cn(
-              "flex items-center gap-6 flex-start px-4 py-2 rounded-lg transition-all duration-300 ease-in-out",
-              isActive 
-                ? "dark:primary-gradient-dark primary-gradient-light rounded-lg flex gap-6 items-center flex-start py-4 mx-3" 
-                : "text-dark300_light900 rounded-lg"
-            )}
-          >
-            {linkContent}
-          </Link>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href={href}
+                  className={cn(
+                    "flex items-center gap-6 flex-start px-4 py-2 rounded-lg transition-all duration-300 ease-in-out",
+                    isActive
+                      ? "dark:primary-gradient-dark primary-gradient-light rounded-lg flex gap-6 items-center flex-start py-4 mx-3"
+                      : "text-dark300_light900 rounded-lg"
+                  )}
+                >
+                  {linkContent}
+                </Link>
+              </TooltipTrigger>
+              {!isMobileNav && (
+                <TooltipContent side="right">
+                  <p>{label}</p>
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
         );
 
         // For Mobile Navigation
