@@ -71,7 +71,7 @@ export function AuthForm<T extends FieldValues>({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-8 mt-5 w-full   "
+        className="space-y-6 mt-8 w-full max-w-md mx-auto"
       >
         {Object.keys(defaultValues).map((fieldName) => (
           <FormField
@@ -79,23 +79,21 @@ export function AuthForm<T extends FieldValues>({
             control={form.control}
             name={fieldName as Path<T>}
             render={({ field }) => (
-              <FormItem className="flex flex-col gap-2 w-full min-w-full sm:max-w-[500px] mx-auto">
+              <FormItem className="flex flex-col gap-2 w-full">
                 <FormLabel className="text-dark100_light900 small-bold">
                   {fieldName === "email"
                     ? "Email Address"
                     : fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
                 </FormLabel>
-                <div className="flex items-center w-full ">
-                  <FormControl>
-                    <Input
-                      className="w-full   py-6"
-                      type={fieldName === "password" ? "password" : "text"}
-                      placeholder={`Enter your ${fieldName} . . .`}
-                      {...field}
-                    />
-                  </FormControl>
-                </div>
-                <FormMessage />
+                <FormControl>
+                  <Input
+                    className="w-full h-12 px-4 paragraph-regular text-dark300_light700 background-light700_dark300 light-border-2 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200"
+                    type={fieldName === "password" ? "password" : "text"}
+                    placeholder={`Enter your ${fieldName}...`}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="text-red-500 small-regular" />
               </FormItem>
             )}
           />
@@ -103,7 +101,8 @@ export function AuthForm<T extends FieldValues>({
 
         <Button
           type="submit"
-          className=" w-full primary-gradient-dark dark:primary-gradient-light text-light-900 py-6 font-semibold text-[16px] hover:opacity-90 transition-opacity"
+          disabled={form.formState.isSubmitting}
+          className="w-full h-12 primary-gradient-dark dark:primary-gradient-light text-light-900 font-semibold paragraph-regular hover:opacity-90 transition-opacity duration-200 disabled:opacity-50"
         >
           {form.formState.isSubmitting
             ? buttonText === "Sign In"
@@ -111,27 +110,30 @@ export function AuthForm<T extends FieldValues>({
               : "Signing Up..."
             : buttonText}
         </Button>
-        {formType === "SIGN_IN" ? (
-          <p className="text-center paragraph-regular text-dark500_light400 m-0 p-0">
-            dont have an account?{" "}
-            <Link
-              href={ROUTES.SIGNUP}
-              className=" dark:dark-text-gradient light-text-gradient font-bold text-[16px]"
-            >
-              Sign Up
-            </Link>
-          </p>
-        ) : (
-          <p className="text-dark500_light400 text-center paragraph-regular m-0 p-0 ">
-            Already have an account?{" "}
-            <Link
-              href={ROUTES.SIGNIN}
-              className="dark:dark-text-gradient light-text-gradient font-bold text-[16px] "
-            >
-              Sign In
-            </Link>
-          </p>
-        )}
+
+        <div className="text-center mt-6">
+          {formType === "SIGN_IN" ? (
+            <p className="paragraph-regular text-dark500_light400">
+              Don't have an account?{" "}
+              <Link
+                href={ROUTES.SIGNUP}
+                className="text-primary-500 hover:text-primary-600 font-medium transition-colors duration-200"
+              >
+                Sign Up
+              </Link>
+            </p>
+          ) : (
+            <p className="paragraph-regular text-dark500_light400">
+              Already have an account?{" "}
+              <Link
+                href={ROUTES.SIGNIN}
+                className="text-primary-500 hover:text-primary-600 font-medium transition-colors duration-200"
+              >
+                Sign In
+              </Link>
+            </p>
+          )}
+        </div>
       </form>
     </Form>
   );

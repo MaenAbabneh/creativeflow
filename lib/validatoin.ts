@@ -124,7 +124,7 @@ export const GetQuestionSchema = QuestionSchema.extend({
   questionId: z.string().min(1, { message: "Question ID is required." }),
 });
 
-export const GetAnswerSchema = z.object({
+export const GetQuestionsSchema = z.object({
   questionId: z.string().min(1, { message: "Question ID is required." }),
 });
 
@@ -138,4 +138,19 @@ export const PaginatedSearchSchema = z.object({
 
 export const GetTagQuestionsSchema = PaginatedSearchSchema.extend({
   tagId: z.string().min(1, { message: "Tag ID is required." }),
+});
+
+export const IncrementViewsSchema = z.object({
+  questionId: z.string().min(1, "Question ID is required"),
+});
+
+export const AnswerSchema = z.object({
+  content: z.string().min(20, "Content must be at least 20 characters long"),
+});
+
+export const AnswerServerSchema = AnswerSchema.extend({
+  questionId: z.string().min(1, "Question ID is required"),
+});
+export const GetAnswersSchema = PaginatedSearchSchema.extend({
+  questionId: z.string().min(1, "Question ID is required"),
 });

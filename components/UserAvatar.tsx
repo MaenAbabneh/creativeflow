@@ -13,9 +13,19 @@ interface Props {
   imageUrl?: string | null;
   className?: string;
   fallbackClassName?: string;
+  showName?: boolean;
+  nameClassName?: string;
 }
 
-const UserAvatar = ({ id, name, imageUrl, className = "h-9 w-9", fallbackClassName }: Props) => {
+const UserAvatar = ({
+  id,
+  name,
+  imageUrl,
+  className = "h-9 w-9",
+  fallbackClassName,
+  showName = false,
+  nameClassName = "paragraph-semibold text-dark300_light700",
+}: Props) => {
   const initials = name
     .split(" ")
     .map((word: string) => word[0])
@@ -24,7 +34,7 @@ const UserAvatar = ({ id, name, imageUrl, className = "h-9 w-9", fallbackClassNa
     .slice(0, 2);
 
   return (
-    <Link href={ROUTES.PROFILE(id)}>
+    <Link href={ROUTES.PROFILE(id)} className="flex items-center gap-2">
       <Avatar className={className}>
         {imageUrl ? (
           <Image
@@ -36,11 +46,17 @@ const UserAvatar = ({ id, name, imageUrl, className = "h-9 w-9", fallbackClassNa
             quality={100}
           />
         ) : (
-          <AvatarFallback className={cn(fallbackClassName, "primary-gradient font-space-grotesk font-bold tracking-wider text-white")}>
+          <AvatarFallback
+            className={cn(
+              fallbackClassName,
+              "primary-gradient font-space-grotesk font-bold tracking-wider text-white"
+            )}
+          >
             {initials}
           </AvatarFallback>
         )}
       </Avatar>
+      {showName && <span className={nameClassName}>{name}</span>}
     </Link>
   );
 };

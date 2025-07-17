@@ -8,7 +8,7 @@ import ROUTES from "@/constants/routes";
 
 const AuthSocailForms = () => {
   const buttonStyles =
-    "text-dark400_light900 background-light800_dark100 body-medium min-h-12 px-4 py-3.5 flex-1 rounded-2 w-full cursor-pointer hover:bg-light900_dark200 ";
+    "w-full h-12 text-dark400_light900 background-light800_dark100 border border-light-700 dark:border-dark-400 body-medium flex items-center justify-center gap-2 rounded-lg hover:bg-light-700 dark:hover:bg-dark-300 transition-colors duration-200 cursor-pointer";
 
   const handleLogin = async (provider: "github" | "google") => {
     try {
@@ -34,31 +34,49 @@ const AuthSocailForms = () => {
   };
 
   return (
-    <div className="mt-10 flex flex-wrap gap-2.5 min-w-full ">
-      <Button
-        type="submit"
-        className={buttonStyles}
-        onClick={() => handleLogin("github")}
-      >
-        <Image
-          className=" invert-colors mr-1 object-contain"
-          src={"/icons/github.svg"}
-          alt={"Github logo"}
-          width={20}
-          height={20}
-        />
-        <span className="">Login with GitHub</span>
-      </Button>
-      <Button className={buttonStyles} onClick={() => handleLogin("google")}>
-        <Image
-          className=" mr-1 object-contain"
-          src={"/icons/google.svg"}
-          alt={"Google logo"}
-          width={20}
-          height={20}
-        />
-        <span>Login with Google</span>
-      </Button>
+    <div className="mt-8 w-full max-w-md mx-auto">
+      <div className="relative mb-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-light-700 dark:border-dark-400"></div>
+        </div>
+        <div className="relative flex justify-center text-small-regular">
+          <span className="bg-light-850 dark:bg-dark-200 px-4 text-dark500_light400">
+            Or continue with
+          </span>
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <Button
+          type="button"
+          className={buttonStyles}
+          onClick={() => handleLogin("github")}
+        >
+          <Image
+            className="invert-colors object-contain"
+            src={"/icons/github.svg"}
+            alt={"Github logo"}
+            width={20}
+            height={20}
+          />
+          <span>Continue with GitHub</span>
+        </Button>
+
+        <Button
+          type="button"
+          className={buttonStyles}
+          onClick={() => handleLogin("google")}
+        >
+          <Image
+            className="object-contain"
+            src={"/icons/google.svg"}
+            alt={"Google logo"}
+            width={20}
+            height={20}
+          />
+          <span>Continue with Google</span>
+        </Button>
+      </div>
     </div>
   );
 };

@@ -27,7 +27,7 @@ interface updateQuestionProps extends createQuestionProps {
   questionId: string;
 }
 
-interface GetAnswerProps {
+interface GetQuestionsParams {
   questionId: string;
 }
 
@@ -41,4 +41,17 @@ interface PaginatedSearchParams {
 
 interface GetTagQuestionsParams extends Omit<PaginatedSearchParams, 'filter'> {
   tagId: string;
+}
+
+interface IncrementViewsParams {
+  questionId: string;
+}
+
+interface createAnswerParmas {
+  content: string;
+  questionId: string;
+}
+
+interface getAnswersParams extends PaginatedSearchParams {
+  questionId: string;
 }

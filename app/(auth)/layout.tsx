@@ -9,30 +9,37 @@ export default function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="flex-center min-h-screen  dark:bg-auth-dark bg-auth-light bg-contain bg-center bg-no-repeat dark:bg-dark-100">
-      <section className="light-border flex justify-start items-start flex-col background-light800_dark200 shadow-light100_dark100 rounded-2xl border px-4 pt-4 pb-4 shadow-md w-full max-w-[520px] sm:min-w-[450px] ">
-        <div className="flex items-center min-w-full justify-between">
-          <div className="space-y-2.5">
-            <h1 className="h2-bold text-dark100_light900">
-              Join Creative Overflow
-            </h1>
-            <p className="paragraph-regular text-dark500_light400">
-              Sign in to your account or create a new one
-            </p>
+    <main className="min-h-screen flex items-center justify-center p-4 dark:bg-auth-dark bg-auth-light bg-contain bg-center bg-no-repeat dark:bg-dark-100">
+      <div className="w-full max-w-md">
+        <section className="background-light850_dark200 shadow-light100_dark100 rounded-xl border border-light-700 dark:border-dark-400 p-8">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex-1">
+              <h1 className="h2-bold text-dark100_light900 mb-2">
+                Creative Overflow
+              </h1>
+              <p className="paragraph-regular text-dark500_light400">
+                Connect with developers worldwide
+              </p>
+            </div>
+            <Link href="/" className="flex-shrink-0 ml-4">
+              <Image
+                src="/images/site-logo.svg"
+                alt="Creative Overflow"
+                width={40}
+                height={40}
+                className="object-contain hover:scale-105 transition-transform duration-200"
+              />
+            </Link>
           </div>
-          <Link href="/" className="ml-auto">
-            <Image
-              src="/images/site-logo.svg"
-              alt={"Creative Overflow"}
-              width={50}
-              height={50}
-              className="object-contain hover:scale-105 transition-transform duration-200 ease-in-out "
-            />
-          </Link>
-        </div>
-        {children}
-        <SocailAuthForms />
-      </section>
+
+          {/* Form Content */}
+          {children}
+
+          {/* Social Auth */}
+          <SocailAuthForms />
+        </section>
+      </div>
     </main>
   );
 }

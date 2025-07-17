@@ -233,6 +233,10 @@
   @apply text-[12px] font-semibold leading-[15.6px];
 }
 
+@utility small-bold {
+  @apply text-[12px] font-bold leading-[15.6px];
+}
+
 @utility subtle-medium {
   @apply text-[10px]! font-medium! leading-[13px]!;
 }
@@ -692,7 +696,10 @@ code {
 
 /* تحسين الانتقالات */
 .transition-colors {
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
 }
 
 /* تحسين الظلال */
@@ -731,4 +738,56 @@ code {
 
 .primary-gradient-dark {
   background: linear-gradient(135deg, #1b55d1 0%, #111960 100%);
+}
+
+/* تحسين responsive design لصفحة تفاصيل السؤال */
+.question-detail-container {
+  width: 100%;
+  max-width: none;
+  overflow-x: hidden;
+}
+
+/* تحسين المحرر ليكون متجاوب */
+.editor-container {
+  width: 100%;
+  max-width: none;
+  min-height: 300px;
+}
+
+.markdown-editor {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* تحسين prose للمحتوى */
+.prose {
+  max-width: none !important;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+.prose pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.prose code {
+  word-break: break-all;
+}
+
+/* تحسين التاغز */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+/* تحسين الأزرار */
+.question-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 1.5rem;
 }

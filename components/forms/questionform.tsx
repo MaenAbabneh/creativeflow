@@ -30,6 +30,7 @@ const Editor = dynamic(() => import("@/components/editor/editor"), {
   // Make sure we turn SSR off
   ssr: false,
 });
+
 interface Params {
   question?: Questions;
   isEdit?: boolean;
@@ -101,7 +102,8 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
           toast.success("Question updated successfully", {
             description: "Your question has been updated successfully.",
           });
-          if (result.data?._id) router.push(ROUTES.QUESTION(String(result.data._id)));
+          if (result.data?._id)
+            router.push(ROUTES.QUESTION(String(result.data._id)));
         } else {
           toast.error("Failed to update question", {
             description: "Please try again later.",
@@ -126,7 +128,7 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleCreateQuestion)}
-        className="flex flex-col gap-6 sm:gap-8 items-center justify-center  "
+        className="space-y-6 w-full max-w-4xl mx-auto"
       >
         <FormField
           control={form.control}

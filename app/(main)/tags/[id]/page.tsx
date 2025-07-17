@@ -13,6 +13,7 @@ const page = async ({ searchParams, params }: RouteParams) => {
   const { id } = await params;
   const { page, pagesize, query } = await searchParams;
 
+
   const { success, data, error } = await getQuestionTag({
     page: Number(page) || 1,
     pageSize: Number(pagesize) || 10,

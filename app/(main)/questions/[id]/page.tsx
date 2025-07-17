@@ -1,38 +1,55 @@
+import AllAnswers from "@/components/answers/allanswer";
+import AnswerCard from "@/components/card/answer-card";
 import TagsCard from "@/components/card/tags-card";
 import { Preview } from "@/components/editor/preview";
+import AnswerForm from "@/components/forms/answerform";
 import Metric from "@/components/metric";
 import UserAvatar from "@/components/UserAvatar";
 import ROUTES from "@/constants/routes";
-import { getQuestion } from "@/lib/actions/qustion.action";
+import { getAnswers } from "@/lib/actions/answer.action";
+import { getQuestion, incrementViews } from "@/lib/actions/qustion.action";
 import { formatNumber, getPuplishTime } from "@/lib/utils";
 import { RouteParams, Tags } from "@/types/global";
-import { Link } from "lucide-react";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
+
   const { success, data: question } = await getQuestion({ questionId: id });
+  const {
+    success: areAnswersLoaded,
+    data: answersResult,
+    error: answersError,
+  } = await getAnswers({
+    questionId: id,
+    page: 1,
+    pageSize: 10,
+    filter: "latest",
+  });
+
+  after(async () => {
+    await incrementViews({ questionId: id });
+  });
 
   if (!success || !question) return redirect("/404");
 
   const { title, content, tags, author, createdAt, answers, views } = question;
 
   return (
-    <>
+    <div className="w-full max-w-none">
       <div className="flex-start w-full flex-col mt-8">
         <div className="flex w-full flex-col-reverse justify-between">
           <div className="flex items-center justify-start gap-1">
             <UserAvatar
               id={author._id}
               name={author.name}
-              className="size-[22px]"
-              fallbackClassName="text-[10px]"
+              imageUrl={author.image}
+              className="size-[30px]"
+              fallbackClassName="text-[15px]"
+              showName={true}
+              nameClassName="paragraph-semibold text-dark300_light700"
             />
-            <Link href={ROUTES.PROFILE(author._id)}>
-              <p className="paragraph-semibold text-dark300_light700">
-                {author.name}
-              </p>
-            </Link>
           </div>
 
           <div className="flex justify-end">
@@ -40,7 +57,7 @@ const QuestionDetails = async ({ params }: RouteParams) => {
           </div>
         </div>
 
-        <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full">
+        <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full break-words">
           {title}
         </h2>
       </div>
@@ -68,9 +85,17 @@ const QuestionDetails = async ({ params }: RouteParams) => {
           textStyles="small-regular text-dark400_light700"
         />
       </div>
-      <div className="w-full xl:w-[calc(100vw-320px-320px)] max-w-none overflow-hidden">
-        <Preview content={content} />
+
+      {/* Question Content - Responsive and contained */}
+      <div className="w-full max-w-none overflow-hidden">
+        <div
+          className="prose prose-slate dark:prose-invert max-w-none 
+                        w-full break-words overflow-wrap-anywhere"
+        >
+          <Preview content={content} />
+        </div>
       </div>
+
       <div className="mt-8 flex flex-wrap gap-2 items-center">
         {tags.map((tag: Tags) => (
           <TagsCard
@@ -81,7 +106,25 @@ const QuestionDetails = async ({ params }: RouteParams) => {
           />
         ))}
       </div>
-    </>
+      {/* Answers Section */}
+      <div className="mt-8">
+        <AllAnswers
+          data={answersResult?.answers}
+          success={areAnswersLoaded}
+          error={answersError}
+          totalAnswers={answersResult?.totalAnswers || 0}
+        />
+        
+      </div>
+
+      {/* Answer Form - Responsive container */}
+      <section className="mt-8 w-full max-w-none">
+        <div className="mb-6">
+          <h3 className="h3-semibold text-dark200_light900">Your Answer</h3>
+        </div>
+        <AnswerForm questionId={id} />
+      </section>
+    </div>
   );
 };
 

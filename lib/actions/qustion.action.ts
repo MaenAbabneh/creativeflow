@@ -4,7 +4,8 @@ import { ActionResponse, ErrorResponse, Questions } from "@/types/global";
 import action from "../handler/action";
 import {
   EditQuestionSchema,
-  GetAnswerSchema,
+  GetQuestionsSchema,
+  IncrementViewsSchema,
   PaginatedSearchSchema,
   QuestionSchema,
 } from "../validatoin";
@@ -194,11 +195,11 @@ export async function editQuestion(
 }
 
 export async function getQuestion(
-  params: GetAnswerProps
+  params: GetQuestionsParams
 ): Promise<ActionResponse<Questions>> {
   const validationResult = await action({
     params,
-    schema: GetAnswerSchema,
+    schema: GetQuestionsSchema,
     authorize: true,
   });
 
@@ -290,6 +291,29 @@ export async function getQuestions(
       success: true,
       data: { questions: JSON.parse(JSON.stringify(questions)), isNext },
     };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function incrementViews(params: IncrementViewsParams): Promise<ActionResponse<{views: number}>> {
+  const validationResult = await action({
+    params,
+    schema: IncrementViewsSchema,
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { questionId } = validationResult.params!;
+
+  try {
+    const question = await Question.findByIdAndUpdate(questionId, { $inc: { views: 1 } }, { new: true });
+    if (!question) throw new Error("Question not found");
+
+
+    return { success: true, data: { views: question.views } };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

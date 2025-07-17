@@ -46,3 +46,9 @@ interface RouteParams {
   searchParams: Promise<Record<string, string>>;
 }
 
+interface Answers {
+  _id: string;
+  content: string;
+  author: Author;
+  createdAt: Date;
+}
