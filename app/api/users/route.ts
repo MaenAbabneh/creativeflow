@@ -9,6 +9,7 @@ import { ValidationError } from "@/lib/http-errors";
 export async function GET(request: Request) {
   try {
     await dbConnect();
+
     const users = await User.find();
 
     return NextResponse.json(
@@ -26,6 +27,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     await dbConnect();
+
     const body = await request.json();
 
     const ValidatedData = UserSchema.safeParse(body);

@@ -49,7 +49,8 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
       tags: question?.tags?.map((tag) => tag.name) || [],
     },
   });
-  const handelTagsInput = (
+
+  const handleTagsInput = (
     e: React.KeyboardEvent<HTMLInputElement>,
     field: string[]
   ) => {
@@ -85,6 +86,7 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
       }
     }
   };
+
   const handleRemoveTags = (tag: string, field: string[]) => {
     const updatedTags = field.filter((t) => t !== tag);
     form.setValue("tags", updatedTags);
@@ -124,6 +126,7 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
       }
     });
   };
+  
   return (
     <Form {...form}>
       <form
@@ -191,7 +194,7 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
               <FormControl>
                 <div className="w-full">
                   <Input
-                    onKeyDown={(e) => handelTagsInput(e, field.value)}
+                    onKeyDown={(e) => handleTagsInput(e, field.value)}
                     className="paragraph-regular text-dark300_light700 background-light700_dark300 light-border-2 w-full min-h-[56px]"
                     placeholder="Add tags (press Enter to add)"
                   />

@@ -8,9 +8,12 @@ import dbConnect from "@/lib/mongoose";
 
 export async function POST(request: Request) {
   const { email } = await request.json();
+
   try {
     await dbConnect();
+
     const validatedEmail = UserSchema.partial().safeParse({ email });
+    
     if (!validatedEmail.success)
       throw new ValidationError(validatedEmail.error.flatten().fieldErrors);
 
