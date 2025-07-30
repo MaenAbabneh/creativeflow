@@ -151,6 +151,40 @@ export const AnswerSchema = z.object({
 export const AnswerServerSchema = AnswerSchema.extend({
   questionId: z.string().min(1, "Question ID is required"),
 });
+
 export const GetAnswersSchema = PaginatedSearchSchema.extend({
   questionId: z.string().min(1, "Question ID is required"),
+});
+
+export const EditAnswerSchema = AnswerSchema.extend({
+  answerId: z.string().min(1, "Answer ID is required"),
+  questionId: z.string().min(1, "Question ID is required"),
+  content: z.string().min(20, "Content must be at least 20 characters long"),
+});
+
+
+export const AIAnswerSchema = z.object({
+  question: z
+    .string()
+    .min(5, { message: "Question is required." })
+    .max(130, { message: "Question cannot exceed 130 characters." }),
+  content: z
+    .string()
+    .min(100, { message: "Answer has to have more than 100 characters." }),
+  userAnswer: z.string().optional(),
+});
+
+export const CreateVotesSchema = z.object({
+  targetId: z.string().min(1, { message: "Target ID is required." }),
+  targetType: z.enum(["question", "answer"] , {message: "Target type is required."}),
+  voteType: z.enum(["upvote", "downvote"] , {message: "Vote type is required."}),
+});
+
+export const UpdateVotesSchema = CreateVotesSchema.extend({
+  change: z.number().int().min(-1).max(1)
+})
+
+export const HasVotedSchema = CreateVotesSchema.pick({
+  targetId: true,
+  targetType: true,
 });

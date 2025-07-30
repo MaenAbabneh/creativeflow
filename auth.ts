@@ -116,7 +116,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     // divided (async signIn) problem into smaller part or in antor word what (async signIn) actually does is:
     // 1. It receives the user, profile, and account objects.
-    // 2. If the account provider is "credentials", it returns true to allow sign 
+    // 2. If the account provider is "credentials", it returns true to allow sign
     // 3. If the account or user is not present, it returns false to deny sign in.
     // 4. It constructs a userInfo object with the user's name, email, image, and username.
     // 5. It calls the api.auth.oAuthSignIn function with the userInfo, provider, and providerAccountId.

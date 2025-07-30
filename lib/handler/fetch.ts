@@ -1,9 +1,9 @@
 import { ActionResponse } from "@/types/global";
+import { RequestError } from "../http-errors";
 import logger from "../logger";
 import { handleError } from "./error";
-import { RequestError } from "../http-errors";
 
-export interface FetchOptions extends RequestInit {
+interface FetchOptions extends RequestInit {
   timeout?: number;
 }
 
@@ -16,24 +16,20 @@ export async function fetchHandler<T>(
   options: FetchOptions = {}
 ): Promise<ActionResponse<T>> {
   const {
-    timeout = 5000,
+    timeout = 20000,
     headers: customHeaders = {},
     ...restOptions
   } = options;
 
   const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
 
-  const id = setTimeout(() => {
-    controller.abort();
-  }, timeout);
-
-  const defaultHeaders = {
+  const defaultHeaders: HeadersInit = {
     "Content-Type": "application/json",
     Accept: "application/json",
   };
 
-  const headers: HeadersInit = {  ...defaultHeaders, ...customHeaders };
-
+  const headers: HeadersInit = { ...defaultHeaders, ...customHeaders };
   const config: RequestInit = {
     ...restOptions,
     headers,
@@ -46,21 +42,19 @@ export async function fetchHandler<T>(
     clearTimeout(id);
 
     if (!response.ok) {
-      throw new RequestError(
-        response.status,
-        `HTTP error = ${response.status}`
-      );
+      throw new RequestError(response.status, `HTTP error: ${response.status}`);
     }
+
     return await response.json();
   } catch (err) {
-    clearTimeout(id);
-    const error = isError(err) ? err : new Error("Unknown error occurred");
+    const error = isError(err) ? err : new Error("Unknown error");
 
     if (error.name === "AbortError") {
       logger.warn(`Request to ${url} timed out`);
     } else {
       logger.error(`Error fetching ${url}: ${error.message}`);
     }
+
     return handleError(error) as ActionResponse<T>;
   }
 }

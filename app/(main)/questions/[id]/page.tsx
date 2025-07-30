@@ -1,17 +1,18 @@
 import AllAnswers from "@/components/answers/allanswer";
-import AnswerCard from "@/components/card/answer-card";
 import TagsCard from "@/components/card/tags-card";
 import { Preview } from "@/components/editor/preview";
 import AnswerForm from "@/components/forms/answerform";
 import Metric from "@/components/metric";
 import UserAvatar from "@/components/UserAvatar";
-import ROUTES from "@/constants/routes";
+import Votes from "@/components/votes/votes";
 import { getAnswers } from "@/lib/actions/answer.action";
 import { getQuestion, incrementViews } from "@/lib/actions/qustion.action";
+import { hasVoted } from "@/lib/actions/vote.action";
 import { formatNumber, getPuplishTime } from "@/lib/utils";
 import { RouteParams, Tags } from "@/types/global";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
+import { Suspense} from "react";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -26,6 +27,11 @@ const QuestionDetails = async ({ params }: RouteParams) => {
     page: 1,
     pageSize: 10,
     filter: "latest",
+  });
+
+  const hasVotedPromise = hasVoted({
+    targetId: question?._id,
+    targetType: "question",
   });
 
   after(async () => {
@@ -53,7 +59,16 @@ const QuestionDetails = async ({ params }: RouteParams) => {
           </div>
 
           <div className="flex justify-end">
-            <p>Votes</p>
+            <Suspense fallback={<div>Loading...</div>}>
+
+            <Votes
+              upVotes={question.upvotes}
+              downVotes={question.downvotes}
+              targetId={question._id}
+              targetType="question"
+              hasVotedPromise={hasVotedPromise}
+            />
+            </Suspense>
           </div>
         </div>
 
@@ -114,7 +129,6 @@ const QuestionDetails = async ({ params }: RouteParams) => {
           error={answersError}
           totalAnswers={answersResult?.totalAnswers || 0}
         />
-        
       </div>
 
       {/* Answer Form - Responsive container */}
@@ -122,7 +136,11 @@ const QuestionDetails = async ({ params }: RouteParams) => {
         <div className="mb-6">
           <h3 className="h3-semibold text-dark200_light900">Your Answer</h3>
         </div>
-        <AnswerForm questionId={id} />
+        <AnswerForm
+          questionId={id}
+          questionTitle={question.title}
+          questionContent={question.content}
+        />
       </section>
     </div>
   );

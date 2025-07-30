@@ -3,6 +3,7 @@ import logger from "./logger";
 import "@/database";
 
 interface Cached {
+  startSession(): unknown;
   conn: Mongoose | null;
   promise: Promise<Mongoose> | null;
 }

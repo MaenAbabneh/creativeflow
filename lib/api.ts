@@ -1,13 +1,13 @@
 import { fetchHandler } from "./handler/fetch";
 import { IUser } from "@/database/user.model";
 import { IAccount } from "@/database/account.model";
+import { ActionResponse, APIResponse } from "@/types/global";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
 
 export const api = {
-
-    auth: {
+  auth: {
     oAuthSignIn: ({
       user,
       provider,
@@ -15,7 +15,7 @@ export const api = {
     }: SigninWithOauthParams) =>
       fetchHandler(`${API_BASE_URL}/auth/signin-with-oauth`, {
         method: "POST",
-        body: JSON.stringify({ user , provider, providerAccountId  }),
+        body: JSON.stringify({ user, provider, providerAccountId }),
       }),
   },
 
@@ -42,7 +42,7 @@ export const api = {
         method: "DELETE",
       }),
   },
-  
+
   account: {
     getAll: () => fetchHandler(`${API_BASE_URL}/accounts`),
     getById: (id: string) => fetchHandler(`${API_BASE_URL}/accounts/${id}`),
@@ -67,4 +67,11 @@ export const api = {
       }),
   },
 
+  ai: {
+    getAnswer: (question: string, content: string , userAnswer: string): Promise<ActionResponse<string>> =>
+      fetchHandler(`${API_BASE_URL}/ai/answers`, {
+        method: "POST",
+        body: JSON.stringify({ question, content, userAnswer }),
+      }),
+  },
 };

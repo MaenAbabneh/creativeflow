@@ -1,5 +1,6 @@
 "use client";
-import {  AnswerSchema } from "@/lib/validatoin";
+
+import { AnswerSchema } from "@/lib/validatoin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ReloadIcon } from "@radix-ui/react-icons";
@@ -16,13 +17,12 @@ import {
 } from "@/components/ui/form";
 import dynamic from "next/dynamic";
 import { MDXEditorMethods } from "@mdxeditor/editor";
-import React, { useRef, useTransition, useState } from "react";
+import React, { useRef, useTransition, useState, use } from "react";
 import z from "zod";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import ROUTES from "@/constants/routes";
-import { Questions } from "@/types/global";
 import { createAnswer } from "@/lib/actions/answer.action";
+import { api } from "@/lib/api";
+import { useSession } from "next-auth/react";
 
 const Editor = dynamic(() => import("@/components/editor/editor"), {
   // Make sure we turn SSR off
@@ -32,34 +32,43 @@ const Editor = dynamic(() => import("@/components/editor/editor"), {
 interface Params {
   questionId: string;
   isEdit?: boolean;
+  questionTitle?: string;
+  questionContent?: string;
 }
 
-const AnswerForm = ({ questionId, isEdit = false }: Params) => {
-  const router = useRouter();
+const AnswerForm = ({
+  questionId,
+  questionTitle,
+  questionContent,
+  isEdit = false,
+}: Params) => {
   const editorRef = useRef<MDXEditorMethods>(null);
   const [isPending, startTransition] = useTransition();
   const [isAISubmitting, setIsAISubmitting] = useState(false);
+  const session = useSession();
 
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
     defaultValues: {
-      content:"",
+      content: "",
     },
   });
 
   const handleCreateAnswer = async (data: z.infer<typeof AnswerSchema>) => {
     startTransition(async () => {
-    
       const result = await createAnswer({
-        content : data.content,
-        questionId
+        content: data.content,
+        questionId,
       });
       if (result.success) {
         form.reset();
-        editorRef.current?.setMarkdown('');
+        editorRef.current?.setMarkdown("");
         toast.success("Answer submitted successfully", {
           description: "Your answer has been submitted successfully.",
         });
+        if (editorRef.current) {
+          editorRef.current.setMarkdown("");
+        }
       } else {
         toast.error("Failed to submit answer", {
           description: "Please try again later.",
@@ -68,33 +77,53 @@ const AnswerForm = ({ questionId, isEdit = false }: Params) => {
     });
   };
 
-//   const handleGenerateAIAnswer = async () => {
-//     if (!questionId) return;
+  const generateAIAnswer = async () => {
+    if (session.status !== "authenticated") {
+      return toast("Please sign in to use AI features", {
+        description: "You need to be signed in to generate AI answers.",
+      });
+    }
 
-//     setIsAISubmitting(true);
-//     try {
-//       // TODO: Implement AI generation logic here
-//       // For now, we'll show a placeholder
-//       toast.info("AI Answer Generation", {
-//         description: "AI answer generation will be implemented soon.",
-//       });
+    setIsAISubmitting(true);
 
-//       // Placeholder AI-generated content
-//       const aiContent = `This is a placeholder AI-generated answer for the question: "${questionId.title}". 
+    const userAnswer = editorRef.current?.getMarkdown() ?? "";
 
-// The AI would analyze the question and provide a comprehensive answer based on the context and requirements.
+    try {
+      const { success, data, error } = await api.ai.getAnswer(
+        questionTitle!,
+        questionContent!,
+        userAnswer
+      );
 
-// Please implement the actual AI generation logic here.`;
+      if (!success || !data || error) {
+        return toast.error("Failed to generate AI answer", {
+          description: error?.message,
+        });
+      }
 
-//       form.setValue("content", aiContent);
-//     } catch (error) {
-//       toast.error("Failed to generate AI answer", {
-//         description: "Please try again later.",
-//       });
-//     } finally {
-//       setIsAISubmitting(false);
-//     }
-//   };
+      const formattedAnswer = data.replace(/<br>/g, " ").toString().trim();
+      console.log("AI Answer:", formattedAnswer);
+      if (editorRef.current) {
+        editorRef.current.setMarkdown(formattedAnswer);
+
+        form.setValue("content", formattedAnswer);
+        form.trigger("content");
+      }
+
+      toast("AI answer generated successfully", {
+        description: "Your AI-generated answer has been inserted.",
+      });
+    } catch (error) {
+      toast.error("Failed to generate AI answer", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "There was a problem with your request",
+      });
+    } finally {
+      setIsAISubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -104,20 +133,22 @@ const AnswerForm = ({ questionId, isEdit = false }: Params) => {
         </h4>
         <Button
           type="submit"
-          // onClick={handleGenerateAIAnswer}
+          onClick={generateAIAnswer}
           className="btn light-border-2 gap-1.5 rounded-md border px-4 py-2.5  w-full sm:w-auto cursor-pointer"
           disabled={isAISubmitting}
         >
           {isAISubmitting ? (
             <>
-             <Image
+              <Image
                 src="/icons/stars.svg"
                 alt="Generate AI Answer"
                 width={12}
                 height={12}
                 className="object-contain"
               />
-              <span className="text-dark100_light900 small-regular">Generating...</span>
+              <span className="text-dark100_light900 small-regular">
+                Generating...
+              </span>
             </>
           ) : (
             <>
@@ -128,7 +159,9 @@ const AnswerForm = ({ questionId, isEdit = false }: Params) => {
                 height={12}
                 className="object-contain"
               />
-              <span className="text-dark100_light900 small-regular">Generate AI Answer</span>
+              <span className="text-dark100_light900 small-regular">
+                Generate AI Answer
+              </span>
             </>
           )}
         </Button>
@@ -144,13 +177,12 @@ const AnswerForm = ({ questionId, isEdit = false }: Params) => {
             name="content"
             render={({ field }) => (
               <FormItem className="w-full gap-3">
-
                 <div className="w-full">
                   <FormControl>
                     <Editor
                       editorRef={editorRef}
                       value={field.value}
-                      onChange={field.onChange}
+                      fieldChange={field.onChange}
                     />
                   </FormControl>
                 </div>

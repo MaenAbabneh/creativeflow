@@ -1,49 +1,51 @@
 "use client";
-import type { ForwardedRef } from "react";
-import "@mdxeditor/editor/style.css";
 
 import {
-  ConditionalContents,
-  ChangeCodeMirrorLanguage,
-  ListsToggle,
-  InsertImage,
-  InsertTable,
-  InsertThematicBreak,
-  InsertCodeBlock,
-  linkDialogPlugin,
-  tablePlugin,
-  codeBlockPlugin,
-  codeMirrorPlugin,
-  diffSourcePlugin,
-  headingsPlugin,
-  listsPlugin,
-  quotePlugin,
-  thematicBreakPlugin,
-  markdownShortcutPlugin,
   MDXEditor,
-  type MDXEditorMethods,
   UndoRedo,
   BoldItalicUnderlineToggles,
   toolbarPlugin,
-  CreateLink,
-  imagePlugin,
+  InsertCodeBlock,
+  codeBlockPlugin,
+  headingsPlugin,
+  listsPlugin,
   linkPlugin,
+  quotePlugin,
+  markdownShortcutPlugin,
+  ListsToggle,
+  linkDialogPlugin,
+  CreateLink,
+  InsertImage,
+  InsertTable,
+  tablePlugin,
+  imagePlugin,
+  codeMirrorPlugin,
+  ConditionalContents,
+  ChangeCodeMirrorLanguage,
+  Separator,
+  InsertThematicBreak,
+  diffSourcePlugin,
+  MDXEditorMethods,
+  thematicBreakPlugin,
   BlockTypeSelect,
+  CodeToggle,
 } from "@mdxeditor/editor";
-import { FC, useEffect, useState } from "react";
 import { basicDark } from "cm6-theme-basic-dark";
+import { Ref } from "react";
+import { FC, useEffect, useState } from "react";
+import "@mdxeditor/editor/style.css";
 import "./dark.editor.css";
 import "./light.editor.css";
 import { useTheme } from "next-themes";
-import { Separator } from "@radix-ui/react-separator";
 import ThemeToggle from "./theme-toggle";
-interface EditorProps {
+
+interface Props {
   value: string;
-  editorRef: React.MutableRefObject<MDXEditorMethods | null>;
-  onChange: (markdown: string) => void;
+  editorRef: Ref<MDXEditorMethods> | null;
+  fieldChange: (value: string) => void;
 }
 
-const Editor: FC<EditorProps> = ({ editorRef, value, onChange, ...props }) => {
+const Editor: FC<Props> = ({ editorRef, value, fieldChange }) => {
   const { resolvedTheme } = useTheme();
   const [editorTheme, setEditorTheme] = useState(resolvedTheme);
   const theme = editorTheme === "dark" ? [basicDark] : [];
@@ -153,8 +155,8 @@ const Editor: FC<EditorProps> = ({ editorRef, value, onChange, ...props }) => {
         key={editorTheme}
         markdown={value}
         ref={editorRef}
+        onChange={fieldChange}
         className={`grid background-light800_dark200 light-border-2 markdown-editor ${editorTheme === "dark" ? "dark-editor" : "light-editor"} border rounded-xl transition-colors duration-300`}
-        onChange={onChange}
         plugins={[
           headingsPlugin(),
           listsPlugin(),
@@ -198,22 +200,15 @@ const Editor: FC<EditorProps> = ({ editorRef, value, onChange, ...props }) => {
                 options={[
                   {
                     when: (editor) => editor?.editorType === "codeblock",
-                    contents: () => (
-                      <div className="flex items-center w-full">
-                        <span className="mr-2 text-xs font-medium">
-                          Language:
-                        </span>
-                        <ChangeCodeMirrorLanguage />
-                      </div>
-                    ),
+                    contents: () => <ChangeCodeMirrorLanguage />,
                   },
                   {
                     fallback: () => (
                       <>
-                        {" "}
                         <UndoRedo />
                         <Separator />
                         <BoldItalicUnderlineToggles />
+                        <CodeToggle />
                         <Separator />
                         {/* محدد نوع العنوان H1-H6 */}
                         <BlockTypeSelect />
@@ -228,7 +223,6 @@ const Editor: FC<EditorProps> = ({ editorRef, value, onChange, ...props }) => {
                           <ThemeToggle
                             onThemeChange={handleThemeChange}
                             initialTheme={resolvedTheme}
-                            className=""
                           />
                         </div>
                       </>
@@ -239,7 +233,6 @@ const Editor: FC<EditorProps> = ({ editorRef, value, onChange, ...props }) => {
             ),
           }),
         ]}
-        {...props}
       />
     </div>
   );

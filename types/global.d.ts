@@ -9,6 +9,7 @@ interface Author {
   _id: string;
   name: string;
   image: string;
+  email: string;
 }
 
 interface Questions {
@@ -20,6 +21,7 @@ interface Questions {
   createdAt: Date;
   views: number;
   upvotes: number;
+  downvotes:number;
   answers: number;
 }
 
@@ -50,5 +52,7 @@ interface Answers {
   _id: string;
   content: string;
   author: Author;
+  upvotes: number;
+  downvotes: number;
   createdAt: Date;
 }
