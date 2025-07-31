@@ -188,3 +188,4 @@ export const HasVotedSchema = CreateVotesSchema.pick({
   targetId: true,
   targetType: true,
 });
+

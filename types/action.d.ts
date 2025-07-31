@@ -72,3 +72,4 @@ interface HasVotedResponse {
   hasUpvoted: boolean;
   hasDownvoted: boolean;
 }
+

@@ -8,12 +8,20 @@ import UserAvatar from "../UserAvatar";
 import { Answers } from "@/types/global";
 import Votes from "../votes/votes";
 import { hasVoted } from "@/lib/actions/vote.action";
+import { Suspense } from "react";
 
-const AnswerCard = ({ _id, author, content, createdAt , upvotes, downvotes }: Answers) => {
+const AnswerCard = ({
+  _id,
+  author,
+  content,
+  createdAt,
+  upvotes,
+  downvotes,
+}: Answers) => {
   const hasVotedPromise = hasVoted({
     targetId: _id,
-    targetType: "answer"
-  })
+    targetType: "answer",
+  });
   return (
     <article className="light-border border-b py-10">
       <span id={JSON.stringify(_id)} className="hash-span" />
@@ -43,7 +51,15 @@ const AnswerCard = ({ _id, author, content, createdAt , upvotes, downvotes }: An
         </div>
 
         <div className="flex justify-end">
-          <Votes upVotes={upvotes} downVotes={downvotes} hasVotedPromise={hasVotedPromise} targetId={_id} targetType="answer" />
+          <Suspense>
+            <Votes
+              upVotes={upvotes}
+              downVotes={downvotes}
+              hasVotedPromise={hasVotedPromise}
+              targetId={_id}
+              targetType="answer"
+            />
+          </Suspense>
         </div>
       </div>
 

@@ -21,7 +21,7 @@ const UserAvatar = ({
   id,
   name,
   imageUrl,
-  className = "h-9 w-9",
+  className="w-9 h-9" ,
   fallbackClassName,
   showName = false,
   nameClassName = "paragraph-semibold text-dark300_light700",
@@ -33,30 +33,28 @@ const UserAvatar = ({
     .toUpperCase()
     .slice(0, 2);
 
-  return (
-    <Link href={ROUTES.PROFILE(id)} className="flex items-center gap-2">
-      <Avatar className={className}>
+     return (
+    <Link href={ROUTES.PROFILE(id)}>
+      <Avatar className={cn("relative", className)}>
         {imageUrl ? (
           <Image
             src={imageUrl}
             alt={name}
             className="object-cover"
-            width={36}
-            height={36}
+            fill
             quality={100}
           />
         ) : (
           <AvatarFallback
             className={cn(
-              fallbackClassName,
-              "primary-gradient font-space-grotesk font-bold tracking-wider text-white"
+              "primary-gradient font-space-grotesk font-bold tracking-wider text-white",
+              fallbackClassName
             )}
           >
             {initials}
           </AvatarFallback>
         )}
       </Avatar>
-      {showName && <span className={nameClassName}>{name}</span>}
     </Link>
   );
 };

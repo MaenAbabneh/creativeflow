@@ -56,3 +56,15 @@ interface Answers {
   downvotes: number;
   createdAt: Date;
 }
+
+interface Users {
+  _id: string;
+  name: string;
+  username: string;
+  email: string;
+  image: string;
+  bio?: string;
+  location?: string;
+  portfolio?: string;
+  reputation?: number;
+}
