@@ -12,7 +12,9 @@ import { formatNumber, getPuplishTime } from "@/lib/utils";
 import { RouteParams, Tags } from "@/types/global";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
-import { Suspense} from "react";
+import { Suspense } from "react";
+import SaveQuestion from "@/components/question/save-question";
+import { hasSavedQuestion } from "@/lib/actions/collaction.action";
 
 const QuestionDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -32,6 +34,10 @@ const QuestionDetails = async ({ params }: RouteParams) => {
   const hasVotedPromise = hasVoted({
     targetId: question?._id,
     targetType: "question",
+  });
+
+  const hasSavedPromise = hasSavedQuestion({
+    questionId: question?._id ?? "",
   });
 
   after(async () => {
@@ -60,15 +66,19 @@ const QuestionDetails = async ({ params }: RouteParams) => {
 
           <div className="flex justify-end">
             <Suspense fallback={<div>Loading...</div>}>
-
-            <Votes
-              upVotes={question.upvotes}
-              downVotes={question.downvotes}
-              targetId={question._id}
-              targetType="question"
-              hasVotedPromise={hasVotedPromise}
-            />
+              <Votes
+                upVotes={question.upvotes}
+                downVotes={question.downvotes}
+                targetId={question._id}
+                targetType="question"
+                hasVotedPromise={hasVotedPromise}
+              />
             </Suspense>
+            <div className="ml-2 flex items-center justify-center">
+            <Suspense fallback={<div>Loading...</div>}>
+            <SaveQuestion questionId={question?._id} hasSavedPromise={hasSavedPromise} />
+            </Suspense>
+            </div>
           </div>
         </div>
 

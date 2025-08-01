@@ -38,7 +38,7 @@ interface skeletonProps {
 
 const Skeleton = ({ image, title, message, button }: skeletonProps) => {
   return (
-    <div className="flex flex-col items-center justify-center text-center mt-8">
+    <div className="flex flex-col items-center justify-center text-center mt-8 w-full min-w-[740px] mx-auto">
       <Image
         src={image.dark}
         alt={image.alt}

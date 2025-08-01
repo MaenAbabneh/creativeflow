@@ -7,6 +7,8 @@ import ROUTES from "@/constants/routes";
 import { getQuestions } from "@/lib/actions/qustion.action";
 import DataRender from "@/components/DataRender";
 import { EMPTY_QUESTION } from "@/constants/states";
+import CommonFilter from "@/components/filter/commonfilter";
+import { HomePageFilters } from "@/constants/filters";
 
 interface searchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -24,7 +26,7 @@ export default async function App({ searchParams }: searchParams) {
   const { questions } = data || {};
 
   return (
-    <div className="">
+    <div className="w-full max-w-5xl mx-auto">
       <section className="flex flex-col-reverse sm:flex-row sm:items-center gap-6 justify-between mt-8 w-full">
         <div>
           <h1 className="h1-bold text-dark100_light900">All Questions</h1>
@@ -37,12 +39,13 @@ export default async function App({ searchParams }: searchParams) {
           </Link>
         </div>
       </section>
-      <section className="mt-8">
+      <section className="mt-11 ">
         <LocalSearch
           placeholder="Search questions..."
-          otherClass="text-base"
+          otherClass="flex-1 "
           imgSrc="/icons/search.svg"
-          route="/"
+          iconPosition="left"
+          route={ROUTES.HOME}
         />
       </section>
       <section>
@@ -54,7 +57,7 @@ export default async function App({ searchParams }: searchParams) {
         error={error}
         empty={EMPTY_QUESTION}
         render={(questions) => (
-          <div className="mt-8 min-h-[300px] w-full space-y-4">
+          <div className="mt-8 w-full min-w-[600px] space-y-4">
             {questions?.map((question) => (
               <QuestionCard key={question._id} question={question} />
             ))}

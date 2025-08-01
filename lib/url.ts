@@ -1,4 +1,5 @@
 import qs from "query-string";
+
 interface FormUrlQueryProps {
   param: string;
   key: string;
@@ -22,11 +23,14 @@ export const formUrlQuery = ({ param, key, value }: FormUrlQueryProps) => {
 
 export const removeUrlQuery = ({ param, keyRemove  }: removeUrlQueryProps) => {
   const queryString = qs.parse(param);
+
     keyRemove.forEach((key)=>{
     delete queryString[key];
     })
+
   return qs.stringifyUrl({
     url: window.location.pathname,
     query: queryString,
   },{skipNull: true});
+
 };

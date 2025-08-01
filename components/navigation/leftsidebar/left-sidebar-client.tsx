@@ -42,7 +42,7 @@ const LeftSidebarClient = ({
     <Sidebar
       collapsible="icon"
       className="sticky top-[77px] h-[calc(100vh-77px)] 
-                 border-r border-light-700 dark:border-dark-400
+                 border-r !border-light-700 dark:!border-dark-400
                  !background-light900_dark300
                  !p-0"
     >

@@ -189,3 +189,11 @@ export const HasVotedSchema = CreateVotesSchema.pick({
   targetType: true,
 });
 
+export const HasSavedSchema = z.object({
+  targetId: z.string().min(1, { message: "Target ID is required." }),
+  targetType: z.enum(["question", "answer"], { message: "Target type is required." }),
+});
+
+export const CreateAddCollectionSchema = z.object({
+  questionId: z.string().min(1, { message: "Question ID is required." }),
+});

@@ -6,19 +6,16 @@ import React, { useState } from "react";
 import { formUrlQuery, removeUrlQuery } from "@/lib/url";
 
 import { Button } from "../ui/button";
+import { HomePageFilters } from "@/constants/filters";
 
-const filtertags = [
-  { label: "New", value: "new" },
-  { label: "Popular", value: "popular" },
-  { label: "Answered", value: "answered" },
-  { label: "Unanswered", value: "unanswered" },
-];
+
 
 const HomeFilter = () => {
   const router = useRouter();
   const SearchParams = useSearchParams();
   const filterParam = SearchParams.get("filter");
   const [activeFilter, setActiveFilter] = useState(filterParam || "");
+
   const handleFilterChange = (filter: string) => {
     let newUrl = "";
     if (filter === activeFilter) {
@@ -41,13 +38,13 @@ const HomeFilter = () => {
 
   return (
     <section className="mt-8 flex flex-wrap max-w-[500px] lg:max-w-[700px] gap-4 ">
-      {filtertags.map(({ label, value }) => (
+      {HomePageFilters.map(({ name, value }) => (
         <Button
           key={value}
           onClick={() => handleFilterChange(value)}
           className={` !rounded-1.5 ${activeFilter === value ? "bg-dark-200 text-gradient transition-transform scale-110" : "text-dark400_light700 background-light800_dark300"} `}
         >
-          <span>{label} </span>
+          <span>{name} </span>
         </Button>
       ))}
     </section>

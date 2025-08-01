@@ -11,6 +11,6 @@ const collectionSchema = new Schema<ICollection>({
   author: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
 });
 
-const collection = models?.Collection || model("Collection", collectionSchema);
+const Collection = models?.Collection || model("Collection", collectionSchema);
 
-export default collection;
+export default Collection;

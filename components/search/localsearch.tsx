@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 
 import { Input } from "@/components/ui/input";
 import { formUrlQuery, removeUrlQuery } from "@/lib/url";
+import { cn } from "@/lib/utils";
 
 interface LocalSearchProps {
   placeholder: string;
@@ -26,7 +27,6 @@ const LocalSearch = ({
   const SearchParams = useSearchParams();
   const query = SearchParams.get("query") || "";
   const [searchQuary, setSearchQuary] = useState(query || "");
-  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     const deboncefn = setTimeout(() => {
@@ -62,31 +62,37 @@ const LocalSearch = ({
   };
 
   return (
-    <div className="flex items-center w-full max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] rounded-xl min-h-[50px] background-light800_darkgradient">
+    <div
+      className={cn(
+        "flex items-center rounded-[10px] px-4 gap-4 grow  min-h-[50px] background-light800_darkgradient",
+        otherClass
+      )}
+    >
       {iconPosition === "left" && (
         <Image
           src={imgSrc}
           alt="search icon"
           width={20}
           height={20}
-          className="ml-3 mr-2 object-contain invert-colors cursor-pointer"
+          className="cursor-pointer"
         />
       )}
 
       <Input
-        value={searchQuary}
-        onChange={(e) => setSearchQuary(e.target.value)}
         type="text"
+        value={searchQuary}
         placeholder={placeholder || "Search questions..."}
-        className={`border-none !bg-transparent placeholder shadow-none outline-none text-dark400_light800 no-focus flex-1 ${otherClass}`}
+        className={`border-none !bg-transparent placeholder shadow-none outline-none text-dark400_light800 no-focus  `}
+        onChange={(e) => setSearchQuary(e.target.value)}
       />
+
       {iconPosition === "right" && (
         <Image
           src={imgSrc}
           alt="search icon"
           width={20}
           height={20}
-          className="ml-3 mr-2 object-contain invert-colors cursor-pointer"
+          className="cursor-pointer"
         />
       )}
       {searchQuary && (
@@ -95,7 +101,7 @@ const LocalSearch = ({
           alt="clear search"
           width={20}
           height={20}
-          className="mr-3 cursor-pointer !invert-colors-2 hover:opacity-70 transition-opacity"
+          className="cursor-pointer !invert-colors-2  "
           onClick={handleClear}
         />
       )}

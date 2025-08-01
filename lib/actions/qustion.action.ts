@@ -269,6 +269,9 @@ export async function getQuestions(
     case "popular":
       sortCriteria = { upvotes: -1 };
       break;
+    case "most_viewed":
+      sortCriteria = { views: -1 };
+      break;
     default:
       sortCriteria = { createdAt: -1 };
       break;

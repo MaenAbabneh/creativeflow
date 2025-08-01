@@ -5,10 +5,13 @@ import React from "react";
 import TagsCard from "./tags-card";
 import Metric from "@/components/metric";
 import { Questions, Tags } from "@/types/global";
+import SaveQuestion from "../question/save-question";
+import { hasSavedQuestion } from "@/lib/actions/collaction.action";
 
 interface Props {
   question: Questions;
 }
+
 
 const QuestionCard = ({
   question: {
@@ -22,11 +25,15 @@ const QuestionCard = ({
     answers,
     content,
   },
+  
 }: Props) => {
+   const hasSavedPromise = hasSavedQuestion({
+    questionId: _id ?? "",
+  });
   return (
     <div className="pt-6 pb-4 px-4 sm:px-6 background-light800_dark300 dark:dark-gradient shadow-light-100 dark:shadow-dark-100 rounded-lg mb-4 sm:mb-6 w-full hover:shadow-light-200 dark:hover:shadow-dark-200 transition-shadow duration-200 max-w-full">
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Link href={ROUTES.QUESTION(_id)} className="cursor-pointer group">
             <h3 className="h3-bold text-dark100_light900 group-hover:text-primary-500 dark:group-hover:text-primary-500 transition-colors line-clamp-2">
               {title}
@@ -37,6 +44,10 @@ const QuestionCard = ({
               </p>
             )}
           </Link>
+          
+          <div className="flex flex-col items-center justify-center shrink-0 w-6 h-6">
+          <SaveQuestion questionId={_id} hasSavedPromise={hasSavedPromise} otherClassName="hidden sm:block" />
+          </div>
         </div>
 
         {tags && tags.length > 0 && (
