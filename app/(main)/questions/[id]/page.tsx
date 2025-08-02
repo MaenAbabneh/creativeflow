@@ -16,8 +16,9 @@ import { Suspense } from "react";
 import SaveQuestion from "@/components/question/save-question";
 import { hasSavedQuestion } from "@/lib/actions/collaction.action";
 
-const QuestionDetails = async ({ params }: RouteParams) => {
+const QuestionDetails = async ({ params , searchParams }: RouteParams) => {
   const { id } = await params;
+  const { page, pagesize, filter } = await searchParams;
 
   const { success, data: question } = await getQuestion({ questionId: id });
   const {
@@ -134,6 +135,8 @@ const QuestionDetails = async ({ params }: RouteParams) => {
       {/* Answers Section */}
       <div className="mt-8">
         <AllAnswers
+          page={Number(page) || 1}
+          isNext={answersResult?.isNext || false}
           data={answersResult?.answers}
           success={areAnswersLoaded}
           error={answersError}

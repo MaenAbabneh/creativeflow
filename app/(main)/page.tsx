@@ -7,8 +7,7 @@ import ROUTES from "@/constants/routes";
 import { getQuestions } from "@/lib/actions/qustion.action";
 import DataRender from "@/components/DataRender";
 import { EMPTY_QUESTION } from "@/constants/states";
-import CommonFilter from "@/components/filter/commonfilter";
-import { HomePageFilters } from "@/constants/filters";
+import Pagination from "@/components/pagination";
 
 interface searchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -23,7 +22,7 @@ export default async function App({ searchParams }: searchParams) {
     filter: filter || "",
   });
 
-  const { questions } = data || {};
+  const { questions , isNext } = data || {};
 
   return (
     <div className="w-full max-w-5xl mx-auto">
@@ -64,6 +63,7 @@ export default async function App({ searchParams }: searchParams) {
           </div>
         )}
       />
+      <Pagination isNext={isNext} page={page} />
     </div>
   );
 }

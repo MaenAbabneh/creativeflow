@@ -7,6 +7,9 @@ import ROUTES from "@/constants/routes";
 import DataRender from "@/components/DataRender";
 import { EMPTY_QUESTION } from "@/constants/states";
 import { getSavedQuestions } from "@/lib/actions/collaction.action";
+import CommonFilter from "@/components/filter/commonfilter";
+import { CollectionFilters } from "@/constants/filters";
+import Pagination from "@/components/pagination";
 
 interface searchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -20,11 +23,8 @@ export default async function collection({ searchParams }: searchParams) {
     query: query || "",
     filter: filter || "",
   });
-  
 
-  const { Collection } = data || {};
-
- 
+  const { Collection , isNext } = data || {};
 
   return (
     <div className="">
@@ -40,17 +40,20 @@ export default async function collection({ searchParams }: searchParams) {
           </Link>
         </div>
       </section>
-      <section className="mt-8">
+      <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearch
-          placeholder="Search questions..."
-          otherClass="text-base"
-          imgSrc="/icons/search.svg"
           route={ROUTES.COLLECTION}
+          imgSrc="/icons/search.svg"
+          placeholder="Search questions..."
+          otherClass="flex-1"
         />
-      </section>
-      <section>
-        <HomeFilter />
-      </section>
+
+        <CommonFilter
+          filters={CollectionFilters}
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
+        />
+      </div>
+
       <DataRender
         success={success}
         data={Collection}
@@ -59,11 +62,12 @@ export default async function collection({ searchParams }: searchParams) {
         render={(Collection) => (
           <div className="mt-8 min-h-[300px] w-full space-y-4">
             {Collection?.map((items) => (
-              <QuestionCard key={items._id} question={items.question}/>
+              <QuestionCard key={items._id} question={items.question} />
             ))}
           </div>
         )}
       />
+      <Pagination isNext={isNext} page={page} />
     </div>
   );
 }
