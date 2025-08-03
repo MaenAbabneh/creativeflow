@@ -7,12 +7,14 @@ export const HomePageFilters = [
 ];
 
 export const AnswerFilters = [
+  { name: "All", value: "all" },
   { name: "Newest", value: "latest" },
   { name: "Oldest", value: "oldest" },
   { name: "Popular", value: "popular" },
 ];
 
 export const CollectionFilters = [
+  { name: "All", value: "all" },
   { name: "Oldest", value: "oldest" },
   { name: "Most Voted", value: "mostvoted" },
   { name: "Most Viewed", value: "mostviewed" },
@@ -21,6 +23,7 @@ export const CollectionFilters = [
 ];
 
 export const TagFilters = [
+  { name: "All", value: "all" },
   { name: "A-Z", value: "name" },
   { name: "Recent", value: "recent" },
   { name: "Oldest", value: "oldest" },
@@ -28,6 +31,7 @@ export const TagFilters = [
 ];
 
 export const UserFilters = [
+  { name: "All", value: "all" },
   { name: "Newest", value: "newest" },
   { name: "Oldest", value: "oldest" },
   { name: "Popular", value: "popular" },

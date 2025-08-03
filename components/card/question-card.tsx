@@ -7,11 +7,13 @@ import Metric from "@/components/metric";
 import { Questions, Tags } from "@/types/global";
 import SaveQuestion from "../question/save-question";
 import { hasSavedQuestion } from "@/lib/actions/collaction.action";
+import ResponsiveEditDeleteAction from "../users/responsive-editedelete";
 
 interface Props {
   question: Questions;
+  isProfilePage?: boolean;
+  showActionBtns?: boolean;
 }
-
 
 const QuestionCard = ({
   question: {
@@ -25,40 +27,56 @@ const QuestionCard = ({
     answers,
     content,
   },
-  
+  showActionBtns = false,
+  isProfilePage = false,
 }: Props) => {
-   const hasSavedPromise = hasSavedQuestion({
+  const hasSavedPromise = hasSavedQuestion({
     questionId: _id ?? "",
   });
+
   return (
-    <div className="pt-6 pb-4 px-4 sm:px-6 background-light800_dark300 dark:dark-gradient shadow-light-100 dark:shadow-dark-100 rounded-lg mb-4 sm:mb-6 w-full hover:shadow-light-200 dark:hover:shadow-dark-200 transition-shadow duration-200 max-w-full">
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Link href={ROUTES.QUESTION(_id)} className="cursor-pointer group">
-            <h3 className="h3-bold text-dark100_light900 group-hover:text-primary-500 dark:group-hover:text-primary-500 transition-colors line-clamp-2">
+    <div className="py-4 sm:py-6 px-4 sm:px-6 background-light800_dark300 dark:dark-gradient shadow-light-100 dark:shadow-dark-100 rounded-lg sm:rounded-xl mb-4 sm:mb-6 w-full hover:shadow-light-200 dark:hover:shadow-dark-200 transition-all duration-200 ease-in-out max-w-full">
+      <div className="flex flex-col gap-3 sm:gap-4">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+          <Link
+            href={ROUTES.QUESTION(_id)}
+            className="cursor-pointer group flex-1"
+          >
+            <h3 className="h3-bold text-dark100_light900 group-hover:text-primary-500 dark:group-hover:text-primary-500 transition-colors duration-200 line-clamp-2 mb-2">
               {title}
             </h3>
             {content && (
-              <p className="text-dark400_light700 line-clamp-2 mt-2 body-regular">
+              <p className="text-dark400_light700 line-clamp-2 sm:line-clamp-3 body-regular">
                 {content}
               </p>
             )}
           </Link>
-          
+          <div className="flex  items-end justify-end relative bottom-30 left-5 sm:bottom-20 sm:left-6">
+            {isProfilePage && showActionBtns && (
+              <ResponsiveEditDeleteAction type="Question" itemId={_id} />
+            )}
+          </div>
+
           <div className="flex flex-col items-center justify-center shrink-0 w-6 h-6">
-          <SaveQuestion questionId={_id} hasSavedPromise={hasSavedPromise} otherClassName="hidden sm:block" />
+            {!isProfilePage && (
+              <SaveQuestion
+                questionId={_id}
+                hasSavedPromise={hasSavedPromise}
+                otherClassName="hidden sm:block"
+              />
+            )}
           </div>
         </div>
 
         {tags && tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 items-center mt-3 mb-2">
+          <div className="flex flex-wrap gap-1.5 items-center mt-2 sm:mt-3">
             {tags.map((tag: Tags) => (
               <TagsCard key={tag._id} _id={tag._id} name={tag.name} compact />
             ))}
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-light-700 dark:border-dark-400">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-light-700 dark:border-dark-400">
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <Metric
               image={author.image}
@@ -66,14 +84,17 @@ const QuestionCard = ({
               alt={author.name}
               href={ROUTES.PROFILE(author._id)}
               title=""
-              textStyles="body-medium text-dark400_light700"
+              textStyles="body-medium text-dark400_light700 truncate"
               isAuthor
             />
-            <span className="text-dark400_light700 small-regular whitespace-nowrap ml-1">
+            <span className="text-dark400_light700 small-regular whitespace-nowrap ml-1 hidden sm:inline">
               • asked {getPuplishTime(createdAt)}
             </span>
+            <span className="text-dark400_light700 small-regular whitespace-nowrap ml-1 sm:hidden">
+              • {getPuplishTime(createdAt)}
+            </span>
           </div>
-          <div className="flex flex-wrap gap-3 items-center shrink-0 sm:justify-end">
+          <div className="flex flex-wrap gap-2 sm:gap-3 items-center shrink-0 sm:justify-end">
             <Metric
               image="/icons/like.svg"
               alt="upvote icon"

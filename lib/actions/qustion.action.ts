@@ -14,6 +14,7 @@ import mongoose, { FilterQuery } from "mongoose";
 import Question, { IQuestionDoc } from "@/database/question.model";
 import Tag, { ITagDoc } from "@/database/tags.model";
 import TagQuestion from "@/database/questionTag.model";
+import dbConnect from "../mongoose";
 
 export async function createQuestion(
   params: createQuestionProps
@@ -211,8 +212,8 @@ export async function getQuestion(
 
   try {
     const question = await Question.findById(questionId)
-    .populate("tags")
-    .populate("author", "name image");
+      .populate("tags")
+      .populate("author", "name image");
 
     if (!question) throw new Error("Question not found");
 
@@ -234,12 +235,7 @@ export async function getQuestions(
     return handleError(validationResult) as ErrorResponse;
   }
 
-  const {
-    page = 1,
-    pageSize = 10,
-    query,
-    filter,
-  } = validationResult.params!;
+  const { page = 1, pageSize = 10, query, filter } = validationResult.params!;
   const skip = (page - 1) * pageSize;
   const limit = Number(pageSize);
 
@@ -299,7 +295,9 @@ export async function getQuestions(
   }
 }
 
-export async function incrementViews(params: IncrementViewsParams): Promise<ActionResponse<{views: number}>> {
+export async function incrementViews(
+  params: IncrementViewsParams
+): Promise<ActionResponse<{ views: number }>> {
   const validationResult = await action({
     params,
     schema: IncrementViewsSchema,
@@ -312,11 +310,30 @@ export async function incrementViews(params: IncrementViewsParams): Promise<Acti
   const { questionId } = validationResult.params!;
 
   try {
-    const question = await Question.findByIdAndUpdate(questionId, { $inc: { views: 1 } }, { new: true });
+    const question = await Question.findByIdAndUpdate(
+      questionId,
+      { $inc: { views: 1 } },
+      { new: true }
+    );
     if (!question) throw new Error("Question not found");
 
-
     return { success: true, data: { views: question.views } };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getPopularQuestions(): Promise<
+  ActionResponse<Questions[]>
+> {
+  try {
+    await dbConnect();
+
+    const questions = await Question.find({})
+      .sort({ upvotes: -1, views: -1 })
+      .limit(5);
+
+    return { success: true, data: JSON.parse(JSON.stringify(questions)) };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

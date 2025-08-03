@@ -7,6 +7,7 @@ import { handleError } from "../handler/error";
 import { FilterQuery } from "mongoose";
 import Tag from "@/database/tags.model";
 import { Question } from "@/database";
+import dbConnect from "../mongoose";
 
 export async function getTags(
   params: PaginatedSearchParams
@@ -86,30 +87,40 @@ export async function getQuestionTag(
     if (!tag) throw new Error("Tag not found");
 
     const filterQuery: FilterQuery<typeof Question> = {
-      tags: { $in: [tagId] }
+      tags: { $in: [tagId] },
     };
 
     const totalQuestions = await Question.countDocuments(filterQuery);
 
-    const questions =  await Question.find(filterQuery)
-    .populate([
-      {path:"author", select:" name image"},
-      {path: "tags", select: "name" },
-    ])
-    .skip(skip)
-    .limit(limit)
+    const questions = await Question.find(filterQuery)
+      .populate([
+        { path: "author", select: " name image" },
+        { path: "tags", select: "name" },
+      ])
+      .skip(skip)
+      .limit(limit);
 
     const isNext = totalQuestions > skip + limit;
 
-    return{
-      success:true,
-      data:{
+    return {
+      success: true,
+      data: {
         tag: JSON.parse(JSON.stringify(tag)),
         questions: JSON.parse(JSON.stringify(questions)),
         isNext,
-      }
-    }
+      },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
 
+export async function getPopularTags(): Promise<ActionResponse<Tags[]>> {
+  try {
+    await dbConnect();
+    const tags = await Tag.find().sort({ questions: -1 }).limit(5);
+
+    return { success: true, data: JSON.parse(JSON.stringify(tags)) };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

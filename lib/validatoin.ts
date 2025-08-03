@@ -54,7 +54,7 @@ export const QuestionSchema = z.object({
     .max(100, "Title must be less than 100 characters long"),
   content: z.string().min(20, "Content must be at least 20 characters long"),
   tags: z
-    .array(z.string())
+    .array(z.string().max(30, "Tag must be less than 30 characters"))
     .min(1, "At least one tag is required")
     .max(5, "A maximum of 5 tags is allowed"),
 });
@@ -196,4 +196,14 @@ export const HasSavedSchema = z.object({
 
 export const CreateAddCollectionSchema = z.object({
   questionId: z.string().min(1, { message: "Question ID is required." }),
+});
+
+export const getUserDetailsSchema = z.object({
+  userId: z.string().min(1, { message: "User ID is required." }),
+});
+
+export const getUserInfoSchema = z.object({
+  userId: z.string().min(1, { message: "User ID is required." }),
+  page: z.number().int().positive().default(1),
+  pageSize: z.number().int().positive().default(10),
 });

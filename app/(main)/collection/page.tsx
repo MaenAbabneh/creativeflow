@@ -50,7 +50,7 @@ export default async function collection({ searchParams }: searchParams) {
 
         <CommonFilter
           filters={CollectionFilters}
-          otherClasses="min-h-[56px] sm:min-w-[170px]"
+          otherClasses="min-h-[50px] sm:min-w-[170px]"
         />
       </div>
 

@@ -64,14 +64,14 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
         });
         return;
       }
-      if (tagInput && tagInput.length < 15 && !field.includes(tagInput)) {
+      if (tagInput && tagInput.length < 30 && !field.includes(tagInput)) {
         form.setValue("tags", [...field, tagInput]);
         e.currentTarget.value = "";
         form.clearErrors("tags");
-      } else if (tagInput.length > 15) {
+      } else if (tagInput.length > 30) {
         form.setError("tags", {
           type: "manual",
-          message: "Tag must be less than 15 characters",
+          message: "Tag must be less than 30 characters",
         });
       } else if (field.includes(tagInput)) {
         form.setError("tags", {
@@ -171,7 +171,7 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
                   <Editor
                     editorRef={editorRef}
                     value={field.value}
-                    onChange={field.onChange}
+                    fieldChange={field.onChange}
                   />
                 </FormControl>
               </div>

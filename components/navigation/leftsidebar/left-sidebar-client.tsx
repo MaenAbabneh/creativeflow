@@ -2,6 +2,8 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 import { Button as UIButton } from "@/components/ui/button";
 import {
@@ -34,9 +36,18 @@ const LeftSidebarClient = ({
   signOutAction,
   session,
 }: LeftSidebarClientProps) => {
-  const { state, toggleSidebar } = useSidebar();
+  const { state, toggleSidebar, setOpen } = useSidebar();
+  const pathname = usePathname();
 
   const isCollapsed = state === "collapsed";
+  const isProfilePage = pathname?.startsWith("/profile/");
+
+  // Auto-collapse sidebar on profile pages
+  useEffect(() => {
+    if (isProfilePage && !isCollapsed) {
+      setOpen(false);
+    }
+  }, [isProfilePage, isCollapsed, setOpen]);
 
   return (
     <Sidebar
@@ -48,23 +59,25 @@ const LeftSidebarClient = ({
     >
       <SidebarContent className="flex flex-col pt-4 pl-4 pr-4 custom-scrollbar">
         {" "}
-        <div className="hidden md:block absolute top-15 -right-[15px] z-20 ">
-          {" "}
-          <UIButton
-            variant="outline"
-            size="icon"
-            className="rounded-full p-2 h-10 w-7
-                       bg-background hover:bg-accent
-                       border border-border "
-            onClick={toggleSidebar}
-          >
-            {isCollapsed ? (
-              <ChevronRight size={16} />
-            ) : (
-              <ChevronLeft size={16} />
-            )}
-          </UIButton>
-        </div>
+        {!isProfilePage && (
+          <div className="hidden md:block absolute top-15 -right-[15px] z-20 ">
+            {" "}
+            <UIButton
+              variant="outline"
+              size="icon"
+              className="rounded-full p-2 h-10 w-7
+                         bg-background hover:bg-accent
+                         border border-border "
+              onClick={toggleSidebar}
+            >
+              {isCollapsed ? (
+                <ChevronRight size={16} />
+              ) : (
+                <ChevronLeft size={16} />
+              )}
+            </UIButton>
+          </div>
+        )}
         <SidebarMenu className="mt-6 flex flex-col gap-6">
           <NavLinks userId={userId} isSidebarNav={true} />
         </SidebarMenu>

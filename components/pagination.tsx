@@ -17,7 +17,8 @@ function Pagination({ isNext, page = 1, containerClasses }: Props) {
   const searchParams = useSearchParams();
 
   const handlePageChange = (type: "Prev" | "Next") => {
-    const NextPageNumber = type === "Prev" ? Number(page) - 1 : Number(page) + 1;
+    const NextPageNumber =
+      type === "Prev" ? Number(page) - 1 : Number(page) + 1;
 
     const newUrl = formUrlQuery({
       param: searchParams.toString(),
@@ -29,7 +30,7 @@ function Pagination({ isNext, page = 1, containerClasses }: Props) {
   return (
     <div
       className={cn(
-        "flex w-full items-center justify-center gap-2 mt-5",
+        "flex w-full items-center justify-center gap-2 sm:gap-3 mt-6 sm:mt-8",
         containerClasses
       )}
     >
@@ -38,12 +39,12 @@ function Pagination({ isNext, page = 1, containerClasses }: Props) {
           onClick={() => {
             handlePageChange("Prev");
           }}
-          className="light-border-2 btn flex min-h-[36px] items-center justify-center gap-2 border"
+          className="light-border-2 btn flex min-h-[36px] sm:min-h-[40px] items-center justify-center gap-2 border px-3 sm:px-4 transition-all duration-200 hover:scale-105"
         >
           <p className="body-medium text-dark200_light800">Prev</p>
         </Button>
       )}
-      <div className="flex items-center justify-center rounded-md bg-primary-500 px-3.5 py-2">
+      <div className="flex items-center justify-center rounded-md bg-primary-500 px-3 py-2 sm:px-4 sm:py-2.5 transition-all duration-200">
         <p className="body-semibold text-light-900">{page}</p>
       </div>
       {isNext && (
@@ -51,7 +52,7 @@ function Pagination({ isNext, page = 1, containerClasses }: Props) {
           onClick={() => {
             handlePageChange("Next");
           }}
-          className="light-border-2 btn flex min-h-[36px] items-center justify-center gap-2 border"
+          className="light-border-2 btn flex min-h-[36px] sm:min-h-[40px] items-center justify-center gap-2 border px-3 sm:px-4 transition-all duration-200 hover:scale-105"
         >
           <p className="body-medium text-dark200_light800">Next</p>
         </Button>

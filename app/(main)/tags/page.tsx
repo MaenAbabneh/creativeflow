@@ -37,7 +37,7 @@ export default async function tag({ searchParams }: RouteParams) {
 
         <CommonFilter
           filters={TagFilters}
-          otherClasses="min-h-[56px] sm:min-w-[170px]"
+          otherClasses="min-h-[50px] sm:min-w-[170px]"
         />
       </div>
 

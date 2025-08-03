@@ -75,3 +75,11 @@ interface HasVotedResponse {
 interface CreateAddCollectionParams {
   questionId: string;
 }
+
+interface getUserDetails {
+  userId: string;
+}
+
+interface getUserInfo extends PaginatedSearchParams {
+  userId: string;
+}

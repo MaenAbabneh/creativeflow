@@ -22,7 +22,7 @@
   --color-light-850: #fdfdfd;
   --color-light-900: #ffffff;
 
-  --color-link-100: #ff7000;
+  --color-link-100: #1b55d1;
   --color-link-500: #111960;
 
   --radius-2: 8px;
@@ -458,7 +458,7 @@ code {
   hyphens: auto;
 
   padding: 2px;
-  color: #ff7000 !important;
+  color: #1b55d1 !important;
 }
 
 .markdown pre {
@@ -790,4 +790,37 @@ code {
   justify-content: flex-end;
   width: 100%;
   margin-top: 1.5rem;
+}
+
+/* Responsive utilities for better spacing */
+@utility responsive-spacing-sm {
+  @apply space-y-4 sm:space-y-6;
+}
+
+@utility responsive-spacing-md {
+  @apply space-y-6 sm:space-y-8 lg:space-y-10;
+}
+
+@utility responsive-gap-sm {
+  @apply gap-3 sm:gap-4 lg:gap-5;
+}
+
+@utility responsive-gap-md {
+  @apply gap-4 sm:gap-6 lg:gap-8;
+}
+
+@utility responsive-padding {
+  @apply px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10;
+}
+
+@utility smooth-transition {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+@utility hover-lift {
+  @apply hover:scale-105 hover:shadow-lg;
+}
+
+@utility card-hover {
+  @apply hover:shadow-light-200 dark:hover:shadow-dark-200 transition-shadow duration-200;
 }

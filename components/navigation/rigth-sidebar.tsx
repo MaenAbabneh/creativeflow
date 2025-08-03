@@ -3,35 +3,22 @@ import Link from "next/link";
 
 import TagsCard from "@/components/card/tags-card";
 import ROUTES from "@/constants/routes";
-import { cn } from "@/lib/utils"; // Make sure cn is imported
+import { cn } from "@/lib/utils"; 
+import DataRender from "../DataRender";
+import { getPopularQuestions } from "@/lib/actions/qustion.action";
+import { getPopularTags } from "@/lib/actions/tag.action";
 
 interface RightSidebarProps {
   isMobileView?: boolean;
 }
 
-const RightSidebar = ({ isMobileView = false }: RightSidebarProps) => {
-  const topQuestions = [
-    { id: "1", question: "What is the best way to learn React?" },
-    { id: "2", question: "How do I manage state in a React application?" },
-    {
-      id: "3",
-      question:
-        "What are the differences between functional and class components?",
-    },
-    { id: "4", question: "How can I optimize performance in a React app?" },
-    { id: "5", question: "What is the purpose of keys in React lists?" },
-  ];
-  const popularTags = [
-    { id: "1", name: "React", qustions: 120 },
-    { id: "2", name: "JavaScript", qustions: 95 },
-    { id: "3", name: "css", qustions: 80 },
-    { id: "4", name: "HTML", qustions: 60 },
-    { id: "5", name: "Next.js", qustions: 45 },
-  ];
+const RightSidebar = async ({ isMobileView = false }: RightSidebarProps) => {
+  const [
+    { success, data: topQuestions, error },
+    { success: tagsSuccess, data: tagsData, error: tagsError },
+  ] = await Promise.all([getPopularQuestions(), getPopularTags()]);
 
   const baseSectionClasses = "!background-light900_dark300 custom-scrollbar";
-  // Desktop specific classes (borders, shadows, rounding) are applied by the <aside> in layout.tsx
-  // So, for desktop, RightSidebar just needs to fill its container and handle internal scrolling if necessary.
   const desktopSpecificClasses = "h-full overflow-y-auto";
   const mobileSpecificClasses = "h-full overflow-y-auto";
   return (
@@ -44,42 +31,65 @@ const RightSidebar = ({ isMobileView = false }: RightSidebarProps) => {
       <div className="pt-10 px-6 flex flex-col gap-6">
         <div>
           <h2 className="h3-bold text-dark100_light900 mb-3">Top Questions</h2>
-          <div className="flex flex-col gap-1">
-            {topQuestions.map(({ id, question }) => (
-              <Link
-                href={ROUTES.PROFILE(id)}
-                key={id}
-                className="flex flex-row items-center justify-between gap-3 cursor-pointer rounded-lg p-3 hover:background-light800_dark400 transition-colors duration-200"
-              >
-                <p className="body-medium text-dark100_light900 flex-1 line-clamp-2">
-                  {question}
-                </p>
-                <Image
-                  src="/icons/chevron-right.svg"
-                  alt="arrow-right"
-                  width={16}
-                  height={16}
-                  className="invert-colors flex-shrink-0"
-                />
-              </Link>
-            ))}
-          </div>
+          <DataRender
+            data={topQuestions}
+            empty={{
+              title: "No questions found",
+              message: "No questions have been asked yet.",
+            }}
+            success={success}
+            error={error}
+            render={(hotQuestions) => (
+              <div className="mt-7 flex w-full flex-col gap-[30px]">
+                {hotQuestions.map(({ _id, title }) => (
+                  <Link
+                    key={_id}
+                    href={ROUTES.QUESTION(_id)}
+                    className="flex cursor-pointer items-center justify-between gap-7"
+                  >
+                    <p className="body-medium text-dark500_light700 line-clamp-2">
+                      {title}
+                    </p>
+
+                    <Image
+                      src="/icons/chevron-right.svg"
+                      alt="Chevron"
+                      width={20}
+                      height={20}
+                      className="invert-colors"
+                    />
+                  </Link>
+                ))}
+              </div>
+            )}
+          />
         </div>
 
         <div>
           <h3 className="h3-bold text-dark100_light900 mb-4">Popular Tags</h3>
-          <div className="flex flex-col gap-1.5">
-            {popularTags.map(({ id, name, qustions }) => (
-              <TagsCard
-                key={id}
-                _id={id}
-                name={name}
-                questions={qustions}
-                showCount={true}
-                compact
-              />
-            ))}
-          </div>
+          <DataRender
+            data={tagsData}
+            empty={{
+              title: "No tags found",
+              message: "No tags have been created yet.",
+            }}
+            success={tagsSuccess}
+            error={tagsError}
+            render={(tags) => (
+              <div className="mt-7 flex flex-col gap-4">
+                {tags.map(({ _id, name, questions }) => (
+                  <TagsCard
+                    key={_id}
+                    _id={_id}
+                    name={name}
+                    questions={questions}
+                    showCount
+                    compact
+                  />
+                ))}
+              </div>
+            )}
+          />
         </div>
       </div>
     </section>
