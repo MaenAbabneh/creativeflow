@@ -18,6 +18,7 @@ import { handleError } from "../handler/error";
 import { FilterQuery, PipelineStage, Types } from "mongoose";
 import { Answer, Question, User } from "@/database";
 import { assignBadges } from "../utils";
+import { cache } from "react";
 
 export async function getAllUsers(
   params: PaginatedSearchParams
@@ -87,8 +88,7 @@ export async function getAllUsers(
     return handleError(error) as ErrorResponse;
   }
 }
-
-export async function getUserDetails(params: getUserDetails): Promise<
+export const getUserDetails = cache(async function getUserDetails(params: getUserDetails): Promise<
   ActionResponse<{
     user: Users;
   }>
@@ -118,6 +118,7 @@ export async function getUserDetails(params: getUserDetails): Promise<
     return handleError(error) as ErrorResponse;
   }
 }
+)
 
 export async function getUserQuestions(
   params: getUserInfo

@@ -24,6 +24,7 @@ import { createInteraction } from "./interaction.action";
 import { after } from "next/server";
 import Interaction from "@/database/interaction.model";
 import { auth } from "@/auth";
+import { cache } from "react";
 
 export async function createQuestion(
   params: createQuestionProps
@@ -287,7 +288,7 @@ export async function getRecommendedQuestions({
   };
 }
 
-export async function getQuestion(
+export const getQuestion = cache(async function getQuestion(
   params: GetQuestionsParams
 ): Promise<ActionResponse<Questions>> {
   const validationResult = await action({
@@ -314,6 +315,7 @@ export async function getQuestion(
     return handleError(error) as ErrorResponse;
   }
 }
+)
 
 export async function getQuestions(
   params: PaginatedSearchParams

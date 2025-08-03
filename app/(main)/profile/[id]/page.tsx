@@ -22,6 +22,33 @@ import Pagination from "@/components/pagination";
 import AnswerCard from "@/components/card/answer-card";
 import TagsCard from "@/components/card/tags-card";
 import { RouteParams } from "@/types/global";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: RouteParams): Promise<Metadata> {
+  const { id } = await params;
+
+const { success, data, error } = await getUserDetails({
+    userId: id,
+  });
+  if (!success || !data) {
+    return {
+      title: "User not found",
+      description: "This user does not exist.",
+    };
+  }
+
+  return {
+    title: data.user.name,
+    description: data.user.bio?.slice(0, 100),
+    twitter: {
+      card: "summary_large_image",
+      title: data.user.name,
+      description: data.user.bio?.slice(0, 100),
+    },
+  };
+}
 
 const Profile = async ({ params, searchParams }: RouteParams) => {
   // /12312313
