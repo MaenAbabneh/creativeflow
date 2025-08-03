@@ -1,4 +1,6 @@
+import { InteractionActionEnums } from "@/database/interaction.model";
 import z from "zod";
+import mongoose from "mongoose";
 
 export const SignInSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -207,3 +209,20 @@ export const getUserInfoSchema = z.object({
   page: z.number().int().positive().default(1),
   pageSize: z.number().int().positive().default(10),
 });
+
+export const deleteQuestionSchema = z.object({
+  questionId: z.string().min(1, { message: "Question ID is required." }),
+});
+
+export const deleteAnswerSchema = z.object({
+  answerId: z.string().min(1, { message: "Answer ID is required." }),
+});
+
+
+export const createInteractionSchema = z.object({
+  actionId: z.string().min(1),
+  authorId: z.string().min(1),
+  actionTarget: z.enum(["answer", "question"]),
+  actions: z.enum(InteractionActionEnums),
+});
+

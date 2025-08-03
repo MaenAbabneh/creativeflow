@@ -3,12 +3,19 @@
 import { ActionResponse, ErrorResponse, Answers } from "@/types/global";
 import action from "../handler/action";
 import { handleError } from "../handler/error";
-import { AnswerServerSchema, GetAnswersSchema } from "../validatoin";
+import {
+  AnswerServerSchema,
+  deleteAnswerSchema,
+  GetAnswersSchema,
+} from "../validatoin";
 import mongoose from "mongoose";
 import Question from "@/database/question.model";
 import Answer, { IAnswerDoc } from "@/database/answer .model";
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/constants/routes";
+import Vote from "@/database/vote.model";
+import { after } from "next/server";
+import { createInteraction } from "./interaction.action";
 
 export async function createAnswer(
   params: createAnswerParmas
@@ -55,6 +62,15 @@ export async function createAnswer(
 
     revalidatePath(ROUTES.QUESTION(questionId));
 
+    after(async () => {
+      await createInteraction({
+        actionId: newAnswer._id.toString(),
+        authorId: userId as string,
+        actionTarget: "answer",
+        actions: "post",
+      });
+    });
+
     return { success: true, data: JSON.parse(JSON.stringify(newAnswer)) };
   } catch (error) {
     if (session.inTransaction()) {
@@ -81,7 +97,12 @@ export async function getAnswers(
     return handleError(validationResult) as ErrorResponse;
   }
 
-  const { questionId, page = 1, pageSize = 10 , filter } = validationResult.params!;
+  const {
+    questionId,
+    page = 1,
+    pageSize = 10,
+    filter,
+  } = validationResult.params!;
   const skip = (page - 1) * pageSize;
   const limit = pageSize;
 
@@ -105,21 +126,82 @@ export async function getAnswers(
   try {
     const totalAnswers = await Answer.countDocuments({ question: questionId });
     const answers = await Answer.find({ question: questionId })
-    .populate("author", "_id name image")
-    .sort(sortCriteria)
-    .skip(skip)
-    .limit(limit);
-    
+      .populate("author", "_id name image")
+      .sort(sortCriteria)
+      .skip(skip)
+      .limit(limit);
+
     const isNext = totalAnswers > skip + limit;
-    return { 
-      success: true, 
-      data: { 
-        answers: JSON.parse(JSON.stringify(answers)), 
-        isNext, 
-        totalAnswers 
-      } 
+    return {
+      success: true,
+      data: {
+        answers: JSON.parse(JSON.stringify(answers)),
+        isNext,
+        totalAnswers,
+      },
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function deleteAnswer(params: deleteAnswerParams) {
+  const validationResult = await action({
+    params,
+    schema: deleteAnswerSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { answerId } = validationResult.params!;
+  const { user } = validationResult.session!;
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+    const answer = await Answer.findById(answerId).session(session);
+    if (!answer) throw new Error("Answer not found");
+
+    if (answer.author.toString() !== user?.id)
+      throw new Error("User not authorized to delete this answer");
+
+    await Question.findByIdAndUpdate(
+      answer.question,
+      { $inc: { answers: -1 } },
+      { new: true, session }
+    );
+
+    await Vote.deleteMany({ actionId: answerId, actionType: "answer" }).session(
+      session
+    );
+
+    await Answer.findByIdAndDelete(answerId).session(session);
+
+    await session.commitTransaction();
+    session.endSession();
+
+    revalidatePath(`/profile/${user?.id}`);
+
+    after(async () => {
+      await createInteraction({
+        actionId: answerId,
+        authorId: user?.id as string,
+        actionTarget: "answer",
+        actions: "delete",
+      });
+    });
+
+    return { success: true };
+  } catch (error) {
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
+    return handleError(error) as ErrorResponse;
+  } finally {
+    await session.endSession();
   }
 }

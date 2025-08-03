@@ -83,3 +83,24 @@ interface BadgeCounts {
   SILVER: number;
   BRONZE: number;
 }
+
+interface Interaction {
+  actionId: string;
+  user: Author;
+  actionType: "answer" | "question";
+  action:
+    | "view"
+    | "upvote"
+    | "downvote"
+    | "bookmark"
+    | "post"
+    | "edit"
+    | "delete"
+    | "search";
+}
+
+interface Badges {
+  GOLD: number;
+  SILVER: number;
+  BRONZE: number;
+}

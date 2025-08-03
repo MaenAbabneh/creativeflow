@@ -6,6 +6,7 @@ interface Props {
   totalAnswers: number;
   totalQuestions: number;
   badges: BadgeCounts;
+  reputationPoints: number;
 }
 
 interface StatsCardProps {
@@ -30,11 +31,20 @@ const StatsCard = ({ imgUrl, value, title }: StatsCardProps) => (
   </div>
 );
 
-const Stats = ({ totalAnswers, totalQuestions, badges }: Props) => {
+const Stats = ({
+  totalAnswers,
+  totalQuestions,
+  badges,
+  reputationPoints,
+}: Props) => {
   return (
     <div className="space-y-4 sm:space-y-6">
-      <h4 className="h3-semibold text-dark200_light900">Stats</h4>
-
+      <div className="flex items-center gap-4 ">
+        <h4 className="h3-semibold text-dark200_light900">Stats :</h4>
+        <span className="medium-semibold primary-text-gradient">
+          {formatNumber(reputationPoints)}
+        </span>
+      </div>
       <div className="grid grid-cols-1 gap-4 sm:gap-5 xs:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
         <div className="light-border background-light900_dark300 flex flex-wrap items-center justify-evenly gap-3 sm:gap-4 rounded-lg border p-4 sm:p-6 shadow-light-300 dark:shadow-dark-200 transition-all duration-200 hover:shadow-light-200 dark:hover:shadow-dark-100">
           <div className="text-center">

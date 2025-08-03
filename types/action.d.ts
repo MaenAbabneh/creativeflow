@@ -1,20 +1,19 @@
 interface SigninWithOauthParams {
-
-    provider: github|google;
-    providerAccountId: string;
-    user: {
-        name: string;
-        email: string;
-        image: string;
-        username: string;
-    };
+  provider: github | google;
+  providerAccountId: string;
+  user: {
+    name: string;
+    email: string;
+    image: string;
+    username: string;
+  };
 }
 
 interface AuthCredentials {
-    email: string;
-    name: string;
-    username: string;
-    password: string;
+  email: string;
+  name: string;
+  username: string;
+  password: string;
 }
 
 interface createQuestionProps {
@@ -39,7 +38,7 @@ interface PaginatedSearchParams {
   sort?: string;
 }
 
-interface GetTagQuestionsParams extends Omit<PaginatedSearchParams, 'filter'> {
+interface GetTagQuestionsParams extends Omit<PaginatedSearchParams, "filter"> {
   tagId: string;
 }
 
@@ -82,4 +81,41 @@ interface getUserDetails {
 
 interface getUserInfo extends PaginatedSearchParams {
   userId: string;
+}
+
+interface deleteQuestionParams {
+  questionId: string;
+}
+
+interface deleteAnswerParams {
+  answerId: string;
+}
+
+interface createInteractionParams {
+  actionId: string;
+  actionTarget: "answer" | "question";
+  authorId: string;
+  actions:
+    | "view"
+    | "upvote"
+    | "downvote"
+    | "bookmark"
+    | "post"
+    | "edit"
+    | "delete"
+    | "search";
+}
+
+interface UpdateReputationParams {
+  interaction: IInteractionDoc;
+  session: mongoose.ClientSession;
+  performerId: string;
+  authorId: string;
+}
+
+interface RecommendationParams {
+  userId: string;
+  query?: string;
+  skip: number;
+  limit: number;
 }

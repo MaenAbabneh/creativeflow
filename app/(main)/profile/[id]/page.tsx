@@ -6,6 +6,7 @@ import {
   getUserQuestions,
   getUserAnswers,
   getUserTopTags,
+  getUserStats,
 } from "@/lib/actions/users.action";
 import { notFound } from "next/navigation";
 import dayjs from "dayjs";
@@ -31,10 +32,11 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
   if (!id) notFound();
 
   const loggedInUser = await auth();
+
   const { success, data, error } = await getUserDetails({
     userId: id,
   });
-
+  
   if (!success)
     return (
       <div>
@@ -42,7 +44,9 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
       </div>
     );
 
-  const { user, totalQuestions, totalAnswers } = data!;
+  const { user } = data!;
+
+  const { data: userStats } = await getUserStats({ userId: id });
 
   const {
     success: userQuestionsSuccess,
@@ -135,13 +139,14 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
 
       <div className="w-full">
         <Stats
-          totalQuestions={totalQuestions}
-          totalAnswers={totalAnswers}
-          badges={{
+          totalQuestions={userStats?.totalQuestions || 0}
+          totalAnswers={userStats?.totalAnswers || 0}
+          badges={userStats?.badges || {
             GOLD: 0,
             SILVER: 0,
             BRONZE: 0,
           }}
+          reputationPoints={user.reputation || 0}
         />
       </div>
 

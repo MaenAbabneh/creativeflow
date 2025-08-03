@@ -14,6 +14,8 @@ import Answer from "@/database/answer .model";
 import Question from "@/database/question.model";
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/constants/routes";
+import { after } from "next/server";
+import { createInteraction } from "./interaction.action";
 
 export async function updateVotes(
   params: updateVotesParams,
@@ -69,6 +71,13 @@ export async function createVotes(
   session.startTransaction();
 
   try {
+    const Model = targetType === "question" ? Question : Answer;
+
+    const contentDoc = await Model.findById(targetId).session(session);
+    if (!contentDoc) throw new Error("Content not found");
+
+    const contentAuthorId = contentDoc.author.toString();
+
     const existingVote = await Vote.findOne({
       author: userId,
       actionId: targetId,
@@ -79,6 +88,7 @@ export async function createVotes(
       if (existingVote.voteType === voteType) {
         // If the user has already voted with the same voteType, remove the vote
         await Vote.deleteOne({ _id: existingVote._id }).session(session);
+        
         await updateVotes(
           { targetId, targetType, voteType, change: -1 },
           session
@@ -121,6 +131,15 @@ export async function createVotes(
     session.endSession();
 
     revalidatePath(ROUTES.QUESTION(targetId));
+
+    after(async () => {
+      await createInteraction({
+        actionId: targetId,
+        authorId: contentAuthorId,
+        actionTarget: targetType,
+        actions: voteType,
+      });
+    });
 
     return { success: true };
   } catch (error) {

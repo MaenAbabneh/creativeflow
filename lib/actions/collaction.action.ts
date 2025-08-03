@@ -12,6 +12,8 @@ import Question from "@/database/question.model";
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/constants/routes";
 import mongoose, { PipelineStage } from "mongoose";
+import { after } from "next/server";
+import { createInteraction } from "./interaction.action";
 
 export async function addToCollection(
   params: CreateAddCollectionParams
@@ -49,6 +51,15 @@ export async function addToCollection(
     });
 
     revalidatePath(ROUTES.QUESTION(questionId));
+
+    after(async () => {
+      await createInteraction({
+        actionId: question._id.toString(),
+        authorId: userId,
+        actionTarget: "question",
+        actions: "bookmark",
+      });
+    });
 
     return { success: true, data: { hasSaved: true } };
   } catch (error) {
