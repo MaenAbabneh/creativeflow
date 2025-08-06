@@ -1,10 +1,11 @@
-import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
-import { handleError } from "@/lib/handler/error";
-import { APIErrorResponse } from "@/types/global";
-import { AIAnswerSchema } from "@/lib/validatoin";
-import { ValidationError } from "@/lib/http-errors";
+import { generateText } from "ai";
 import { NextResponse } from "next/server";
+
+import { handleError } from "@/lib/handler/error";
+import { ValidationError } from "@/lib/http-errors";
+import { AIAnswerSchema } from "@/lib/validatoin";
+import { APIErrorResponse } from "@/types/global";
 
 export async function POST(req: Request) {
   const { question, content, userAnswer } = await req.json();

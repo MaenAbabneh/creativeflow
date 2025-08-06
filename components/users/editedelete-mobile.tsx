@@ -1,5 +1,10 @@
 "use client";
 
+import { Edit, MoreVertical, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,22 +14,16 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { MoreVertical, Edit, Trash2 } from "lucide-react";
-import { useState } from "react";
-import { deleteQuestion } from "@/lib/actions/qustion.action";
 import { deleteAnswer } from "@/lib/actions/answer.action";
+import { deleteQuestion } from "@/lib/actions/qustion.action";
 
 interface Props {
   type: string;
@@ -56,8 +55,8 @@ const EditDeleteActionMobile = ({ type, itemId }: Props) => {
         description: "Your question has been deleted successfully.",
       });
     } else if (type === "Answer") {
-     await deleteAnswer({ answerId: itemId });
-     
+      await deleteAnswer({ answerId: itemId });
+
       toast.warning("Answer deleted", {
         description: "Your answer has been deleted successfully.",
       });

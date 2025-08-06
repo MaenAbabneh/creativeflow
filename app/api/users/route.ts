@@ -1,12 +1,13 @@
-import { handleError } from "@/lib/handler/error";
-import dbConnect from "@/lib/mongoose";
-import { APIErrorResponse } from "@/types/global";
-import User from "@/database/user.model";
 import { NextResponse } from "next/server";
-import { UserSchema } from "@/lib/validatoin";
-import { ValidationError } from "@/lib/http-errors";
 
-export async function GET(request: Request) {
+import User from "@/database/user.model";
+import { handleError } from "@/lib/handler/error";
+import { ValidationError } from "@/lib/http-errors";
+import dbConnect from "@/lib/mongoose";
+import { UserSchema } from "@/lib/validatoin";
+import { APIErrorResponse } from "@/types/global";
+
+export async function GET() {
   try {
     await dbConnect();
 

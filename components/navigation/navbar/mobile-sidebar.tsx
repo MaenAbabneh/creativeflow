@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { auth, signOut } from "@/auth";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -13,8 +14,6 @@ import {
 import ROUTES from "@/constants/routes";
 
 import NavLinks from "./Navlinks";
-import { auth, signOut } from "@/auth";
-import { redirect } from "next/dist/server/api-utils";
 
 const MobileSidebar = async () => {
   const session = await auth();
@@ -68,11 +67,11 @@ const MobileSidebar = async () => {
           {userId ? (
             <form action={handleSignOut} className="w-full">
               <Link href={ROUTES.HOME} className="w-full">
-              <SheetClose asChild>
-                <Button className="w-full background-light800_dark400 light-border-2 hover:background-light700_dark300 transition-colors mb-10 h-10 cursor-pointer">
-                  <p className="text-white body-semibold">logout</p>
-                </Button>
-              </SheetClose>
+                <SheetClose asChild>
+                  <Button className="w-full background-light800_dark400 light-border-2 hover:background-light700_dark300 transition-colors mb-10 h-10 cursor-pointer">
+                    <p className="text-white body-semibold">logout</p>
+                  </Button>
+                </SheetClose>
               </Link>
             </form>
           ) : (

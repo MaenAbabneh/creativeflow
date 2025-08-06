@@ -1,35 +1,35 @@
+import dayjs from "dayjs";
+import { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
 import { auth } from "@/auth";
-import ProfileLink from "@/components/users/profilelink";
+import AnswerCard from "@/components/card/answer-card";
+import QuestionCard from "@/components/card/question-card";
+import TagsCard from "@/components/card/tags-card";
+import DataRenderer from "@/components/DataRender";
+import Pagination from "@/components/pagination";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserAvatar from "@/components/UserAvatar";
+import ProfileLink from "@/components/users/profilelink";
+import Stats from "@/components/users/stats";
+import { EMPTY_ANSWERS, EMPTY_QUESTION, EMPTY_TAGS } from "@/constants/states";
 import {
+  getUserAnswers,
   getUserDetails,
   getUserQuestions,
-  getUserAnswers,
-  getUserTopTags,
   getUserStats,
+  getUserTopTags,
 } from "@/lib/actions/users.action";
-import { notFound } from "next/navigation";
-import dayjs from "dayjs";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import Stats from "@/components/users/stats";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import page from "../../page";
-import DataRenderer from "@/components/DataRender";
-import { EMPTY_ANSWERS, EMPTY_QUESTION, EMPTY_TAGS } from "@/constants/states";
-import QuestionCard from "@/components/card/question-card";
-import Pagination from "@/components/pagination";
-import AnswerCard from "@/components/card/answer-card";
-import TagsCard from "@/components/card/tags-card";
 import { RouteParams } from "@/types/global";
-import { Metadata } from "next";
 
 export async function generateMetadata({
   params,
 }: RouteParams): Promise<Metadata> {
   const { id } = await params;
 
-const { success, data, error } = await getUserDetails({
+  const { success, data } = await getUserDetails({
     userId: id,
   });
   if (!success || !data) {
@@ -63,7 +63,7 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
   const { success, data, error } = await getUserDetails({
     userId: id,
   });
-  
+
   if (!success)
     return (
       <div>
@@ -168,11 +168,13 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
         <Stats
           totalQuestions={userStats?.totalQuestions || 0}
           totalAnswers={userStats?.totalAnswers || 0}
-          badges={userStats?.badges || {
-            GOLD: 0,
-            SILVER: 0,
-            BRONZE: 0,
-          }}
+          badges={
+            userStats?.badges || {
+              GOLD: 0,
+              SILVER: 0,
+              BRONZE: 0,
+            }
+          }
           reputationPoints={user.reputation || 0}
         />
       </div>

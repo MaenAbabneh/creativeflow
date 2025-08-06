@@ -1,13 +1,14 @@
+import mongoose from "mongoose";
+import { NextResponse } from "next/server";
+import slugify from "slugify";
+
+import Account from "@/database/account.model";
+import User from "@/database/user.model";
 import { handleError } from "@/lib/handler/error";
 import { ValidationError } from "@/lib/http-errors";
 import dbConnect from "@/lib/mongoose";
 import { SigninWithOauthSchema } from "@/lib/validatoin";
 import { APIErrorResponse } from "@/types/global";
-import User from "@/database/user.model";
-import mongoose from "mongoose";
-import slugify from "slugify";
-import Account from "@/database/account.model";
-import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const { provider, providerAccountId, user } = await request.json();

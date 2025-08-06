@@ -1,6 +1,8 @@
-import mongoose, { Mongoose } from "mongoose";
-import logger from "./logger";
 import "@/database";
+
+import mongoose, { Mongoose } from "mongoose";
+
+import logger from "./logger";
 
 interface Cached {
   startSession(): unknown;
@@ -16,17 +18,22 @@ if (!MONGODB_URI) {
   );
 }
 declare global {
+  // eslint-disable-next-line no-var
   var mongoose: Cached;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let cached = (global as any).mongoose;
 
 if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+  cached = global.mongoose = {
+    conn: null,
+    promise: null,
+    startSession: () => mongoose.startSession(),
+  };
 }
 
 const dbConnect = async (): Promise<Mongoose> => {
-
   if (cached.conn) {
     logger.info("Using cached MongoDB connection");
     return cached.conn;

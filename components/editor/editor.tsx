@@ -1,42 +1,44 @@
 "use client";
 
-import {
-  MDXEditor,
-  UndoRedo,
-  BoldItalicUnderlineToggles,
-  toolbarPlugin,
-  InsertCodeBlock,
-  codeBlockPlugin,
-  headingsPlugin,
-  listsPlugin,
-  linkPlugin,
-  quotePlugin,
-  markdownShortcutPlugin,
-  ListsToggle,
-  linkDialogPlugin,
-  CreateLink,
-  InsertImage,
-  InsertTable,
-  tablePlugin,
-  imagePlugin,
-  codeMirrorPlugin,
-  ConditionalContents,
-  ChangeCodeMirrorLanguage,
-  Separator,
-  InsertThematicBreak,
-  diffSourcePlugin,
-  MDXEditorMethods,
-  thematicBreakPlugin,
-  BlockTypeSelect,
-  CodeToggle,
-} from "@mdxeditor/editor";
-import { basicDark } from "cm6-theme-basic-dark";
-import { Ref } from "react";
-import { FC, useEffect, useState } from "react";
 import "@mdxeditor/editor/style.css";
 import "./dark.editor.css";
 import "./light.editor.css";
+
+import {
+  BlockTypeSelect,
+  BoldItalicUnderlineToggles,
+  ChangeCodeMirrorLanguage,
+  codeBlockPlugin,
+  codeMirrorPlugin,
+  CodeToggle,
+  ConditionalContents,
+  CreateLink,
+  diffSourcePlugin,
+  headingsPlugin,
+  imagePlugin,
+  InsertCodeBlock,
+  InsertImage,
+  InsertTable,
+  InsertThematicBreak,
+  linkDialogPlugin,
+  linkPlugin,
+  listsPlugin,
+  ListsToggle,
+  markdownShortcutPlugin,
+  MDXEditor,
+  MDXEditorMethods,
+  quotePlugin,
+  Separator,
+  tablePlugin,
+  thematicBreakPlugin,
+  toolbarPlugin,
+  UndoRedo,
+} from "@mdxeditor/editor";
+import { basicDark } from "cm6-theme-basic-dark";
 import { useTheme } from "next-themes";
+import { Ref } from "react";
+import { FC, useEffect, useState } from "react";
+
 import ThemeToggle from "./theme-toggle";
 
 interface Props {

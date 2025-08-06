@@ -1,13 +1,15 @@
 "use server";
 
-import { ActionResponse, ErrorResponse, Questions, Tags } from "@/types/global";
-import action from "../handler/action";
-import { GetTagQuestionsSchema, PaginatedSearchSchema } from "../validatoin";
-import { handleError } from "../handler/error";
 import { FilterQuery } from "mongoose";
-import Tag from "@/database/tags.model";
+
 import { Question } from "@/database";
+import Tag from "@/database/tags.model";
+import { ActionResponse, ErrorResponse, Questions, Tags } from "@/types/global";
+
+import action from "../handler/action";
+import { handleError } from "../handler/error";
 import dbConnect from "../mongoose";
+import { GetTagQuestionsSchema, PaginatedSearchSchema } from "../validatoin";
 
 export async function getTags(
   params: PaginatedSearchParams
@@ -78,7 +80,7 @@ export async function getQuestionTag(
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
   }
-  const { page = 1, pageSize = 10, tagId, query } = validationResult.params!;
+  const { page = 1, pageSize = 10, tagId } = validationResult.params!;
   const skip = (page - 1) * pageSize;
   const limit = Number(pageSize);
 

@@ -1,7 +1,23 @@
 "use server";
 
+import mongoose, { FilterQuery, Types } from "mongoose";
+import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+import { cache } from "react";
+
+import { auth } from "@/auth";
+import Answer from "@/database/answer .model";
+import Collection from "@/database/collection .model";
+import Interaction from "@/database/interaction.model";
+import Question, { IQuestionDoc } from "@/database/question.model";
+import TagQuestion from "@/database/questionTag.model";
+import Tag, { ITagDoc } from "@/database/tags.model";
+import Vote from "@/database/vote.model";
 import { ActionResponse, ErrorResponse, Questions } from "@/types/global";
+
 import action from "../handler/action";
+import { handleError } from "../handler/error";
+import dbConnect from "../mongoose";
 import {
   deleteQuestionSchema,
   EditQuestionSchema,
@@ -10,21 +26,7 @@ import {
   PaginatedSearchSchema,
   QuestionSchema,
 } from "../validatoin";
-import { handleError } from "../handler/error";
-import mongoose, { FilterQuery, Types } from "mongoose";
-import Question, { IQuestionDoc } from "@/database/question.model";
-import Tag, { ITagDoc } from "@/database/tags.model";
-import TagQuestion from "@/database/questionTag.model";
-import Collection from "@/database/collection .model";
-import dbConnect from "../mongoose";
-import Vote from "@/database/vote.model";
-import Answer from "@/database/answer .model";
-import { revalidatePath } from "next/cache";
 import { createInteraction } from "./interaction.action";
-import { after } from "next/server";
-import Interaction from "@/database/interaction.model";
-import { auth } from "@/auth";
-import { cache } from "react";
 
 export async function createQuestion(
   params: createQuestionProps

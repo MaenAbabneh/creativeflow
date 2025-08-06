@@ -1,9 +1,11 @@
 import React from "react";
-import DataRender from "../DataRender";
-import { ActionResponse, Answers } from "@/types/global";
-import { EMPTY_ANSWERS } from "@/constants/states";
-import AnswerCard from "../card/answer-card";
+
 import { AnswerFilters } from "@/constants/filters";
+import { EMPTY_ANSWERS } from "@/constants/states";
+import { ActionResponse, Answers } from "@/types/global";
+
+import AnswerCard from "../card/answer-card";
+import DataRender from "../DataRender";
 import CommonFilter from "../filter/commonfilter";
 import Pagination from "../pagination";
 

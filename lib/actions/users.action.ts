@@ -1,24 +1,26 @@
 "use server";
 
+import { FilterQuery, PipelineStage, Types } from "mongoose";
+import { cache } from "react";
+
+import { Answer, Question, User } from "@/database";
 import {
   ActionResponse,
+  Answers,
+  Badges,
   ErrorResponse,
   Questions,
   Users,
-  Answers,
-  Badges,
 } from "@/types/global";
+
+import action from "../handler/action";
+import { handleError } from "../handler/error";
+import { assignBadges } from "../utils";
 import {
   getUserDetailsSchema,
   getUserInfoSchema,
   PaginatedSearchSchema,
 } from "../validatoin";
-import action from "../handler/action";
-import { handleError } from "../handler/error";
-import { FilterQuery, PipelineStage, Types } from "mongoose";
-import { Answer, Question, User } from "@/database";
-import { assignBadges } from "../utils";
-import { cache } from "react";
 
 export async function getAllUsers(
   params: PaginatedSearchParams
@@ -30,13 +32,7 @@ export async function getAllUsers(
   if (validationResult instanceof Error) {
     return handleError(validationResult.error) as ErrorResponse;
   }
-  const {
-    page = 1,
-    pageSize = 10,
-    query = "",
-    filter = "",
-    sort = "",
-  } = params!;
+  const { page = 1, pageSize = 10, query = "", filter = "" } = params!;
 
   const skip = (Number(page) - 1) * pageSize;
   const limit = pageSize;
@@ -88,7 +84,9 @@ export async function getAllUsers(
     return handleError(error) as ErrorResponse;
   }
 }
-export const getUserDetails = cache(async function getUserDetails(params: getUserDetails): Promise<
+export const getUserDetails = cache(async function getUserDetails(
+  params: getUserDetails
+): Promise<
   ActionResponse<{
     user: Users;
   }>
@@ -117,8 +115,7 @@ export const getUserDetails = cache(async function getUserDetails(params: getUse
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
-}
-)
+});
 
 export async function getUserQuestions(
   params: getUserInfo
@@ -264,9 +261,7 @@ export async function getUserTopTags(
   }
 }
 
-export async function getUserStats(
-  params: getUserDetails
-): Promise<
+export async function getUserStats(params: getUserDetails): Promise<
   ActionResponse<{
     totalQuestions: number;
     totalAnswers: number;
@@ -311,19 +306,21 @@ export async function getUserStats(
       criteria: [
         { type: "QUESTION_COUNT", count: questionStats?.count || 0 },
         { type: "ANSWER_COUNT", count: answerStates?.count || 0 },
-        { type: "QUESTION_UPVOTES", count: questionStats?.upvotes + answerStates?.upvotes || 0 },
-        { type: "TOTAL_VIEWS" , count: questionStats?.views || 0 },
-      ]
+        {
+          type: "QUESTION_UPVOTES",
+          count: questionStats?.upvotes + answerStates?.upvotes || 0,
+        },
+        { type: "TOTAL_VIEWS", count: questionStats?.views || 0 },
+      ],
     });
-
-
 
     return {
       success: true,
       data: {
         badges,
         totalQuestions: questionStats?.count || 0,
-        totalAnswers: answerStates?.count || 0,},
+        totalAnswers: answerStates?.count || 0,
+      },
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;

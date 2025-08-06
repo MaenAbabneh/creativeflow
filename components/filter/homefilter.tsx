@@ -3,10 +3,10 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 
+import { HomePageFilters } from "@/constants/filters";
 import { formUrlQuery, removeUrlQuery } from "@/lib/url";
 
 import { Button } from "../ui/button";
-import { HomePageFilters } from "@/constants/filters";
 
 
 

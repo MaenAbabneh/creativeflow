@@ -6,8 +6,8 @@ import { usePathname } from "next/navigation";
 
 import { SheetClose } from "@/components/ui/sheet";
 import {
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
 import {

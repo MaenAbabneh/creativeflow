@@ -1,12 +1,13 @@
 "use client";
 
-import { use, useState } from "react";
 import Image from "next/image";
-import { formatNumber } from "@/lib/utils";
 import { useSession } from "next-auth/react";
+import { use, useState } from "react";
 import { toast } from "sonner";
-import { ActionResponse } from "@/types/global";
+
 import { createVotes } from "@/lib/actions/vote.action";
+import { formatNumber } from "@/lib/utils";
+import { ActionResponse } from "@/types/global";
 
 interface Props {
   upVotes: number;
@@ -38,21 +39,20 @@ function Votes({
     }
     setIsLoading(true);
     try {
-        const result = await createVotes({
-            targetId: targetId!,
-            targetType: targetType!,
-            voteType,
-        })
-        if (!result.success) {
-          return toast.error("Failed to cast vote", {
-            description: result.error?.message || "An unexpected error occurred.",
-          });
-        }
-        toast.success(`Successfully ${voteType}d!`, {
-            description: `Your ${voteType} has been recorded.`,
-            });
-
-    } catch (error) {
+      const result = await createVotes({
+        targetId: targetId!,
+        targetType: targetType!,
+        voteType,
+      });
+      if (!result.success) {
+        return toast.error("Failed to cast vote", {
+          description: result.error?.message || "An unexpected error occurred.",
+        });
+      }
+      toast.success(`Successfully ${voteType}d!`, {
+        description: `Your ${voteType} has been recorded.`,
+      });
+    } catch {
       return toast.error("Failed to cast vote", {
         description: "An unexpected error occurred.",
       });
@@ -64,7 +64,9 @@ function Votes({
     <div className="flex items-center gap-2">
       <div className="flex-center">
         <Image
-          src={ success && hasUpvoted ? "/icons/upvoted.svg" : "/icons/upvote.svg"}
+          src={
+            success && hasUpvoted ? "/icons/upvoted.svg" : "/icons/upvote.svg"
+          }
           alt="upvote icon"
           width={20}
           height={20}
@@ -81,7 +83,11 @@ function Votes({
 
       <div className="flex-center">
         <Image
-          src={success && hasDownvoted ? "/icons/downvoted.svg" : "/icons/downvote.svg"}
+          src={
+            success && hasDownvoted
+              ? "/icons/downvoted.svg"
+              : "/icons/downvote.svg"
+          }
           alt="downvote icon"
           width={20}
           height={20}

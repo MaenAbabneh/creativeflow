@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Session } from "next-auth";
 import { useEffect } from "react";
 
 import { Button as UIButton } from "@/components/ui/button";
@@ -20,10 +21,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import ROUTES from "@/constants/routes";
-import NavLinks from "../navbar/Navlinks";
 import UserAvatar from "@/components/UserAvatar";
-import { Session } from "next-auth";
+import ROUTES from "@/constants/routes";
+
+import NavLinks from "../navbar/Navlinks";
 
 interface LeftSidebarClientProps {
   userId: string | null;

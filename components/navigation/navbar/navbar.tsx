@@ -2,13 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+import { auth } from "@/auth";
 import MobileRightSidebar from "@/components/navigation/navbar/mobile-right-sidebar"; // New: Right mobile sidebar
 import MobileSidebar from "@/components/navigation/navbar/mobile-sidebar"; // Left mobile sidebar
-
-import Theme from "./theme";
-import { Input } from "../../ui/input";
-import { auth } from "@/auth";
 import UserAvatar from "@/components/UserAvatar";
+
+import { Input } from "../../ui/input";
+import Theme from "./theme";
 
 const Navbar = async () => {
   const session = await auth();

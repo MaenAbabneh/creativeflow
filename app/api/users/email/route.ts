@@ -1,10 +1,11 @@
+import { NextResponse } from "next/server";
+
+import User from "@/database/user.model";
 import { handleError } from "@/lib/handler/error";
+import { NotFoundError, ValidationError } from "@/lib/http-errors";
+import dbConnect from "@/lib/mongoose";
 import { UserSchema } from "@/lib/validatoin";
 import { APIErrorResponse } from "@/types/global";
-import User from "@/database/user.model";
-import { NotFoundError, ValidationError } from "@/lib/http-errors";
-import { NextResponse } from "next/server";
-import dbConnect from "@/lib/mongoose";
 
 export async function POST(request: Request) {
   const { email } = await request.json();

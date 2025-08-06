@@ -1,13 +1,14 @@
 import Link from "next/link";
+
 import QuestionCard from "@/components/card/question-card";
+import DataRender from "@/components/DataRender";
 import HomeFilter from "@/components/filter/homefilter";
+import Pagination from "@/components/pagination";
 import LocalSearch from "@/components/search/localsearch";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
-import { getQuestions } from "@/lib/actions/qustion.action";
-import DataRender from "@/components/DataRender";
 import { EMPTY_QUESTION } from "@/constants/states";
-import Pagination from "@/components/pagination";
+import { getQuestions } from "@/lib/actions/qustion.action";
 
 interface searchParams {
   searchParams: Promise<{ [key: string]: string }>;

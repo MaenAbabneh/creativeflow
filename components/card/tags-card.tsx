@@ -1,5 +1,6 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+
 import { Badge } from "@/components/ui/badge";
 import ROUTES from "@/constants/routes";
 import { cn, getDeviconClassName, getTechDescription } from "@/lib/utils";
@@ -43,7 +44,9 @@ const TagsCard = ({
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              handleRemove && handleRemove(_id);
+              if (handleRemove) {
+                handleRemove(_id);
+              }
             }}
           />
         )}

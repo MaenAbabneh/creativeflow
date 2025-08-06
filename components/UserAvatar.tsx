@@ -3,9 +3,9 @@ import Link from "next/link";
 import React from "react";
 
 import ROUTES from "@/constants/routes";
+import { cn } from "@/lib/utils";
 
 import { Avatar, AvatarFallback } from "./ui/avatar";
-import { cn } from "@/lib/utils";
 
 interface Props {
   id: string;
@@ -21,10 +21,8 @@ const UserAvatar = ({
   id,
   name,
   imageUrl,
-  className="w-9 h-9" ,
+  className = "w-9 h-9",
   fallbackClassName,
-  showName = false,
-  nameClassName = "paragraph-semibold text-dark300_light700",
 }: Props) => {
   const initials = name
     .split(" ")
@@ -33,7 +31,7 @@ const UserAvatar = ({
     .toUpperCase()
     .slice(0, 2);
 
-     return (
+  return (
     <Link href={ROUTES.PROFILE(id)}>
       <Avatar className={cn("relative", className)}>
         {imageUrl ? (

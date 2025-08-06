@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
-import { AlertTriangle, RefreshCw, Home, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AlertTriangle, ArrowLeft, Home, RefreshCw } from "lucide-react";
 import Link from "next/link";
+import { useEffect } from "react";
+
+import { Button } from "@/components/ui/button";
 
 export default function Error({
   error,
@@ -31,8 +32,8 @@ export default function Error({
         <div className="space-y-4">
           <h2 className="h2-bold text-dark100_light900">Question Not Found</h2>
           <p className="text-dark500_light700 text-base leading-relaxed">
-            We couldn't find the question you're looking for. It might have been
-            removed or the link is incorrect.
+            We couldn&apos;t find the question you&apos;re looking for. It might
+            have been removed or the link is incorrect.
           </p>
 
           {/* Error Details */}

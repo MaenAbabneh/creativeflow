@@ -1,6 +1,15 @@
 "use server";
 
+import mongoose, { ClientSession } from "mongoose";
+import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+
+import ROUTES from "@/constants/routes";
+import Answer from "@/database/answer .model";
+import Question from "@/database/question.model";
+import Vote from "@/database/vote.model";
 import { ActionResponse, ErrorResponse } from "@/types/global";
+
 import action from "../handler/action";
 import { handleError } from "../handler/error";
 import {
@@ -8,13 +17,6 @@ import {
   HasVotedSchema,
   UpdateVotesSchema,
 } from "../validatoin";
-import mongoose, { ClientSession } from "mongoose";
-import Vote from "@/database/vote.model";
-import Answer from "@/database/answer .model";
-import Question from "@/database/question.model";
-import { revalidatePath } from "next/cache";
-import ROUTES from "@/constants/routes";
-import { after } from "next/server";
 import { createInteraction } from "./interaction.action";
 
 export async function updateVotes(

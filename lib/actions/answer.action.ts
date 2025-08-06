@@ -1,6 +1,15 @@
 "use server";
 
-import { ActionResponse, ErrorResponse, Answers } from "@/types/global";
+import mongoose from "mongoose";
+import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+
+import ROUTES from "@/constants/routes";
+import Answer, { IAnswerDoc } from "@/database/answer .model";
+import Question from "@/database/question.model";
+import Vote from "@/database/vote.model";
+import { ActionResponse, Answers,ErrorResponse } from "@/types/global";
+
 import action from "../handler/action";
 import { handleError } from "../handler/error";
 import {
@@ -8,13 +17,6 @@ import {
   deleteAnswerSchema,
   GetAnswersSchema,
 } from "../validatoin";
-import mongoose from "mongoose";
-import Question from "@/database/question.model";
-import Answer, { IAnswerDoc } from "@/database/answer .model";
-import { revalidatePath } from "next/cache";
-import ROUTES from "@/constants/routes";
-import Vote from "@/database/vote.model";
-import { after } from "next/server";
 import { createInteraction } from "./interaction.action";
 
 export async function createAnswer(

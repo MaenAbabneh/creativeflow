@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
-import { AlertTriangle, RefreshCw, Home, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AlertTriangle, ArrowLeft, Home, RefreshCw } from "lucide-react";
 import Link from "next/link";
+import { useEffect } from "react";
+
+import { Button } from "@/components/ui/button";
 
 export default function Error({
   error,
@@ -35,7 +36,7 @@ export default function Error({
           </h2>
           <p className="text-dark500_light700 text-base leading-relaxed">
             We encountered an unexpected error while loading the community page.
-            Don't worry, this happens sometimes!
+            Don&apos;t worry, this happens sometimes!
           </p>
 
           {/* Error Details */}

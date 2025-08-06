@@ -1,3 +1,6 @@
+import Link from "next/link";
+import React from "react";
+
 import QuestionCard from "@/components/card/question-card";
 import DataRender from "@/components/DataRender";
 import LocalSearch from "@/components/search/localsearch";
@@ -6,8 +9,6 @@ import ROUTES from "@/constants/routes";
 import { EMPTY_QUESTION } from "@/constants/states";
 import { getQuestionTag } from "@/lib/actions/tag.action";
 import { RouteParams } from "@/types/global";
-import Link from "next/link";
-import React from "react";
 
 const page = async ({ searchParams, params }: RouteParams) => {
   const { id } = await params;

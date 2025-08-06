@@ -1,15 +1,15 @@
 import Link from "next/link";
+
 import QuestionCard from "@/components/card/question-card";
-import HomeFilter from "@/components/filter/homefilter";
+import DataRender from "@/components/DataRender";
+import CommonFilter from "@/components/filter/commonfilter";
+import Pagination from "@/components/pagination";
 import LocalSearch from "@/components/search/localsearch";
 import { Button } from "@/components/ui/button";
+import { CollectionFilters } from "@/constants/filters";
 import ROUTES from "@/constants/routes";
-import DataRender from "@/components/DataRender";
 import { EMPTY_QUESTION } from "@/constants/states";
 import { getSavedQuestions } from "@/lib/actions/collaction.action";
-import CommonFilter from "@/components/filter/commonfilter";
-import { CollectionFilters } from "@/constants/filters";
-import Pagination from "@/components/pagination";
 
 interface searchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -24,7 +24,7 @@ export default async function collection({ searchParams }: searchParams) {
     filter: filter || "",
   });
 
-  const { Collection , isNext } = data || {};
+  const { Collection, isNext } = data || {};
 
   return (
     <div className="">

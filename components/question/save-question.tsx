@@ -1,16 +1,17 @@
 "use client";
 
-import React, { use, useState } from "react";
 import Image from "next/image";
-import { ActionResponse } from "@/types/global";
 import { useSession } from "next-auth/react";
+import React, { use, useState } from "react";
 import { toast } from "sonner";
+
 import { addToCollection } from "@/lib/actions/collaction.action";
+import { ActionResponse } from "@/types/global";
 
 interface Props {
-    questionId: string;
-    hasSavedPromise?: Promise<ActionResponse<{ saved: boolean }>>;
-    otherClassName?: string;
+  questionId: string;
+  hasSavedPromise?: Promise<ActionResponse<{ saved: boolean }>>;
+  otherClassName?: string;
 }
 
 function SaveQuestion({ questionId, hasSavedPromise, otherClassName }: Props) {
@@ -24,34 +25,38 @@ function SaveQuestion({ questionId, hasSavedPromise, otherClassName }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSave = async () => {
-    if(isLoading) return;
+    if (isLoading) return;
     if (!userId) {
       return toast.warning("Login Required", {
         description: "You need to be logged in to save questions.",
       });
     }
-    setIsLoading(true);   
+    setIsLoading(true);
 
     try {
-        const {error , success, data} = await addToCollection({ questionId });
+      const { error, success, data } = await addToCollection({ questionId });
 
-        if (!success) {
-          return toast.error("Failed to save question", {
-            description: error?.message || "An unexpected error occurred.",
-          });
-        }
-
-        toast.success(`Question ${data?.hasSaved ? "saved to" : "removed from"} your collection!`, {
-          description: data?.hasSaved ? "Question saved to your collection." : "Question removed from your collection.",
+      if (!success) {
+        return toast.error("Failed to save question", {
+          description: error?.message || "An unexpected error occurred.",
         });
-    } catch (error) {
+      }
+
+      toast.success(
+        `Question ${data?.hasSaved ? "saved to" : "removed from"} your collection!`,
+        {
+          description: data?.hasSaved
+            ? "Question saved to your collection."
+            : "Question removed from your collection.",
+        }
+      );
+    } catch {
       toast.error("Failed to save question", {
         description: "An unexpected error occurred.",
-      });   
-    }finally{
-        setIsLoading(false);
+      });
+    } finally {
+      setIsLoading(false);
     }
-
   };
 
   return (
@@ -63,7 +68,9 @@ function SaveQuestion({ questionId, hasSavedPromise, otherClassName }: Props) {
         height={20}
         className={`cursor-pointer ${isLoading && "opacity-50"}`}
         aria-label="Save question"
-        onClick={async () => {handleSave()}}
+        onClick={async () => {
+          handleSave();
+        }}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 import {
   DefaultValues,
   FieldValues,
@@ -9,7 +9,7 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-
+import { toast } from "sonner";
 import z, { ZodType } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -24,8 +24,6 @@ import {
 import { Input } from "@/components/ui/input";
 import ROUTES from "@/constants/routes";
 import { ActionResponse } from "@/types/global";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodType<T>;
@@ -113,7 +111,7 @@ export function AuthForm<T extends FieldValues>({
         <div className="text-center mt-6">
           {formType === "SIGN_IN" ? (
             <p className="paragraph-regular text-dark500_light400">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link
                 href={ROUTES.SIGNUP}
                 className="text-primary-500 hover:text-primary-600 font-medium transition-colors duration-200"

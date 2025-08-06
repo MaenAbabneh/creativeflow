@@ -1,15 +1,15 @@
 import Link from "next/link";
-
-import ROUTES from "@/constants/routes";
-import { cn, getPuplishTime } from "@/lib/utils";
+import { Suspense } from "react";
 
 import { Preview } from "@/components/editor/preview";
-import UserAvatar from "../UserAvatar";
-import { Answers } from "@/types/global";
-import Votes from "../votes/votes";
+import ROUTES from "@/constants/routes";
 import { hasVoted } from "@/lib/actions/vote.action";
-import { Suspense } from "react";
+import { cn, getPuplishTime } from "@/lib/utils";
+import { Answers } from "@/types/global";
+
+import UserAvatar from "../UserAvatar";
 import ResponsiveEditDeleteAction from "../users/responsive-editedelete";
+import Votes from "../votes/votes";
 
 interface Props extends Answers {
   containerClasses?: string;

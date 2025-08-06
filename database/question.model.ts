@@ -1,4 +1,4 @@
-import { model, Schema, Types, models , Document } from "mongoose";
+import { Document,model, models , Schema, Types } from "mongoose";
 
 export interface IQuestion {
   title: string;

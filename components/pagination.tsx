@@ -2,9 +2,11 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
-import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
+
 import { formUrlQuery } from "@/lib/url";
+import { cn } from "@/lib/utils";
+
+import { Button } from "./ui/button";
 
 interface Props {
   isNext?: boolean;

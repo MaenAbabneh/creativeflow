@@ -1,13 +1,15 @@
-import ROUTES from "@/constants/routes";
-import { getPuplishTime } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
-import TagsCard from "./tags-card";
+
 import Metric from "@/components/metric";
-import { Questions, Tags } from "@/types/global";
-import SaveQuestion from "../question/save-question";
+import ROUTES from "@/constants/routes";
 import { hasSavedQuestion } from "@/lib/actions/collaction.action";
+import { getPuplishTime } from "@/lib/utils";
+import { Questions, Tags } from "@/types/global";
+
+import SaveQuestion from "../question/save-question";
 import ResponsiveEditDeleteAction from "../users/responsive-editedelete";
+import TagsCard from "./tags-card";
 
 interface Props {
   question: Questions;

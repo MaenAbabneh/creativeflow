@@ -3,10 +3,11 @@ import Link from "next/link";
 
 import TagsCard from "@/components/card/tags-card";
 import ROUTES from "@/constants/routes";
-import { cn } from "@/lib/utils"; 
-import DataRender from "../DataRender";
 import { getPopularQuestions } from "@/lib/actions/qustion.action";
 import { getPopularTags } from "@/lib/actions/tag.action";
+import { cn } from "@/lib/utils"; 
+
+import DataRender from "../DataRender";
 
 interface RightSidebarProps {
   isMobileView?: boolean;

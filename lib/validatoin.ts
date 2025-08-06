@@ -1,6 +1,6 @@
-import { InteractionActionEnums } from "@/database/interaction.model";
 import z from "zod";
-import mongoose from "mongoose";
+
+import { InteractionActionEnums } from "@/database/interaction.model";
 
 export const SignInSchema = z.object({
   email: z.string().email("Invalid email address"),

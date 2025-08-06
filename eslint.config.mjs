@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,45 +20,21 @@ const config = [
   ...compat.extends(
     "next/core-web-vitals",
     "next/typescript",
-    "standard",
     // "plugin:tailwindcss/recommended",
     "prettier"
   ),
   {
+    plugins: {
+      "simple-import-sort": simpleImportSort,
+    },
     rules: {
-      "import/order": [
-        "error",
-        {
-          groups: [
-            "builtin",
-            "external",
-            "internal",
-            ["parent", "sibling"],
-            "index",
-            "object",
-          ],
-
-          "newlines-between": "always",
-
-          pathGroups: [
-            {
-              pattern: "@app/**",
-              group: "external",
-              position: "after",
-            },
-          ],
-
-          pathGroupsExcludedImportTypes: ["builtin"],
-
-          alphabetize: {
-            order: "asc",
-            caseInsensitive: true,
-          },
-        },
-      ],
+      "simple-import-sort/imports": "error", // Use this rule for sorting imports
+      "simple-import-sort/exports": "error", // Use this rule for sorting exports
       "comma-dangle": "off",
+      // You can remove your old "import/order" rule here
     },
   },
+   
   {
     files: ["**/*.ts", "**/*.tsx"],
 

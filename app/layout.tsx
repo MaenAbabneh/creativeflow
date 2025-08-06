@@ -1,10 +1,11 @@
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
 
-import "./globals.css";
 import { auth } from "@/auth";
 import ThemeProvider from "@/context/Theme";
 const inter = Inter({
