@@ -45,7 +45,16 @@ export const metadata: Metadata = {
   referrer: "origin-when-cross-origin",
   description:
     "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
-  keywords: ["programming", "coding", "developer community" , "Q&A", "web development", "mobile app development", "algorithms", "data structures"],
+  keywords: [
+    "programming",
+    "coding",
+    "developer community",
+    "Q&A",
+    "web development",
+    "mobile app development",
+    "algorithms",
+    "data structures",
+  ],
   authors: [{ name: "Maen Ababenh" }],
   creator: "Maen Ababenh",
   publisher: "Maen Ababenh",
@@ -67,7 +76,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "website",
   },
-   formatDetection: {
+  formatDetection: {
     email: false,
     address: false,
     telephone: false,
@@ -99,7 +108,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-
 };
 
 export default async function RootLayout({
@@ -109,7 +117,7 @@ export default async function RootLayout({
 }>) {
   const session = await auth();
   return (
-    <html lang="en" >
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
@@ -121,12 +129,7 @@ export default async function RootLayout({
         <body
           className={`${inter.className} ${Grotisk.variable} ${Tajwal.variable} font-sans antialiased`}
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+          <ThemeProvider attribute="class" defaultTheme="system">
             {children}
           </ThemeProvider>
           <Toaster />

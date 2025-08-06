@@ -1,5 +1,5 @@
-export const sidebarLinks  = [
-     {
+export const sidebarLinks = [
+  {
     imgURL: "/icons/home.svg",
     route: "/",
     label: "Home",
@@ -36,7 +36,6 @@ export const sidebarLinks  = [
   },
 ];
 
-
 export const BADGE_CRITERIA = {
   QUESTION_COUNT: {
     BRONZE: 10,
@@ -64,3 +63,14 @@ export const BADGE_CRITERIA = {
     GOLD: 100000,
   },
 };
+
+export const InteractionActionEnums = [
+  "view",
+  "upvote",
+  "downvote",
+  "bookmark",
+  "post",
+  "edit",
+  "delete",
+  "search",
+] as const;

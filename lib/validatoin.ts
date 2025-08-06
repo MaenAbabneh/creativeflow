@@ -1,6 +1,6 @@
 import z from "zod";
 
-import { InteractionActionEnums } from "@/database/interaction.model";
+import { InteractionActionEnums } from "@/constants";
 
 export const SignInSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -136,7 +136,7 @@ export const PaginatedSearchSchema = z.object({
   query: z.string().optional(),
   filter: z.string().optional(),
   sort: z.string().optional(),
-})
+});
 
 export const GetTagQuestionsSchema = PaginatedSearchSchema.extend({
   tagId: z.string().min(1, { message: "Tag ID is required." }),
@@ -164,7 +164,6 @@ export const EditAnswerSchema = AnswerSchema.extend({
   content: z.string().min(20, "Content must be at least 20 characters long"),
 });
 
-
 export const AIAnswerSchema = z.object({
   question: z
     .string()
@@ -178,13 +177,17 @@ export const AIAnswerSchema = z.object({
 
 export const CreateVotesSchema = z.object({
   targetId: z.string().min(1, { message: "Target ID is required." }),
-  targetType: z.enum(["question", "answer"] , {message: "Target type is required."}),
-  voteType: z.enum(["upvote", "downvote"] , {message: "Vote type is required."}),
+  targetType: z.enum(["question", "answer"], {
+    message: "Target type is required.",
+  }),
+  voteType: z.enum(["upvote", "downvote"], {
+    message: "Vote type is required.",
+  }),
 });
 
 export const UpdateVotesSchema = CreateVotesSchema.extend({
-  change: z.number().int().min(-1).max(1)
-})
+  change: z.number().int().min(-1).max(1),
+});
 
 export const HasVotedSchema = CreateVotesSchema.pick({
   targetId: true,
@@ -193,7 +196,9 @@ export const HasVotedSchema = CreateVotesSchema.pick({
 
 export const HasSavedSchema = z.object({
   targetId: z.string().min(1, { message: "Target ID is required." }),
-  targetType: z.enum(["question", "answer"], { message: "Target type is required." }),
+  targetType: z.enum(["question", "answer"], {
+    message: "Target type is required.",
+  }),
 });
 
 export const CreateAddCollectionSchema = z.object({
@@ -218,11 +223,9 @@ export const deleteAnswerSchema = z.object({
   answerId: z.string().min(1, { message: "Answer ID is required." }),
 });
 
-
 export const createInteractionSchema = z.object({
   actionId: z.string().min(1),
   authorId: z.string().min(1),
   actionTarget: z.enum(["answer", "question"]),
   actions: z.enum(InteractionActionEnums),
 });
-
