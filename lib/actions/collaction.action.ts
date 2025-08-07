@@ -75,7 +75,7 @@ export async function hasSavedQuestion(
   const validationResult = await action({
     params,
     schema: CreateAddCollectionSchema,
-    authorize: true,
+    authorize: false, // Don't require authentication
   });
 
   if (validationResult instanceof Error) {

@@ -172,7 +172,9 @@ export const AIAnswerSchema = z.object({
   content: z
     .string()
     .min(100, { message: "Answer has to have more than 100 characters." }),
-  userAnswer: z.string().optional(),
+  userAnswer: z.string().min(20, {
+    message: "User answer must be at least 20 characters long.",
+  }),
 });
 
 export const CreateVotesSchema = z.object({

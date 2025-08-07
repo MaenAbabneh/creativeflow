@@ -157,7 +157,7 @@ export async function hasVoted(
   const validationResult = await action({
     params,
     schema: HasVotedSchema,
-    authorize: true,
+    authorize: false, // Don't require authentication
   });
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
@@ -166,7 +166,13 @@ export async function hasVoted(
   const { targetId, targetType } = validationResult.params!;
   const userId = validationResult.session?.user?.id;
 
-  if (!userId) return handleError("User not authenticated") as ErrorResponse;
+  // If user is not authenticated, return default state
+  if (!userId) {
+    return {
+      success: true,
+      data: { hasUpvoted: false, hasDownvoted: false },
+    };
+  }
 
   try {
     const vote = await Vote.findOne({

@@ -88,6 +88,13 @@ const AnswerForm = ({
 
     const userAnswer = editorRef.current?.getMarkdown() ?? "";
 
+    if (!userAnswer || userAnswer.length < 20) {
+      setIsAISubmitting(false);
+      return toast.error("Your answer must be at least 20 characters long", {
+        description: "Please provide a longer answer before generating AI content.",
+      });
+    }
+
     try {
       const { success, data, error } = await api.ai.getAnswer(
         questionTitle!,
@@ -160,7 +167,7 @@ const AnswerForm = ({
                 className="object-contain"
               />
               <span className="text-dark100_light900 small-regular">
-                Generate AI Answer
+                Improve with AI
               </span>
             </>
           )}
@@ -188,8 +195,7 @@ const AnswerForm = ({
                 </div>
                 <FormMessage />
                 <FormDescription className="!text-dark300_light800 small-regular">
-                  Provide a detailed answer to help solve the problem. Minimum
-                  20 characters.
+                  Start writing your answer, then use &quot;Improve with AI&quot; to enhance it. Minimum 20 characters.
                 </FormDescription>
               </FormItem>
             )}

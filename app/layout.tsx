@@ -122,7 +122,6 @@ export default async function RootLayout({
         <link
           rel="stylesheet"
           type="text/css"
-          href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
         />
       </head>
       <SessionProvider session={session}>

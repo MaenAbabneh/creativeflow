@@ -92,7 +92,7 @@ export async function getAnswers(
   const validationResult = await action({
     params,
     schema: GetAnswersSchema,
-    authorize: true,
+    authorize: false, // Don't require authentication for viewing answers
   });
 
   if (validationResult instanceof Error) {

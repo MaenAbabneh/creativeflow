@@ -296,7 +296,7 @@ export const getQuestion = cache(async function getQuestion(
   const validationResult = await action({
     params,
     schema: GetQuestionsSchema,
-    authorize: true,
+    authorize: false, // Don't require authentication for viewing questions
   });
 
   if (validationResult instanceof Error) {
@@ -429,14 +429,7 @@ export async function incrementViews(
     );
     if (!question) throw new Error("Question not found");
 
-    after(async () => {
-      await createInteraction({
-        actionId: question._id.toString(),
-        authorId: question.author.toString(),
-        actionTarget: "question",
-        actions: "view",
-      });
-    });
+   
 
     return { success: true, data: { views: question.views } };
   } catch (error) {

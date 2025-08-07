@@ -2,7 +2,7 @@ import { type ClassValue,clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 import { BADGE_CRITERIA } from "@/constants";
-import { techDescriptionMap, techMap } from "@/constants/techmap";
+import { techDescriptionMap} from "@/constants/techmap";
 import { Badges } from "@/types/global";
 
 export function cn(...inputs: ClassValue[]) {
@@ -12,9 +12,7 @@ export function cn(...inputs: ClassValue[]) {
 export const getDeviconClassName = (techName: string) => {
   const normalizedTechName = techName.replace(/[ .]/g, "").toLowerCase();
 
-  return techMap[normalizedTechName]
-    ? `${techMap[normalizedTechName]} colored`
-    : "devicon-devicon-plain";
+  return normalizedTechName;
 };
 
 export function getTechDescription(techName: string): string {

@@ -1,6 +1,5 @@
 "use server";
 
-
 import mongoose from "mongoose";
 
 import Interaction, { IInteractionDoc } from "@/database/interaction.model";
@@ -97,14 +96,7 @@ export async function updateReputation(params: UpdateReputationParams) {
     case "edit":
       authorPoint = actionType === "question" ? 2 : 2;
       break;
-    case "search":
-      performerPoint = 1;
-      authorPoint = 0;
-      break;
-    case "view":
-      performerPoint = 0;
-      authorPoint = 1;
-      break;     
+    
   }
 
   if (performerId === authorId) {

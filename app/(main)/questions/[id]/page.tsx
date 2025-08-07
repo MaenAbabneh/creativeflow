@@ -48,6 +48,9 @@ const QuestionDetails = async ({ params , searchParams }: RouteParams) => {
   const { page, pagesize, filter } = await searchParams;
 
   const { success, data: question } = await getQuestion({ questionId: id });
+
+  if (!success || !question) return redirect("/404");
+
   const {
     success: areAnswersLoaded,
     data: answersResult,
@@ -60,19 +63,17 @@ const QuestionDetails = async ({ params , searchParams }: RouteParams) => {
   });
 
   const hasVotedPromise = hasVoted({
-    targetId: question?._id,
+    targetId: question._id,
     targetType: "question",
   });
 
   const hasSavedPromise = hasSavedQuestion({
-    questionId: question?._id ?? "",
+    questionId: question._id,
   });
 
   after(async () => {
     await incrementViews({ questionId: id });
   });
-
-  if (!success || !question) return redirect("/404");
 
   const { title, content, tags, author, createdAt, answers, views } = question;
 
@@ -104,7 +105,7 @@ const QuestionDetails = async ({ params , searchParams }: RouteParams) => {
             </Suspense>
             <div className="ml-2 flex items-center justify-center">
             <Suspense fallback={<div>Loading...</div>}>
-            <SaveQuestion questionId={question?._id} hasSavedPromise={hasSavedPromise} />
+            <SaveQuestion questionId={question._id} hasSavedPromise={hasSavedPromise} />
             </Suspense>
             </div>
           </div>

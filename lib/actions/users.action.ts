@@ -84,6 +84,7 @@ export async function getAllUsers(
     return handleError(error) as ErrorResponse;
   }
 }
+
 export const getUserDetails = cache(async function getUserDetails(
   params: getUserDetails
 ): Promise<
