@@ -66,15 +66,15 @@ const GlobalSearch = () => {
 
   return (
     <div
-      className="relative w-full max-w-[600px] max-lg:hidden background-light800_darkgradient"
+      className="relative w-full max-w-[600px] max-lg:hidden background-light800_darkgradient rounded-xl"
       ref={searchContainerRef}
     >
       <div className="!bg-transparent relative flex min-h-[56px] grow items-center gap-1 rounded-xl px-4">
         <Image
           src="/icons/search.svg"
           alt="search"
-          width={24}
-          height={24}
+          width={20}
+          height={20}
           className="cursor-pointer"
         />
 

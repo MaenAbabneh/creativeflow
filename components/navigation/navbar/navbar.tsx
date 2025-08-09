@@ -45,7 +45,7 @@ const Navbar = async () => {
       </div>
 
       {/* Center Section: Search Bar (visible on sm and up) */}
-      <div className="hidden sm:flex items-center gap-2 flex-1 mx-4 max-w-md lg:max-w-xl light-border-2 background-light800_darkgradient rounded-lg px-3 py-2 shadow-light-100 dark:shadow-none">
+      <div className="hidden sm:flex items-center gap-2 flex-1 mx-4 max-w-md lg:max-w-xl light-border-2 background-light800_darkgradient rounded-lg  shadow-light-100 dark:shadow-none">
       <GlobalSearch />
       </div>
 
