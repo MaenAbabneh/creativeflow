@@ -111,7 +111,7 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
     user;
 
   return (
-    <div className="w-full max-w-7xl mx-auto space-y-6 sm:space-y-8 lg:space-y-10">
+    <div className="w-full max-w-7xl mx-auto space-y-6 sm:space-y-8 lg:space-y-10 mt-11">
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
         <div className="lg:col-span-2 flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
           <UserAvatar
@@ -155,7 +155,7 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
 
         <div className="lg:col-span-1 flex justify-start lg:justify-end">
           {loggedInUser?.user?.id === id && (
-            <Link href="/profile/edit" className="w-full sm:w-auto lg:w-auto">
+            <Link href="/profile/edite" className="w-full sm:w-auto lg:w-auto">
               <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-12 w-full sm:min-w-44 lg:min-w-36 xl:min-w-44 px-4 py-3 transition-all duration-200 hover:scale-105">
                 Edit Profile
               </Button>
