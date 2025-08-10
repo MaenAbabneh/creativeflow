@@ -1,3 +1,6 @@
+export const runtime = "edge";
+export const maxDuration = 20;
+
 import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
 import { NextResponse } from "next/server";

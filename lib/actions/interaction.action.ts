@@ -8,14 +8,14 @@ import { ActionResponse, ErrorResponse } from "@/types/global";
 
 import action from "../handler/action";
 import { handleError } from "../handler/error";
-import { createInteractionSchema } from "../validatoin";
+import { CreateInteractionSchema } from "../validatoin";
 
 export async function createInteraction(
-  params: createInteractionParams
+  params: CreateInteractionParams
 ): Promise<ActionResponse<IInteractionDoc>> {
   const validationResult = await action({
     params,
-    schema: createInteractionSchema,
+    schema: CreateInteractionSchema,
     authorize: true,
   });
 
@@ -23,8 +23,12 @@ export async function createInteraction(
     return handleError(validationResult) as ErrorResponse;
   }
 
-  const { actions, actionId, actionTarget, authorId } =
-    validationResult.params!;
+  const {
+    actions: actionType,
+    actionId,
+    actionTarget,
+    authorId, // person who owns the content (question/answer)
+  } = validationResult.params!;
   const userId = validationResult.session?.user?.id;
 
   const session = await mongoose.startSession();
@@ -34,17 +38,16 @@ export async function createInteraction(
     const [interaction] = await Interaction.create(
       [
         {
-          actions,
+          user: userId,
+          action: actionType,
           actionId,
-          actionTarget,
-          authorId,
+          actionType: actionTarget,
         },
       ],
       { session }
     );
 
-    // TODO: Update reputation for both the performer and the content author
-
+    // Update reputation for both the performer and the content author
     await updateReputation({
       interaction,
       session,
@@ -53,16 +56,13 @@ export async function createInteraction(
     });
 
     await session.commitTransaction();
-    return {
-      success: true,
-      data: JSON.parse(JSON.stringify(interaction)),
-    };
+
+    return { success: true, data: JSON.parse(JSON.stringify(interaction)) };
   } catch (error) {
     await session.abortTransaction();
-    session.endSession();
     return handleError(error) as ErrorResponse;
   } finally {
-    session.endSession();
+    await session.endSession();
   }
 }
 
@@ -96,15 +96,16 @@ export async function updateReputation(params: UpdateReputationParams) {
     case "edit":
       authorPoint = actionType === "question" ? 2 : 2;
       break;
-    
   }
 
+  
   if (performerId === authorId) {
     await User.findByIdAndUpdate(
       performerId,
-      { $inc: { reputation: performerPoint } },
+      { $inc: { reputation: authorPoint } },
       { session }
     );
+
     return;
   }
 

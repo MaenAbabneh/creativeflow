@@ -43,9 +43,9 @@ function SaveQuestion({ questionId, hasSavedPromise, otherClassName }: Props) {
       }
 
       toast.success(
-        `Question ${data?.hasSaved ? "saved to" : "removed from"} your collection!`,
+        `Question ${data?.Saved ? "saved to" : "removed from"} your collection!`,
         {
-          description: data?.hasSaved
+          description: data?.Saved
             ? "Question saved to your collection."
             : "Question removed from your collection.",
         }

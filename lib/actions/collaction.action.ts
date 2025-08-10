@@ -17,9 +17,10 @@ import {
 } from "../validatoin";
 import { createInteraction } from "./interaction.action";
 
+
 export async function addToCollection(
   params: CreateAddCollectionParams
-): Promise<ActionResponse<{ hasSaved: boolean }>> {
+): Promise<ActionResponse<{ Saved: boolean }>> {
   const validationResult = await action({
     params,
     schema: CreateAddCollectionSchema,
@@ -32,21 +33,35 @@ export async function addToCollection(
   const { questionId } = validationResult.params!;
   const userId = validationResult.session?.user?.id;
 
-  if (!userId) return handleError("User not authenticated") as ErrorResponse;
+   if (!questionId || !userId) {
+    return {
+      success: false,
+      error: { message: "Missing questionId or userId." },
+    };
+  }
 
   try {
     const question = await Question.findById(questionId);
-    if (!question) return handleError("Question not found") as ErrorResponse;
+    if (!question) throw new Error("Question not found");
 
     const collection = await Collection.findOne({
-      author: userId,
       question: questionId,
+      author: userId,
     });
+
     if (collection) {
       await Collection.findByIdAndDelete(collection._id);
+
       revalidatePath(ROUTES.QUESTION(questionId));
-      return { success: true, data: { hasSaved: false } };
+
+      return {
+        success: true,
+        data: {
+          Saved: false,
+        },
+      };
     }
+
     await Collection.create({
       question: questionId,
       author: userId,
@@ -63,7 +78,12 @@ export async function addToCollection(
       });
     });
 
-    return { success: true, data: { hasSaved: true } };
+    return {
+      success: true,
+      data: {
+        Saved: true,
+      },
+    };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
@@ -75,10 +95,10 @@ export async function hasSavedQuestion(
   const validationResult = await action({
     params,
     schema: CreateAddCollectionSchema,
-    authorize: false, // Don't require authentication
+    authorize: true, 
   });
 
-  if (validationResult instanceof Error) {
+   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
   }
 

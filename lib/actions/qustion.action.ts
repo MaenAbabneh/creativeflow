@@ -1,7 +1,12 @@
 "use server";
 
 import mongoose, { FilterQuery, Types } from "mongoose";
-import { revalidatePath } from "next/cache";
+import {
+  revalidatePath,
+  revalidateTag,
+  unstable_cacheLife as cacheLife,
+  unstable_cacheTag as cacheTag,
+} from "next/cache";
 import { after } from "next/server";
 import { cache } from "react";
 
@@ -41,7 +46,7 @@ export async function createQuestion(
     return handleError(validationResult) as ErrorResponse;
   }
 
-  const { title, content, tags ,  } = validationResult.params!;
+  const { title, content, tags } = validationResult.params!;
   const userId = validationResult.session?.user?.id;
 
   if (!userId) {
@@ -51,7 +56,6 @@ export async function createQuestion(
   session.startTransaction();
 
   try {
-  
     const [question] = await Question.create(
       [
         {
@@ -96,6 +100,10 @@ export async function createQuestion(
         actions: "post",
       });
     });
+
+    revalidateTag(`recommended-questions-${userId}`);
+    revalidateTag("questions");
+    revalidateTag("popular-tags");
 
     await session.commitTransaction();
     return {
@@ -216,6 +224,10 @@ export async function editQuestion(
         actions: "edit",
       });
     });
+    revalidateTag(`recommended-questions-${userId}`);
+    revalidateTag("questions");
+    revalidateTag("popular-tags");
+
     await session.commitTransaction();
 
     return { success: true, data: JSON.parse(JSON.stringify(question)) };
@@ -227,12 +239,156 @@ export async function editQuestion(
   }
 }
 
+export async function deleteQuestion(
+  params: deleteQuestionParams
+): Promise<ActionResponse> {
+  const validationResult = await action({
+    params,
+    schema: deleteQuestionSchema,
+    authorize: true,
+  });
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { questionId } = params;
+  const { user } = validationResult.session!;
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    // البحث عن السؤال للتأكد من وجوده
+    const question = await Question.findById(questionId).session(session);
+    if (!question) throw new Error("Question not found");
+
+    // التحقق من صلاحيات المستخدم
+    if (question.author.toString() !== user?.id) {
+      throw new Error("You are not authorized to delete this question");
+    }
+
+    // حذف المجموعات المرتبطة بالسؤال
+    await Collection.deleteMany({ question: questionId }).session(session);
+
+    // حذف علاقات العلامات بالسؤال
+    await TagQuestion.deleteMany({ question: questionId }).session(session);
+
+    // تقليل عدد الأسئلة في العلامات
+    if (question.tags.length > 0) {
+      await Tag.updateMany(
+        { _id: { $in: question.tags } },
+        { $inc: { questions: -1 } },
+        { session }
+      );
+    }
+
+    // البحث عن الإجابات المرتبطة بالسؤال
+    const answers = await Answer.find({ question: questionId }).session(
+      session
+    );
+
+    // حذف الإجابات والأصوات المرتبطة بها
+    if (answers.length > 0) {
+      await Answer.deleteMany({ question: questionId }).session(session);
+
+      // حذف أصوات الإجابات
+      await Vote.deleteMany(
+        {
+          actionId: { $in: answers.map((answer) => answer._id) },
+          actionType: "answer",
+        },
+        { session }
+      );
+    }
+
+    // حذف الأصوات المرتبطة بالسؤال نفسه
+    await Vote.deleteMany(
+      {
+        actionId: questionId,
+        actionType: "question",
+      },
+      { session }
+    );
+
+    // حذف السؤال نفسه
+    await Question.findByIdAndDelete(questionId).session(session);
+
+    // إتمام المعاملة
+    await session.commitTransaction();
+
+    // إعادة تحديث المسار
+    revalidatePath(`/profile/${user?.id}`);
+
+    after(async () => {
+      await createInteraction({
+        actionId: question._id.toString(),
+        authorId: user?.id as string,
+        actionTarget: "question",
+        actions: "delete",
+      });
+    });
+    revalidateTag(`recommended-questions-${user?.id}`);
+    revalidateTag("questions");
+    revalidateTag("popular-tags");
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    // إلغاء المعاملة في حالة الخطأ
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
+    return handleError(error) as ErrorResponse;
+  } finally {
+    // إنهاء الجلسة
+    await session.endSession();
+  }
+}
+
+export async function incrementViews(
+  params: IncrementViewsParams
+): Promise<ActionResponse<{ views: number }>> {
+  const validationResult = await action({
+    params,
+    schema: IncrementViewsSchema,
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { questionId } = validationResult.params!;
+
+  try {
+    const question = await Question.findByIdAndUpdate(
+      questionId,
+      { $inc: { views: 1 } },
+      { new: true }
+    );
+    if (!question) throw new Error("Question not found");
+
+    revalidateTag("popular-questions");
+
+    return { success: true, data: { views: question.views } };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+//-------------------------------- All get operations --------------------------------
+
 export async function getRecommendedQuestions({
   userId,
   query,
   skip,
   limit,
 }: RecommendationParams) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`recommended-questions-${userId}`);
+
   // Get user's recent interactions
   const interactions = await Interaction.find({
     user: new Types.ObjectId(userId),
@@ -316,12 +472,17 @@ export const getQuestion = cache(async function getQuestion(
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
-}
-)
+});
 
 export async function getQuestions(
   params: PaginatedSearchParams
 ): Promise<ActionResponse<{ questions: Questions[]; isNext: boolean }>> {
+  "use cache";
+
+  cacheLife("days");
+
+  cacheTag("questions");
+
   const validationResult = await action({
     params,
     schema: PaginatedSearchSchema,
@@ -334,14 +495,14 @@ export async function getQuestions(
   const { page = 1, pageSize = 10, query, filter } = validationResult.params!;
   const skip = (page - 1) * pageSize;
   const limit = Number(pageSize);
-  
+
   const filterQuery: FilterQuery<typeof Question> = {};
 
   let sortCriteria = {};
 
-try {
-  if (filter === "recommended") {
-     const session = await auth();
+  try {
+    if (filter === "recommended") {
+      const session = await auth();
       const userId = session?.user?.id;
 
       if (!userId) {
@@ -356,36 +517,34 @@ try {
       });
 
       return { success: true, data: recommended };
-  }
+    }
 
-  if (query) {
-    filterQuery.$or = [
-      { title: { $regex: new RegExp(query, "i") } },
-      { content: { $regex: new RegExp(query, "i") } },
-    ];
-  }
+    if (query) {
+      filterQuery.$or = [
+        { title: { $regex: new RegExp(query, "i") } },
+        { content: { $regex: new RegExp(query, "i") } },
+      ];
+    }
 
+    switch (filter) {
+      case "newest":
+        sortCriteria = { createdAt: -1 };
+        break;
+      case "unanswered":
+        filterQuery.answers = 0;
+        sortCriteria = { createdAt: -1 };
+        break;
+      case "popular":
+        sortCriteria = { upvotes: -1 };
+        break;
+      case "most_viewed":
+        sortCriteria = { views: -1 };
+        break;
+      default:
+        sortCriteria = { createdAt: -1 };
+        break;
+    }
 
-  switch (filter) {
-    case "newest":
-      sortCriteria = { createdAt: -1 };
-      break;
-    case "unanswered":
-      filterQuery.answers = 0;
-      sortCriteria = { createdAt: -1 };
-      break;
-    case "popular":
-      sortCriteria = { upvotes: -1 };
-      break;
-    case "most_viewed":
-      sortCriteria = { views: -1 };
-      break;
-    default:
-      sortCriteria = { createdAt: -1 };
-      break;
-  }
-
-  
     const totalQuestions = await Question.countDocuments(filterQuery);
 
     const questions = await Question.find(filterQuery)
@@ -407,39 +566,12 @@ try {
   }
 }
 
-export async function incrementViews(
-  params: IncrementViewsParams
-): Promise<ActionResponse<{ views: number }>> {
-  const validationResult = await action({
-    params,
-    schema: IncrementViewsSchema,
-  });
-
-  if (validationResult instanceof Error) {
-    return handleError(validationResult) as ErrorResponse;
-  }
-
-  const { questionId } = validationResult.params!;
-
-  try {
-    const question = await Question.findByIdAndUpdate(
-      questionId,
-      { $inc: { views: 1 } },
-      { new: true }
-    );
-    if (!question) throw new Error("Question not found");
-
-   
-
-    return { success: true, data: { views: question.views } };
-  } catch (error) {
-    return handleError(error) as ErrorResponse;
-  }
-}
-
 export async function getPopularQuestions(): Promise<
   ActionResponse<Questions[]>
 > {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("popular-questions");
   try {
     await dbConnect();
 
@@ -450,110 +582,5 @@ export async function getPopularQuestions(): Promise<
     return { success: true, data: JSON.parse(JSON.stringify(questions)) };
   } catch (error) {
     return handleError(error) as ErrorResponse;
-  }
-}
-
-export async function deleteQuestion(
-  params: deleteQuestionParams
-): Promise<ActionResponse> {
-  const validationResult = await action({
-    params,
-    schema: deleteQuestionSchema,
-    authorize: true,
-  });
-  if (validationResult instanceof Error) {
-    return handleError(validationResult) as ErrorResponse;
-  }
-
-  const { questionId } = params;
-  const { user } = validationResult.session!;
-
-  const session = await mongoose.startSession();
-
-  try {
-     session.startTransaction();
-
-    // البحث عن السؤال للتأكد من وجوده
-    const question = await Question.findById(questionId).session(session);
-    if (!question) throw new Error("Question not found");
-
-    // التحقق من صلاحيات المستخدم
-    if (question.author.toString() !== user?.id) {
-      throw new Error("You are not authorized to delete this question");
-    }
-
-    // حذف المجموعات المرتبطة بالسؤال
-    await Collection.deleteMany({ question: questionId }).session(session);
-
-    // حذف علاقات العلامات بالسؤال
-    await TagQuestion.deleteMany({ question: questionId }).session(session);
-
-    // تقليل عدد الأسئلة في العلامات
-    if (question.tags.length > 0) {
-      await Tag.updateMany(
-        { _id: { $in: question.tags } },
-        { $inc: { questions: -1 } },
-        { session }
-      );
-    }
-
-    // البحث عن الإجابات المرتبطة بالسؤال
-    const answers = await Answer.find({ question: questionId }).session(
-      session
-    );
-
-    // حذف الإجابات والأصوات المرتبطة بها
-    if (answers.length > 0) {
-      await Answer.deleteMany({ question: questionId }).session(session);
-
-      // حذف أصوات الإجابات
-      await Vote.deleteMany(
-        {
-          actionId: { $in: answers.map((answer) => answer._id) },
-          actionType: "answer",
-        },
-        { session }
-      );
-    }
-
-    // حذف الأصوات المرتبطة بالسؤال نفسه
-    await Vote.deleteMany(
-      {
-        actionId: questionId,
-        actionType: "question",
-      },
-      { session }
-    );
-
-    // حذف السؤال نفسه
-    await Question.findByIdAndDelete(questionId).session(session);
-
-    // إتمام المعاملة
-    await session.commitTransaction();
-
-    // إعادة تحديث المسار
-    revalidatePath(`/profile/${user?.id}`);
-
-    after(async () => {
-      await createInteraction({
-        actionId: question._id.toString(),
-        authorId: user?.id as string,
-        actionTarget: "question",
-        actions: "delete",
-      });
-    });
-
-    return {
-      success: true,
-    };
-  } catch (error) {
-    // إلغاء المعاملة في حالة الخطأ
-    if (session.inTransaction()) {
-      await session.abortTransaction();
-    }
-    return handleError(error) as ErrorResponse;
-  } finally {
-    // إنهاء الجلسة
-    await session.endSession();
   }
 }

@@ -4,7 +4,6 @@ import mongoose, { ClientSession } from "mongoose";
 import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 
-import ROUTES from "@/constants/routes";
 import Answer from "@/database/answer .model";
 import Question from "@/database/question.model";
 import Vote from "@/database/vote.model";
@@ -27,10 +26,12 @@ export async function updateVotes(
     params,
     schema: UpdateVotesSchema,
   });
-  if (validationResult instanceof Error) {
+
+   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
   }
-  const { voteType, targetId, targetType, change } = validationResult.params!;
+
+  const { targetId, targetType, voteType, change } = validationResult.params!;
 
   const Model = targetType === "question" ? Question : Answer;
   const voteField = voteType === "upvote" ? "upvotes" : "downvotes";
@@ -42,10 +43,7 @@ export async function updateVotes(
       { new: true, session }
     );
 
-    if (!result)
-      return handleError(
-        new Error("Failed to update vote count")
-      ) as ErrorResponse;
+    if (!result) throw new Error("Failed to update vote count");
 
     return { success: true };
   } catch (error) {
@@ -54,7 +52,7 @@ export async function updateVotes(
 }
 
 export async function createVotes(
-  params: createVotesParams
+  params: createVoteParams
 ): Promise<ActionResponse> {
   const validationResult = await action({
     params,
@@ -64,10 +62,11 @@ export async function createVotes(
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
   }
-  const { voteType, targetId, targetType } = validationResult.params!;
 
+  const { targetId, targetType, voteType } = validationResult.params!;
   const userId = validationResult.session?.user?.id;
-  if (!userId) return handleError("User not authenticated") as ErrorResponse;
+
+  if (!userId) return handleError(new Error("Unauthorized")) as ErrorResponse;
 
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -88,31 +87,45 @@ export async function createVotes(
 
     if (existingVote) {
       if (existingVote.voteType === voteType) {
-        // If the user has already voted with the same voteType, remove the vote
+        // If user is voting again with the same vote type, remove the vote
         await Vote.deleteOne({ _id: existingVote._id }).session(session);
-        
         await updateVotes(
-          { targetId, targetType, voteType, change: -1 },
+          {
+            targetId,
+            targetType,
+            voteType,
+            change: -1,
+          },
           session
         );
       } else {
-        // If the user has already voted with a different voteType, update the vote
+        // If user is changing their vote, update voteType and adjust counts
         await Vote.findByIdAndUpdate(
           existingVote._id,
           { voteType },
           { new: true, session }
         );
         await updateVotes(
-          { targetId, targetType, voteType: existingVote.voteType, change: -1 },
+          {
+            targetId,
+            targetType,
+            voteType: existingVote.voteType,
+            change: -1,
+          },
           session
         );
         await updateVotes(
-          { targetId, targetType, voteType, change: 1 },
+          {
+            targetId,
+            targetType,
+            voteType,
+            change: 1,
+          },
           session
         );
       }
     } else {
-      // If the user has not voted yet, create a new vote
+      // First-time vote creation
       await Vote.create(
         [
           {
@@ -122,26 +135,33 @@ export async function createVotes(
             voteType,
           },
         ],
-        {
-          session,
-        }
+        { session }
       );
-      await updateVotes({ targetId, targetType, voteType, change: 1 }, session);
+      await updateVotes(
+        {
+          targetId,
+          targetType,
+          voteType,
+          change: 1,
+        },
+        session
+      );
     }
+
+    // log the interaction
+    after(async () => {
+      await createInteraction({
+        actions: voteType,
+        actionId: targetId,
+        actionTarget: targetType,
+        authorId: contentAuthorId,
+      });
+    });
 
     await session.commitTransaction();
     session.endSession();
 
-    revalidatePath(ROUTES.QUESTION(targetId));
-
-    after(async () => {
-      await createInteraction({
-        actionId: targetId,
-        authorId: contentAuthorId,
-        actionTarget: targetType,
-        actions: voteType,
-      });
-    });
+    revalidatePath(`/questions/${targetId}`);
 
     return { success: true };
   } catch (error) {
@@ -157,22 +177,14 @@ export async function hasVoted(
   const validationResult = await action({
     params,
     schema: HasVotedSchema,
-    authorize: false, // Don't require authentication
+    authorize: true,
   });
-  if (validationResult instanceof Error) {
+   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
   }
 
   const { targetId, targetType } = validationResult.params!;
   const userId = validationResult.session?.user?.id;
-
-  // If user is not authenticated, return default state
-  if (!userId) {
-    return {
-      success: true,
-      data: { hasUpvoted: false, hasDownvoted: false },
-    };
-  }
 
   try {
     const vote = await Vote.findOne({
@@ -180,12 +192,15 @@ export async function hasVoted(
       actionId: targetId,
       actionType: targetType,
     });
-    if (!vote) {
+
+    if (!vote)
       return {
         success: false,
-        data: { hasUpvoted: false, hasDownvoted: false },
+        data: {
+          hasUpvoted: false,
+          hasDownvoted: false,
+        },
       };
-    }
 
     return {
       success: true,

@@ -1,14 +1,19 @@
 "use server";
 
 import mongoose from "mongoose";
-import { revalidatePath } from "next/cache";
+import {
+  revalidatePath,
+  revalidateTag,
+  unstable_cacheLife as cacheLife,
+  unstable_cacheTag as cacheTag,
+} from "next/cache";
 import { after } from "next/server";
 
 import ROUTES from "@/constants/routes";
 import Answer, { IAnswerDoc } from "@/database/answer .model";
 import Question from "@/database/question.model";
 import Vote from "@/database/vote.model";
-import { ActionResponse, Answers,ErrorResponse } from "@/types/global";
+import { ActionResponse, Answers, ErrorResponse } from "@/types/global";
 
 import action from "../handler/action";
 import { handleError } from "../handler/error";
@@ -63,7 +68,7 @@ export async function createAnswer(
     await session.commitTransaction();
 
     revalidatePath(ROUTES.QUESTION(questionId));
-
+    revalidateTag(`answer-${questionId}`);
     after(async () => {
       await createInteraction({
         actionId: newAnswer._id.toString(),
@@ -89,12 +94,14 @@ export async function getAnswers(
 ): Promise<
   ActionResponse<{ answers: Answers[]; isNext: boolean; totalAnswers: number }>
 > {
+  "use cache";
+
+  cacheLife("hours");
+
   const validationResult = await action({
     params,
     schema: GetAnswersSchema,
-    authorize: false, // Don't require authentication for viewing answers
   });
-
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
   }
@@ -107,6 +114,8 @@ export async function getAnswers(
   } = validationResult.params!;
   const skip = (page - 1) * pageSize;
   const limit = pageSize;
+
+  cacheTag(`answer-${questionId}`);
 
   let sortCriteria = {};
 
@@ -187,6 +196,7 @@ export async function deleteAnswer(params: deleteAnswerParams) {
     session.endSession();
 
     revalidatePath(`/profile/${user?.id}`);
+    revalidateTag(`answer-${answer.question}`);
 
     after(async () => {
       await createInteraction({

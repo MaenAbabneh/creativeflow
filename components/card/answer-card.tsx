@@ -31,10 +31,12 @@ const AnswerCard = ({
   showReadMore = true,
   isProfilePage = false,
 }: Props) => {
+
   const hasVotedPromise = hasVoted({
     targetId: _id,
     targetType: "answer",
   });
+  
   return (
     <article className={cn("light-border border-b py-10", containerClasses)}>
       <span id={JSON.stringify(_id)} className="hash-span" />
@@ -70,11 +72,11 @@ const AnswerCard = ({
         <div className="flex justify-end">
           <Suspense>
             <Votes
-              upVotes={upvotes}
-              downVotes={downvotes}
-              hasVotedPromise={hasVotedPromise}
-              targetId={_id}
               targetType="answer"
+              targetId={_id}
+              hasVotedPromise={hasVotedPromise}
+              upvotes={upvotes}
+              downvotes={downvotes}
             />
           </Suspense>
         </div>

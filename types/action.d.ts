@@ -55,13 +55,13 @@ interface getAnswersParams extends PaginatedSearchParams {
   questionId: string;
 }
 
-interface createVotesParams {
+interface createVoteParams {
   targetId: string;
   targetType: "question" | "answer";
   voteType: "upvote" | "downvote";
 }
 
-interface updateVotesParams extends createVotesParams {
+interface updateVotesParams extends createVoteParams {
   change: 1 | -1;
 }
 
@@ -91,10 +91,7 @@ interface deleteAnswerParams {
   answerId: string;
 }
 
-interface createInteractionParams {
-  actionId: string;
-  actionTarget: "answer" | "question";
-  authorId: string;
+interface CreateInteractionParams {
   actions:
     | "view"
     | "upvote"
@@ -104,6 +101,9 @@ interface createInteractionParams {
     | "edit"
     | "delete"
     | "search";
+  actionId: string;
+  authorId: string;
+  actionTarget: "question" | "answer";
 }
 
 interface UpdateReputationParams {

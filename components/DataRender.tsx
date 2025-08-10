@@ -6,14 +6,14 @@ import { DEFAULT_EMPTY, DEFAULT_ERROR } from "@/constants/states";
 
 import { Button } from "./ui/button";
 
-interface props<T> {
+interface Props<T> {
   success: boolean;
-  data?: T[] | undefined | null;
   error?: {
     message: string;
     details?: Record<string, string[]>;
   };
-  empty?: {
+  data: T[] | null | undefined;
+  empty: {
     title: string;
     message: string;
     button?: {
@@ -24,7 +24,7 @@ interface props<T> {
   render: (data: T[]) => React.ReactNode;
 }
 
-interface skeletonProps {
+interface StateSkeletonProps {
   image: {
     light: string;
     dark: string;
@@ -38,14 +38,19 @@ interface skeletonProps {
   };
 }
 
-const Skeleton = ({ image, title, message, button }: skeletonProps) => {
-  return (
-    <div className="flex flex-col items-center justify-center text-center mt-8 w-full min-w-[740px] mx-auto">
+const StateSkeleton = ({
+  image,
+  title,
+  message,
+  button,
+}: StateSkeletonProps) => (
+  <div className="mt-16 flex w-full flex-col items-center justify-center sm:mt-36">
+    <>
       <Image
         src={image.dark}
         alt={image.alt}
-        width={300}
-        height={230}
+        width={270}
+        height={200}
         className="hidden object-contain dark:block"
       />
       <Image
@@ -55,35 +60,32 @@ const Skeleton = ({ image, title, message, button }: skeletonProps) => {
         height={200}
         className="block object-contain dark:hidden"
       />
-      <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 ">
-        {title}
-      </h2>
-      <p className="body-regular text-dark500_light700 my-3.5 max-w-md text-center">
-        {message}
-      </p>
-      {button && (
-        <Link href={button.href} className="mt-4">
-          <Button className="primary-gradient-light dark:primary-gradient-dark px-6 py-6 rounded-md mt-4 sm:mt-0 cursor-pointer w-full sm:w-auto">
-            <span className="body-semibold !text-white">
-              {button.text}
-            </span>
-          </Button>
-        </Link>
-      )}
-    </div>
-  );
-};
+    </>
 
-const DataRender = <T,>({
+    <h2 className="h2-bold text-dark200_light900 mt-8">{title}</h2>
+    <p className="body-regular text-dark500_light700 my-3.5 max-w-md text-center">
+      {message}
+    </p>
+    {button && (
+      <Link href={button.href}>
+        <Button className="paragraph-medium mt-5 min-h-[46px] rounded-lg bg-primary-500 px-4 py-3 text-light-900 hover:bg-primary-500">
+          {button.text}
+        </Button>
+      </Link>
+    )}
+  </div>
+);
+
+const DataRenderer = <T,>({
   success,
-  data,
-  render,
   error,
+  data,
   empty = DEFAULT_EMPTY,
-}: props<T>) => {
+  render,
+}: Props<T>) => {
   if (!success) {
     return (
-      <Skeleton
+      <StateSkeleton
         image={{
           light: "/images/light-error.png",
           dark: "/images/dark-error.png",
@@ -91,15 +93,18 @@ const DataRender = <T,>({
         }}
         title={error?.message || DEFAULT_ERROR.title}
         message={
-          error?.details ? JSON.stringify(error.details) : DEFAULT_ERROR.message
+          error?.details
+            ? JSON.stringify(error.details, null, 2)
+            : DEFAULT_ERROR.message
         }
-        button={DEFAULT_ERROR.button}
+        button={empty.button}
       />
     );
   }
-  if (!data || data.length === 0) {
+
+  if (!data || data.length === 0)
     return (
-      <Skeleton
+      <StateSkeleton
         image={{
           light: "/images/light-illustration.png",
           dark: "/images/dark-illustration.png",
@@ -110,8 +115,8 @@ const DataRender = <T,>({
         button={empty.button}
       />
     );
-  }
-  return render(data);
+
+  return <div>{render(data)}</div>;
 };
 
-export default DataRender;
+export default DataRenderer;

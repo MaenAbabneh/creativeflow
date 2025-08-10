@@ -1,124 +1,129 @@
-import { unstable_cache } from "next/cache";
+export const fetchLocation = async () => {
+  try {
+    const response = await fetch("http://ip-api.com/json/?fields=country", {
+      next: {
+        revalidate: 3600, // 1 hour cache
+        tags: ["location"],
+      },
+    });
 
-import { CACHE_CONFIG } from "@/lib/cache-config";
-
-export const fetchLocation = unstable_cache(
-  async () => {
-    try {
-      const response = await fetch("http://ip-api.com/json/?fields=country");
-      const location = await response.json();
-      return location.country;
-    } catch (error) {
-      console.error("Error fetching location:", error);
-      return "US"; // fallback to US
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  },
-  ["user-location"],
-  {
-    revalidate: CACHE_CONFIG.USER_LOCATION,
-    tags: [CACHE_CONFIG.TAGS.LOCATION],
-  }
-);
 
-export const fetchCountries = unstable_cache(
-  async () => {
-    try {
-      const response = await fetch(
-        "https://restcountries.com/v3.1/all?fields=name"
-      );
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error("Error fetching countries:", error);
-      return [];
+    const location = await response.json();
+    return location.country;
+  } catch (error) {
+    console.error("Error fetching location:", error);
+    return "US"; // fallback
+  }
+};
+
+export const fetchCountries = async () => {
+  try {
+    const response = await fetch(
+      "https://restcountries.com/v3.1/all?fields=name",
+      {
+        next: {
+          revalidate: 86400, // 24 hours
+          tags: ["countries"],
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  },
-  ["countries-list"],
-  {
-    revalidate: CACHE_CONFIG.COUNTRIES,
-    tags: [CACHE_CONFIG.TAGS.COUNTRIES],
-  }
-);
 
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Error fetching countries:", error);
+    return [];
+  }
+};
 export const fetchJobs = async (filters: JobFilterParams) => {
   const { query, page } = filters;
 
-  // إنشاء مفتاح فريد للتخزين المؤقت
-  const cacheKey = `jobs-search-${encodeURIComponent(query)}-page-${page}`;
+  const headers = {
+    "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY ?? "",
+    "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
+  };
 
-  return unstable_cache(
-    async () => {
-      const headers = {
-        "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY ?? "",
-        "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
-      };
-
-      try {
-        const response = await fetch(
-          `https://jsearch.p.rapidapi.com/search?query=${query}&page=${page}`,
-          {
-            headers,
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        return result.data || [];
-      } catch (error) {
-        console.error("Error fetching jobs:", error);
-        return [];
+  try {
+    const response = await fetch(
+      `https://jsearch.p.rapidapi.com/search?query=${query}&page=${page}`,
+      {
+        headers,
+        next: {
+          revalidate: 600, // 10 minutes cache
+          tags: ["jobs", `jobs-${encodeURIComponent(query)}`],
+        },
       }
-    },
-    [cacheKey],
-    {
-      revalidate: CACHE_CONFIG.JOBS_SEARCH,
-      tags: [CACHE_CONFIG.TAGS.JOBS],
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  )();
+
+    const result = await response.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    return [];
+  }
 };
 
-// دالة للحصول على الوظائف الشائعة مع تخزين مؤقت أطول
-export const fetchPopularJobs = unstable_cache(
-  async (location?: string) => {
-    const searchQuery = `Software Engineer in ${location || "US"}`;
+// دالة للوظائف الشائعة
+export const fetchPopularJobs = async (location?: string) => {
+  const locationKey = location || "US";
+  const searchQuery = `Software Engineer in ${locationKey}`;
 
-    const headers = {
-      "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY ?? "",
-      "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
-    };
+  const headers = {
+    "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY ?? "",
+    "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
+  };
 
-    try {
-      const response = await fetch(
-        `https://jsearch.p.rapidapi.com/search?query=${searchQuery}&page=1`,
-        {
-          headers,
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  try {
+    const response = await fetch(
+      `https://jsearch.p.rapidapi.com/search?query=${searchQuery}&page=1`,
+      {
+        headers,
+        next: {
+          revalidate: 3600, // 1 hour cache
+          tags: ["popular-jobs", `popular-${locationKey}`],
+        },
       }
+    );
 
-      const result = await response.json();
-      return result.data?.slice(0, 10) || []; // أفضل 10 وظائف
-    } catch (error) {
-      console.error("Error fetching popular jobs:", error);
-      return [];
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-  },
-  ["popular-jobs"],
-  {
-    revalidate: CACHE_CONFIG.POPULAR_JOBS,
-    tags: [CACHE_CONFIG.TAGS.JOBS, CACHE_CONFIG.TAGS.POPULAR],
-  }
-);
 
-// دالة لحذف التخزين المؤقت للوظائف
+    const result = await response.json();
+    return result.data?.slice(0, 10) || []; // أفضل 10 وظائف
+  } catch (error) {
+    console.error("Error fetching popular jobs:", error);
+    return [];
+  }
+};
+
+// دوال revalidation للتحكم في التخزين المؤقت
 export const revalidateJobsCache = async () => {
   const { revalidateTag } = await import("next/cache");
-  revalidateTag(CACHE_CONFIG.TAGS.JOBS);
-  revalidateTag(CACHE_CONFIG.TAGS.POPULAR);
+
+  revalidateTag("jobs");
+  revalidateTag("popular-jobs");
+  revalidateTag("location");
+  revalidateTag("countries");
+};
+
+export const revalidateJobsByQuery = async (query: string) => {
+  const { revalidateTag } = await import("next/cache");
+  revalidateTag(`jobs-${encodeURIComponent(query)}`);
+};
+
+export const revalidatePopularJobsByLocation = async (location: string) => {
+  const { revalidateTag } = await import("next/cache");
+  revalidateTag(`popular-${location}`);
 };

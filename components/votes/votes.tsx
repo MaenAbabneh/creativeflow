@@ -10,46 +10,57 @@ import { formatNumber } from "@/lib/utils";
 import { ActionResponse } from "@/types/global";
 
 interface Props {
-  upVotes: number;
-  downVotes: number;
+  upvotes: number;
+  downvotes: number;
   hasVotedPromise: Promise<ActionResponse<HasVotedResponse>>;
   targetId?: string;
   targetType?: "question" | "answer";
 }
 
 function Votes({
-  upVotes,
-  downVotes,
+  upvotes,
+  downvotes,
   hasVotedPromise,
   targetId,
   targetType,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
-  const session = useSession();
+
+ const session = useSession();
+  const userId = session.data?.user?.id;
 
   const { success, data } = use(hasVotedPromise);
 
   const { hasDownvoted, hasUpvoted } = data || {};
 
   const handleVotes = async (voteType: "upvote" | "downvote") => {
-    if (session.status !== "authenticated") {
+
+    if (!userId) {
       return toast.error("You need to be logged in to vote.", {
         description: "Please sign in to cast your vote.",
       });
     }
+
     setIsLoading(true);
+
     try {
       const result = await createVotes({
         targetId: targetId!,
         targetType: targetType!,
         voteType,
       });
+
       if (!result.success) {
         return toast.error("Failed to cast vote", {
           description: result.error?.message || "An unexpected error occurred.",
         });
       }
-      toast.success(`Successfully ${voteType}d!`, {
+       const successMessage =
+        voteType === "upvote"
+          ? `Upvote ${!hasUpvoted ? "added" : "removed"} successfully`
+          : `Downvote ${!hasDownvoted ? "added" : "removed"} successfully`;
+          
+      toast.success(successMessage, {
         description: `Your ${voteType} has been recorded.`,
       });
     } catch {
@@ -60,6 +71,7 @@ function Votes({
       setIsLoading(false);
     }
   };
+
   return (
     <div className="flex items-center gap-2">
       <div className="flex-center">
@@ -76,7 +88,7 @@ function Votes({
         />
         <div className="flex-center background-light700_dark400 min-w-5 rounded-sm p-1 m-1">
           <p className="subtle-medium text-dark100_light900">
-            {formatNumber(upVotes)}
+            {formatNumber(upvotes)}
           </p>
         </div>
       </div>
@@ -97,7 +109,7 @@ function Votes({
         />
         <div className="flex-center background-light700_dark400 min-w-5 rounded-sm p-1 m-1">
           <p className="subtle-medium text-dark100_light900">
-            {formatNumber(downVotes)}
+            {formatNumber(downvotes)}
           </p>
         </div>
       </div>
