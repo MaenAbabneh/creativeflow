@@ -2,44 +2,19 @@ import "./globals.css";
 
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import localFont from "next/font/local";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
 
 import { auth } from "@/auth";
 import ThemeProvider from "@/context/Theme";
+
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
 });
-const Grotisk = localFont({
-  src: "./fonts/SpaceGrotesk.ttf",
-  variable: "--font-space-grotesk",
-  weight: "300 400 500 600 700",
-});
-
-const Tajwal = localFont({
-  src: [
-    {
-      path: "./fonts/Tajawal-Bold.ttf",
-      weight: "700",
-      style: "normal",
-    },
-    {
-      path: "./fonts/Tajawal-Medium.ttf",
-      style: "normal",
-      weight: "500",
-    },
-    {
-      path: "./fonts/Tajawal-Regular.ttf",
-      style: "normal",
-      weight: "400",
-    },
-  ],
-  variable: "--font-tajwal",
-});
 
 export const metadata: Metadata = {
+  title: "creative overflow",
   generator: "Next.js",
   applicationName: "Creative Overflow",
   referrer: "origin-when-cross-origin",
@@ -63,11 +38,11 @@ export const metadata: Metadata = {
     title: "Creative Overflow",
     description:
       "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world.",
-    url: "https://creativeoverflow.dev",
+    url: "https://creative-overflow.vercel.app/",
     siteName: "Creative Overflow",
     images: [
       {
-        url: "https://creativeoverflow.dev/images/og-image.png",
+        url: "https://creative-overflow.vercel.app/images/og-image.png",
         width: 1200,
         height: 630,
         alt: "Creative Overflow - A community-driven platform for programming questions",
@@ -127,9 +102,7 @@ export default async function RootLayout({
         <link rel="stylesheet" type="text/css" />
       </head>
       <SessionProvider session={session}>
-        <body
-          className={`${inter.className} ${Grotisk.variable} ${Tajwal.variable} font-sans antialiased`}
-        >
+        <body className={`${inter.className} font-sans antialiased`}>
           <ThemeProvider attribute="class" defaultTheme="system">
             {children}
           </ThemeProvider>
