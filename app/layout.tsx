@@ -1,6 +1,6 @@
 import "./globals.css";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import { SessionProvider } from "next-auth/react";
@@ -81,7 +81,6 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-
   robots: {
     index: true,
     follow: true,
@@ -110,6 +109,12 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -119,10 +124,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link
-          rel="stylesheet"
-          type="text/css"
-        />
+        <link rel="stylesheet" type="text/css" />
       </head>
       <SessionProvider session={session}>
         <body

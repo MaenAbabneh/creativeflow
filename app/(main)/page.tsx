@@ -23,7 +23,7 @@ export default async function App({ searchParams }: searchParams) {
     filter: filter || "",
   });
 
-  const { questions , isNext } = data || {};
+  const { questions, isNext } = data || {};
 
   return (
     <div className="w-full max-w-5xl mx-auto">
@@ -57,7 +57,7 @@ export default async function App({ searchParams }: searchParams) {
         error={error}
         empty={EMPTY_QUESTION}
         render={(questions) => (
-          <div className="mt-8 w-full min-w-[600px] space-y-4">
+          <div className="mt-8 w-full space-y-4">
             {questions?.map((question) => (
               <QuestionCard key={question._id} question={question} />
             ))}
