@@ -10,7 +10,6 @@ import {
 import { after } from "next/server";
 import { cache } from "react";
 
-import { auth } from "@/auth";
 import Answer from "@/database/answer .model";
 import Collection from "@/database/collection .model";
 import Interaction from "@/database/interaction.model";
@@ -475,7 +474,8 @@ export const getQuestion = cache(async function getQuestion(
 });
 
 export async function getQuestions(
-  params: PaginatedSearchParams
+  params: PaginatedSearchParams,
+  userId?: string
 ): Promise<ActionResponse<{ questions: Questions[]; isNext: boolean }>> {
   "use cache";
 
@@ -502,9 +502,6 @@ export async function getQuestions(
 
   try {
     if (filter === "recommended") {
-      const session = await auth();
-      const userId = session?.user?.id;
-
       if (!userId) {
         return { success: true, data: { questions: [], isNext: false } };
       }

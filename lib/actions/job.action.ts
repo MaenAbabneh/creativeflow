@@ -56,7 +56,7 @@ export const fetchJobs = async (filters: JobFilterParams) => {
       {
         headers,
         next: {
-          revalidate: 600, // 10 minutes cache
+          revalidate: 1800, // 30 minutes cache
           tags: ["jobs", `jobs-${encodeURIComponent(query)}`],
         },
       }

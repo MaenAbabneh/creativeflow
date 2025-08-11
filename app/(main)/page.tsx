@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { auth } from "@/auth";
 import QuestionCard from "@/components/card/question-card";
 import DataRender from "@/components/DataRender";
 import HomeFilter from "@/components/filter/homefilter";
@@ -10,18 +11,31 @@ import ROUTES from "@/constants/routes";
 import { EMPTY_QUESTION } from "@/constants/states";
 import { getQuestions } from "@/lib/actions/qustion.action";
 
+export const metadata = {
+  title: "All Questions - Creative Overflow",
+  description: "Browse and discover questions on Creative Overflow",
+  keywords: ["questions", "programming", "development"],
+};
+
 interface searchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 export default async function App({ searchParams }: searchParams) {
   const { page, pagesize, query, filter } = await searchParams;
 
-  const { success, data, error } = await getQuestions({
-    page: Number(page) || 1,
-    pageSize: Number(pagesize) || 10,
-    query: query || "",
-    filter: filter || "",
-  });
+  // Get userId outside of cached function for recommended filter
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  const { success, data, error } = await getQuestions(
+    {
+      page: Number(page) || 1,
+      pageSize: Number(pagesize) || 10,
+      query: query || "",
+      filter: filter || "",
+    },
+    userId
+  );
 
   const { questions, isNext } = data || {};
 
