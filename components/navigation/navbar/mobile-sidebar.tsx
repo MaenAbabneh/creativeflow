@@ -30,9 +30,9 @@ const MobileSidebar = async () => {
         <Image
           src="/icons/hamburger.svg"
           alt="hamburger menu icon"
-          width={30}
-          height={30}
-          className="cursor-pointer invert-colors object-contain   "
+          width={24}
+          height={24}
+          className="cursor-pointer invert-colors object-contain"
         />
       </SheetTrigger>
       <SheetContent side="left" className=" w-[300px]">
@@ -41,17 +41,19 @@ const MobileSidebar = async () => {
             <SheetClose>
               <Image
                 src="/images/Logo-dark.svg"
-                alt={"creative overflow logo dark"}
-                width={200}
-                height={200}
+                alt="creative overflow logo dark"
+                width={160}
+                height={32}
                 className="block dark:hidden object-contain"
+                priority
               />
               <Image
                 src="/images/Logo-light.svg"
-                alt={"creative overflow logo dark"}
-                width={200}
-                height={200}
+                alt="creative overflow logo light"
+                width={160}
+                height={32}
                 className="hidden dark:block object-contain"
+                priority
               />
             </SheetClose>
           </Link>

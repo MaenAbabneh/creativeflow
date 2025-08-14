@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 
 import RightSidebar from "@/components/navigation/rigth-sidebar"; // Import the main RightSidebar content
