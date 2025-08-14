@@ -40,16 +40,16 @@ const MobileSidebar = async () => {
           <Link href={ROUTES.HOME} className="cursor-pointer">
             <SheetClose>
               <Image
-                src="/images/Logo-dark.svg"
-                alt="creative overflow logo dark"
+                src="/images/Logo.png"
+                alt="creative overflow logo"
                 width={160}
                 height={32}
                 className="block dark:hidden object-contain"
                 priority
               />
               <Image
-                src="/images/Logo-light.svg"
-                alt="creative overflow logo light"
+                src="/images/dark-logo.png"
+                alt="creative overflow logo"
                 width={160}
                 height={32}
                 className="hidden dark:block object-contain"
