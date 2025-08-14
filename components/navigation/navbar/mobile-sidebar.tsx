@@ -70,7 +70,7 @@ const MobileSidebar = async () => {
             <form action={handleSignOut} className="w-full">
               <Link href={ROUTES.HOME} className="w-full">
                 <SheetClose asChild>
-                  <Button className="w-full background-light800_dark400 light-border-2 hover:background-light700_dark300 transition-colors mb-10 h-10 cursor-pointer">
+                  <Button className="w-full background-light800_dark300 light-border-2 hover:background-light700_dark300 transition-colors mb-10 h-10 cursor-pointer">
                     <p className="text-white body-semibold">logout</p>
                   </Button>
                 </SheetClose>
