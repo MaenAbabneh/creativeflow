@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
 
@@ -9,6 +10,57 @@ import ROUTES from "@/constants/routes";
 import { EMPTY_QUESTION } from "@/constants/states";
 import { getQuestionTag } from "@/lib/actions/tag.action";
 import { RouteParams } from "@/types/global";
+
+const OG_IMAGE =
+  "https://res.cloudinary.com/djy5oyivn/image/upload/q_auto/f_auto/v1775140416/Creative-overflow-ezremove_atpzfv.png";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+
+  const { data } = await getQuestionTag({
+    page: 1,
+    pageSize: 1,
+    query: "",
+    tagId: id,
+  });
+
+  const tagName = data?.tag?.name || "Tag";
+  const title = `Questions tagged with \"${tagName}\"`;
+  const description = `Browse programming questions tagged with ${tagName} on Creative Overflow.`;
+  const url = `/tags/${id}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "website",
+      images: [
+        {
+          url: OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: `Questions tagged with ${tagName}`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [OG_IMAGE],
+    },
+  };
+}
 
 const page = async ({ searchParams, params }: RouteParams) => {
   const { id } = await params;

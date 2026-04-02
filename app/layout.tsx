@@ -13,11 +13,36 @@ const inter = Inter({
   display: "swap",
 });
 
+const SITE_URL = "https://creative-overflow.maenababneh.dev";
+const OG_IMAGE =
+  "https://res.cloudinary.com/djy5oyivn/image/upload/q_auto/f_auto/v1775140416/Creative-overflow-ezremove_atpzfv.png";
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Creative Overflow",
+  url: SITE_URL,
+  description:
+    "A community-driven platform for asking and answering programming questions.",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${SITE_URL}/questions?query={search_term_string}`,
+    "query-input": "required name=search_term_string",
+  },
+};
+
 export const metadata: Metadata = {
-  title: "creative overflow",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Creative Overflow",
+    template: "%s | Creative Overflow",
+  },
   generator: "Next.js",
   applicationName: "Creative Overflow",
   referrer: "origin-when-cross-origin",
+  alternates: {
+    canonical: "/",
+  },
   description:
     "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
   keywords: [
@@ -33,16 +58,17 @@ export const metadata: Metadata = {
   authors: [{ name: "Maen Ababenh" }],
   creator: "Maen Ababenh",
   publisher: "Maen Ababenh",
+  category: "technology",
 
   openGraph: {
     title: "Creative Overflow",
     description:
       "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world.",
-    url: "https://creative-overflow.vercel.app/",
+    url: SITE_URL,
     siteName: "Creative Overflow",
     images: [
       {
-        url: "https://creative-overflow.vercel.app/images/og-image.png",
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Creative Overflow - A community-driven platform for programming questions",
@@ -50,6 +76,13 @@ export const metadata: Metadata = {
     ],
     locale: "en_US",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Creative Overflow",
+    description:
+      "A community-driven platform for asking and answering programming questions.",
+    images: [OG_IMAGE],
   },
   formatDetection: {
     email: false,
@@ -88,6 +121,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
+  ],
 };
 
 export default async function RootLayout({
@@ -98,11 +135,12 @@ export default async function RootLayout({
   const session = await auth();
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="stylesheet" type="text/css" />
-      </head>
       <SessionProvider session={session}>
         <body className={`${inter.className} font-sans antialiased`}>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+          />
           <ThemeProvider attribute="class" defaultTheme="system">
             {children}
           </ThemeProvider>

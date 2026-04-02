@@ -18,6 +18,10 @@ import { hasVoted } from "@/lib/actions/vote.action";
 import { formatNumber, getPuplishTime } from "@/lib/utils";
 import { RouteParams, Tags } from "@/types/global";
 
+const SITE_URL = "https://creative-overflow.maenababneh.dev";
+const OG_IMAGE =
+  "https://res.cloudinary.com/djy5oyivn/image/upload/q_auto/f_auto/v1775140416/Creative-overflow-ezremove_atpzfv.png";
+
 export async function generateMetadata({
   params,
 }: RouteParams): Promise<Metadata> {
@@ -29,16 +33,41 @@ export async function generateMetadata({
     return {
       title: "Question not found",
       description: "This question does not exist.",
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
+  const description = question.content.slice(0, 155);
+  const url = `/questions/${id}`;
+
   return {
     title: question.title,
-    description: question.content.slice(0, 100),
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: question.title,
+      description,
+      url,
+      type: "article",
+      images: [
+        {
+          url: OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: question.title,
+        },
+      ],
+    },
     twitter: {
       card: "summary_large_image",
       title: question.title,
-      description: question.content.slice(0, 100),
+      description,
+      images: [OG_IMAGE],
     },
   };
 }
@@ -77,8 +106,41 @@ const QuestionDetails = async ({ params , searchParams }: RouteParams) => {
 
   const { title, content, tags, author, createdAt, answers, views } = question;
 
+  const qaJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "QAPage",
+    mainEntity: {
+      "@type": "Question",
+      name: title,
+      text: content,
+      answerCount: answers,
+      upvoteCount: question.upvotes,
+      dateCreated: new Date(createdAt).toISOString(),
+      author: {
+        "@type": "Person",
+        name: author.name,
+      },
+      suggestedAnswer:
+        answersResult?.answers?.map((answer) => ({
+          "@type": "Answer",
+          text: answer.content,
+          dateCreated: new Date(answer.createdAt).toISOString(),
+          upvoteCount: answer.upvotes,
+          author: {
+            "@type": "Person",
+            name: answer.author.name,
+          },
+          url: `${SITE_URL}/questions/${id}`,
+        })) || [],
+    },
+  };
+
   return (
     <div className="w-full max-w-none">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(qaJsonLd) }}
+      />
       <div className="flex-start w-full flex-col mt-8">
         <div className="flex w-full flex-col-reverse justify-between">
           <div className="flex items-center justify-start gap-1">

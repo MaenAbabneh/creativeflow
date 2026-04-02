@@ -24,6 +24,9 @@ import {
 } from "@/lib/actions/users.action";
 import { RouteParams } from "@/types/global";
 
+const OG_IMAGE =
+  "https://res.cloudinary.com/djy5oyivn/image/upload/q_auto/f_auto/v1775140416/Creative-overflow-ezremove_atpzfv.png";
+
 export async function generateMetadata({
   params,
 }: RouteParams): Promise<Metadata> {
@@ -36,16 +39,44 @@ export async function generateMetadata({
     return {
       title: "User not found",
       description: "This user does not exist.",
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
+  const title = `${data.user.name} (@${data.user.username})`;
+  const description =
+    data.user.bio?.slice(0, 155) ||
+    `View ${data.user.name}'s profile on Creative Overflow.`;
+  const url = `/profile/${id}`;
+
   return {
-    title: data.user.name,
-    description: data.user.bio?.slice(0, 100),
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "profile",
+      images: [
+        {
+          url: data.user.image || OG_IMAGE,
+          width: 1200,
+          height: 630,
+          alt: data.user.name,
+        },
+      ],
+    },
     twitter: {
       card: "summary_large_image",
-      title: data.user.name,
-      description: data.user.bio?.slice(0, 100),
+      title,
+      description,
+      images: [data.user.image || OG_IMAGE],
     },
   };
 }
@@ -110,8 +141,22 @@ const Profile = async ({ params, searchParams }: RouteParams) => {
   const { _id, name, image, portfolio, location, createdAt, username, bio } =
     user;
 
+  const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name,
+    description: bio || undefined,
+    image,
+    url: `https://creative-overflow.maenababneh.dev/profile/${_id}`,
+    sameAs: portfolio ? [portfolio] : undefined,
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto space-y-6 sm:space-y-8 lg:space-y-10 mt-11">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
         <div className="lg:col-span-2 flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
           <UserAvatar

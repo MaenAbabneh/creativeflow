@@ -1,3 +1,5 @@
+import { Metadata } from "next";
+
 import UserCard from "@/components/card/usercard";
 import DataRender from "@/components/DataRender";
 import CommonFilter from "@/components/filter/commonfilter";
@@ -8,6 +10,40 @@ import ROUTES from "@/constants/routes";
 import { EMPTY_USERS } from "@/constants/states";
 import { getAllUsers } from "@/lib/actions/users.action";
 import { RouteParams } from "@/types/global";
+
+const OG_IMAGE =
+  "https://res.cloudinary.com/djy5oyivn/image/upload/q_auto/f_auto/v1775140416/Creative-overflow-ezremove_atpzfv.png";
+
+export const metadata: Metadata = {
+  title: "Developer Community",
+  description:
+    "Discover and connect with developers in the Creative Overflow community.",
+  alternates: {
+    canonical: "/community",
+  },
+  openGraph: {
+    title: "Developer Community",
+    description:
+      "Discover and connect with developers in the Creative Overflow community.",
+    url: "/community",
+    type: "website",
+    images: [
+      {
+        url: OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Creative Overflow community",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Developer Community",
+    description:
+      "Discover and connect with developers in the Creative Overflow community.",
+    images: [OG_IMAGE],
+  },
+};
 
 export default async function Community({ searchParams }: RouteParams) {
   const { page, pagesize, query, filter } = await searchParams;
@@ -21,8 +57,31 @@ export default async function Community({ searchParams }: RouteParams) {
 
   const { users , isNext } = data || {};
 
+  const communityJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Creative Overflow Community",
+    description:
+      "Discover and connect with developers in the Creative Overflow community.",
+    url: "https://creative-overflow.maenababneh.dev/community",
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement:
+        users?.map((user, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: `https://creative-overflow.maenababneh.dev/profile/${user._id}`,
+          name: user.name,
+        })) || [],
+    },
+  };
+
   return (
     <div className="">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(communityJsonLd) }}
+      />
       <section className="flex flex-col-reverse sm:flex-row sm:items-center gap-6 justify-between mt-8 w-full">
         <h1 className="h1-bold text-dark100_light900">All Users</h1>
       </section>

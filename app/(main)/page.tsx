@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Metadata } from "next";
 
 import { auth } from "@/auth";
 import QuestionCard from "@/components/card/question-card";
@@ -11,10 +12,36 @@ import ROUTES from "@/constants/routes";
 import { EMPTY_QUESTION } from "@/constants/states";
 import { getQuestions } from "@/lib/actions/qustion.action";
 
-export const metadata = {
+const OG_IMAGE =
+  "https://res.cloudinary.com/djy5oyivn/image/upload/q_auto/f_auto/v1775140416/Creative-overflow-ezremove_atpzfv.png";
+
+export const metadata: Metadata = {
   title: "All Questions - Creative Overflow",
   description: "Browse and discover questions on Creative Overflow",
   keywords: ["questions", "programming", "development"],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "All Questions - Creative Overflow",
+    description: "Browse and discover questions on Creative Overflow",
+    url: "/",
+    type: "website",
+    images: [
+      {
+        url: OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "Creative Overflow questions feed",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "All Questions - Creative Overflow",
+    description: "Browse and discover questions on Creative Overflow",
+    images: [OG_IMAGE],
+  },
 };
 
 interface searchParams {
