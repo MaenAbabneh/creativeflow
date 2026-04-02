@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Metadata } from "next";
+import Link from "next/link";
 
 import { auth } from "@/auth";
 import QuestionCard from "@/components/card/question-card";
