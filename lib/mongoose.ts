@@ -38,20 +38,39 @@ const dbConnect = async (): Promise<Mongoose> => {
     logger.info("Using cached MongoDB connection");
     return cached.conn;
   }
+
   if (!cached.promise) {
     cached.promise = mongoose
       .connect(MONGODB_URI, {
         dbName: "CreativeOverflow",
+        serverSelectionTimeoutMS: 10000,
       })
       .then((result) => {
         logger.info("Connected to MongoDB");
         return result;
       })
       .catch((error) => {
-        logger.error("Error connecting to MongoDB", error);
+        // Clear cached state so a later request can retry after infra/env fixes.
+        cached.promise = null;
+        cached.conn = null;
+
+        const message = error instanceof Error ? error.message : String(error);
+        logger.error({ err: error }, "Error connecting to MongoDB");
+
+        if (
+          message.includes("Could not connect to any servers") ||
+          message.includes("ReplicaSetNoPrimary") ||
+          message.toLowerCase().includes("whitelist")
+        ) {
+          throw new Error(
+            "MongoDB connection failed. If you use Atlas, add your current IP to Network Access allowlist and verify MONGODB_URI credentials."
+          );
+        }
+
         throw error;
       });
   }
+
   cached.conn = await cached.promise;
 
   return cached.conn;
