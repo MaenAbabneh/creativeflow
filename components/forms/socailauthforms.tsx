@@ -12,15 +12,9 @@ const AuthSocailForms = () => {
 
   const handleLogin = async (provider: "github" | "google") => {
     try {
-      const result = await signIn(provider, {
+      await signIn(provider, {
         callbackUrl: ROUTES.HOME,
-        redirect: false,
       });
-      if (result?.error) {
-        toast(`Authentication Error: ${result.error}`);
-      } else if (result?.url) {
-        window.location.href = result.url;
-      }
     } catch (error) {
       console.log(error);
       toast(`Authentication to ${provider} Error`, {
