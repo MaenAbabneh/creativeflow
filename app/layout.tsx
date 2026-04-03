@@ -18,7 +18,7 @@ const OG_IMAGE =
   "https://res.cloudinary.com/djy5oyivn/image/upload/q_auto/f_auto/v1775140416/Creative-overflow-ezremove_atpzfv.png";
 const PROJECT_DESCRIPTION_AR =
   "منصة تقنية مجتمعية للأسئلة والأجوبة البرمجية، تساعد المطورين على طرح الأسئلة، مشاركة المعرفة، والتعاون في تطوير الويب وتطبيقات الجوال والخوارزميات وهياكل البيانات.";
-const AUTHOR_NAME_AR = "معين عبابنة";
+const AUTHOR_NAME_AR = "معن عبابنة";
 
 const websiteJsonLd = {
   "@context": "https://schema.org",
