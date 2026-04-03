@@ -13,6 +13,8 @@ import { RouteParams } from "@/types/global";
 
 const OG_IMAGE =
   "https://res.cloudinary.com/djy5oyivn/image/upload/q_auto/f_auto/v1775140416/Creative-overflow-ezremove_atpzfv.png";
+const TAGS_DESCRIPTION_AR =
+  "تصفح الأسئلة البرمجية المصنفة بالوسوم على منصة كريتيف أوفرفلو.";
 
 export async function generateMetadata({
   params,
@@ -30,7 +32,7 @@ export async function generateMetadata({
 
   const tagName = data?.tag?.name || "Tag";
   const title = `Questions tagged with \"${tagName}\"`;
-  const description = `Browse programming questions tagged with ${tagName} on Creative Overflow.`;
+  const description = `${TAGS_DESCRIPTION_AR} Browse programming questions tagged with ${tagName} on Creative Overflow.`;
   const url = `/tags/${id}`;
 
   return {

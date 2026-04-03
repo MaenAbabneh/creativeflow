@@ -14,17 +14,26 @@ import { getQuestions } from "@/lib/actions/qustion.action";
 
 const OG_IMAGE =
   "https://res.cloudinary.com/djy5oyivn/image/upload/q_auto/f_auto/v1775140416/Creative-overflow-ezremove_atpzfv.png";
+const HOME_DESCRIPTION_AR =
+  "تصفح واكتشف الأسئلة البرمجية على منصة كريتيف أوفرفلو وتفاعل مع مجتمع المطورين.";
 
 export const metadata: Metadata = {
   title: "All Questions - Creative Overflow",
-  description: "Browse and discover questions on Creative Overflow",
-  keywords: ["questions", "programming", "development"],
+  description: `${HOME_DESCRIPTION_AR} | Browse and discover questions on Creative Overflow`,
+  keywords: [
+    "questions",
+    "programming",
+    "development",
+    "البرمجة",
+    "الاسئلة البرمجية",
+    "مجتمع المطورين",
+  ],
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "All Questions - Creative Overflow",
-    description: "Browse and discover questions on Creative Overflow",
+    description: `${HOME_DESCRIPTION_AR} | Browse and discover questions on Creative Overflow`,
     url: "/",
     type: "website",
     images: [

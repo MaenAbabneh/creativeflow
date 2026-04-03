@@ -13,18 +13,20 @@ import { RouteParams } from "@/types/global";
 
 const OG_IMAGE =
   "https://res.cloudinary.com/djy5oyivn/image/upload/q_auto/f_auto/v1775140416/Creative-overflow-ezremove_atpzfv.png";
+const COMMUNITY_DESCRIPTION_AR =
+  "اكتشف مجتمع المطورين في كريتيف أوفرفلو وتواصل مع المبرمجين والخبراء التقنيين.";
 
 export const metadata: Metadata = {
   title: "Developer Community",
   description:
-    "Discover and connect with developers in the Creative Overflow community.",
+    `${COMMUNITY_DESCRIPTION_AR} | Discover and connect with developers in the Creative Overflow community.`,
   alternates: {
     canonical: "/community",
   },
   openGraph: {
     title: "Developer Community",
     description:
-      "Discover and connect with developers in the Creative Overflow community.",
+      `${COMMUNITY_DESCRIPTION_AR} | Discover and connect with developers in the Creative Overflow community.`,
     url: "/community",
     type: "website",
     images: [
@@ -62,7 +64,7 @@ export default async function Community({ searchParams }: RouteParams) {
     "@type": "CollectionPage",
     name: "Creative Overflow Community",
     description:
-      "Discover and connect with developers in the Creative Overflow community.",
+      `${COMMUNITY_DESCRIPTION_AR} Discover and connect with developers in the Creative Overflow community.`,
     url: "https://creative-overflow.maenababneh.dev/community",
     mainEntity: {
       "@type": "ItemList",

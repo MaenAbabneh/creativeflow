@@ -21,6 +21,7 @@ import { RouteParams, Tags } from "@/types/global";
 const SITE_URL = "https://creative-overflow.maenababneh.dev";
 const OG_IMAGE =
   "https://res.cloudinary.com/djy5oyivn/image/upload/q_auto/f_auto/v1775140416/Creative-overflow-ezremove_atpzfv.png";
+const QUESTION_DESCRIPTION_AR = "تفاصيل سؤال برمجي وإجاباته على كريتيف أوفرفلو.";
 
 export async function generateMetadata({
   params,
@@ -40,7 +41,7 @@ export async function generateMetadata({
     };
   }
 
-  const description = question.content.slice(0, 155);
+  const description = `${QUESTION_DESCRIPTION_AR} ${question.content.slice(0, 155)}`;
   const url = `/questions/${id}`;
 
   return {

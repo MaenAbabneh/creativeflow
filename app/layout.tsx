@@ -16,14 +16,21 @@ const inter = Inter({
 const SITE_URL = "https://creative-overflow.maenababneh.dev";
 const OG_IMAGE =
   "https://res.cloudinary.com/djy5oyivn/image/upload/q_auto/f_auto/v1775140416/Creative-overflow-ezremove_atpzfv.png";
+const PROJECT_DESCRIPTION_AR =
+  "منصة تقنية مجتمعية للأسئلة والأجوبة البرمجية، تساعد المطورين على طرح الأسئلة، مشاركة المعرفة، والتعاون في تطوير الويب وتطبيقات الجوال والخوارزميات وهياكل البيانات.";
+const AUTHOR_NAME_AR = "معين عبابنة";
 
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Creative Overflow",
   url: SITE_URL,
-  description:
-    "A community-driven platform for asking and answering programming questions.",
+  description: PROJECT_DESCRIPTION_AR,
+  inLanguage: ["en", "ar"],
+  publisher: {
+    "@type": "Person",
+    name: AUTHOR_NAME_AR,
+  },
   potentialAction: {
     "@type": "SearchAction",
     target: `${SITE_URL}/questions?query={search_term_string}`,
@@ -42,9 +49,13 @@ export const metadata: Metadata = {
   referrer: "origin-when-cross-origin",
   alternates: {
     canonical: "/",
+    languages: {
+      ar: "/",
+      "en-US": "/",
+    },
   },
   description:
-    "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
+    `${PROJECT_DESCRIPTION_AR} | Creative Overflow is a community-driven platform for asking and answering programming questions.`,
   keywords: [
     "programming",
     "coding",
@@ -54,16 +65,22 @@ export const metadata: Metadata = {
     "mobile app development",
     "algorithms",
     "data structures",
+    "البرمجة",
+    "أسئلة وأجوبة",
+    "مجتمع المطورين",
+    "تطوير الويب",
+    "خوارزميات",
+    "هياكل البيانات",
   ],
-  authors: [{ name: "Maen Ababenh" }],
-  creator: "Maen Ababenh",
-  publisher: "Maen Ababenh",
+  authors: [{ name: AUTHOR_NAME_AR }, { name: "Maen Ababenh" }],
+  creator: `${AUTHOR_NAME_AR} | Maen Ababenh`,
+  publisher: `${AUTHOR_NAME_AR} | Maen Ababenh`,
   category: "technology",
 
   openGraph: {
     title: "Creative Overflow",
     description:
-      "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world.",
+      `${PROJECT_DESCRIPTION_AR} | منصة تقنية للأسئلة والأجوبة للمطورين.`,
     url: SITE_URL,
     siteName: "Creative Overflow",
     images: [
@@ -74,7 +91,8 @@ export const metadata: Metadata = {
         alt: "Creative Overflow - A community-driven platform for programming questions",
       },
     ],
-    locale: "en_US",
+    locale: "ar_JO",
+    alternateLocale: ["en_US"],
     type: "website",
   },
   twitter: {

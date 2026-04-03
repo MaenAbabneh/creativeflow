@@ -26,6 +26,8 @@ import { RouteParams } from "@/types/global";
 
 const OG_IMAGE =
   "https://res.cloudinary.com/djy5oyivn/image/upload/q_auto/f_auto/v1775140416/Creative-overflow-ezremove_atpzfv.png";
+const PROFILE_DESCRIPTION_AR =
+  "الملف الشخصي للمستخدم على كريتيف أوفرفلو مع المساهمات والأسئلة والإجابات.";
 
 export async function generateMetadata({
   params,
@@ -49,7 +51,7 @@ export async function generateMetadata({
   const title = `${data.user.name} (@${data.user.username})`;
   const description =
     data.user.bio?.slice(0, 155) ||
-    `View ${data.user.name}'s profile on Creative Overflow.`;
+    `${PROFILE_DESCRIPTION_AR} View ${data.user.name}'s profile on Creative Overflow.`;
   const url = `/profile/${id}`;
 
   return {
