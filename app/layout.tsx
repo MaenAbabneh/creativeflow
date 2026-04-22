@@ -6,6 +6,7 @@ import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
 
 import { auth } from "@/auth";
+import WebMcpProvider from "@/components/agent/webmcp-provider";
 import ThemeProvider from "@/context/Theme";
 
 const inter = Inter({
@@ -54,8 +55,7 @@ export const metadata: Metadata = {
       "en-US": "/",
     },
   },
-  description:
-    `${PROJECT_DESCRIPTION_AR} | Creative Overflow is a community-driven platform for asking and answering programming questions.`,
+  description: `${PROJECT_DESCRIPTION_AR} | Creative Overflow is a community-driven platform for asking and answering programming questions.`,
   keywords: [
     "programming",
     "coding",
@@ -79,8 +79,7 @@ export const metadata: Metadata = {
 
   openGraph: {
     title: "Creative Overflow",
-    description:
-      `${PROJECT_DESCRIPTION_AR} | منصة تقنية للأسئلة والأجوبة للمطورين.`,
+    description: `${PROJECT_DESCRIPTION_AR} | منصة تقنية للأسئلة والأجوبة للمطورين.`,
     url: SITE_URL,
     siteName: "Creative Overflow",
     images: [
@@ -159,6 +158,7 @@ export default async function RootLayout({
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
           />
+          <WebMcpProvider />
           <ThemeProvider attribute="class" defaultTheme="system">
             {children}
           </ThemeProvider>
