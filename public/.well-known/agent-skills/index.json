@@ -1,0 +1,61 @@
+{
+  "$schema": "https://agentskills.io/schemas/agent-skills-index-v0.2.0.json",
+  "skills": [
+    {
+      "name": "link-headers",
+      "type": "discovery",
+      "description": "Advertise machine-discoverable resources via RFC 8288 Link headers.",
+      "url": "https://creative-overflow.maenababneh.dev/.well-known/agent-skills/link-headers-SKILL.md",
+      "sha256": "70707bf05b69567f41f49b152f6957c034a0250ff2561337267bdd6168f5b2ad"
+    },
+    {
+      "name": "markdown-negotiation",
+      "type": "content-negotiation",
+      "description": "Serve markdown responses for agent requests that prefer text/markdown.",
+      "url": "https://creative-overflow.maenababneh.dev/.well-known/agent-skills/markdown-negotiation-SKILL.md",
+      "sha256": "06c7e4a8bab894f0f56b703e223a0342fc2ad46811d5609dcc6556d2cdc0c850"
+    },
+    {
+      "name": "content-signals",
+      "type": "governance",
+      "description": "Declare AI content usage preferences in robots.txt.",
+      "url": "https://creative-overflow.maenababneh.dev/.well-known/agent-skills/content-signals-SKILL.md",
+      "sha256": "f2fcae6c6ae4c2ba5a1fb4e06992c8b1a521aded25a5ac3f33a3ed5b1391e763"
+    },
+    {
+      "name": "api-catalog",
+      "type": "api-discovery",
+      "description": "Expose service-desc, service-doc, and status links in an API catalog.",
+      "url": "https://creative-overflow.maenababneh.dev/.well-known/agent-skills/api-catalog-SKILL.md",
+      "sha256": "f20200c2b674cbb8202114b840fc5895edb3a3e57dcf511a69097b33a65aa43a"
+    },
+    {
+      "name": "oauth-discovery",
+      "type": "auth-discovery",
+      "description": "Publish OIDC/OAuth authorization server metadata.",
+      "url": "https://creative-overflow.maenababneh.dev/.well-known/agent-skills/oauth-discovery-SKILL.md",
+      "sha256": "479948aa3f6ca171549a1c01d1d919e46c9e4bb88fd593b2cc736e5a66c7e1c5"
+    },
+    {
+      "name": "oauth-protected-resource",
+      "type": "auth-discovery",
+      "description": "Describe OAuth authorization servers and scopes for this API resource.",
+      "url": "https://creative-overflow.maenababneh.dev/.well-known/agent-skills/oauth-protected-resource-SKILL.md",
+      "sha256": "36a6a5742ef4cf404ec51f67cc9ad2cc19f0ab9b2838b4d6dd26f5b96c0b11c6"
+    },
+    {
+      "name": "mcp-server-card",
+      "type": "mcp-discovery",
+      "description": "Publish MCP server metadata for agent interoperability.",
+      "url": "https://creative-overflow.maenababneh.dev/.well-known/agent-skills/mcp-server-card-SKILL.md",
+      "sha256": "d5f4da9537924b6b19b1814694b4de285d4c4dd5630af1809b633ed1da000b2c"
+    },
+    {
+      "name": "webmcp",
+      "type": "browser-tools",
+      "description": "Expose browser tools through navigator.modelContext.provideContext.",
+      "url": "https://creative-overflow.maenababneh.dev/.well-known/agent-skills/webmcp-SKILL.md",
+      "sha256": "979ad2f0f563ca644ab07ac3a1b89a4fd2386f92a556f97e04c412a59369c206"
+    }
+  ]
+}
