@@ -1,0 +1,25 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Creative Overflow API",
+    "version": "1.0.0",
+    "description": "Public API surface for Creative Overflow."
+  },
+  "servers": [
+    {
+      "url": "https://creative-overflow.maenababneh.dev"
+    }
+  ],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "summary": "Service health check",
+        "responses": {
+          "200": {
+            "description": "Healthy response"
+          }
+        }
+      }
+    }
+  }
+}
